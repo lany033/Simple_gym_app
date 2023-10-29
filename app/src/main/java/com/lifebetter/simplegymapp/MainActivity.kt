@@ -11,6 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.lifebetter.simplegymapp.ui.screens.HomeScreen
+import com.lifebetter.simplegymapp.ui.screens.ProfileScreen
+import com.lifebetter.simplegymapp.ui.screens.WorkoutScreen
 import com.lifebetter.simplegymapp.ui.theme.SimpleGymAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -23,7 +25,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    HomeScreen()
+                    WorkoutScreen()
                 }
             }
         }
