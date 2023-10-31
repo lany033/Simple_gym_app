@@ -1,16 +1,19 @@
 package com.lifebetter.simplegymapp.ui.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -23,6 +26,7 @@ import com.lifebetter.simplegymapp.ui.components.CommonCirclePhoto
 import com.lifebetter.simplegymapp.ui.components.CommonLittleText
 import com.lifebetter.simplegymapp.ui.components.CommonTextButtons
 import com.lifebetter.simplegymapp.ui.components.CommonTextTitle
+import com.lifebetter.simplegymapp.ui.components.MyTopWithIconsBar
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.Calendar
@@ -30,13 +34,20 @@ import compose.icons.fontawesomeicons.solid.ChartBar
 import compose.icons.fontawesomeicons.solid.Dumbbell
 import compose.icons.fontawesomeicons.solid.Ruler
 
+
 @Composable
 fun ProfileScreen(){
-    Column(modifier = Modifier.padding(14.dp)) {
-        Header()
-        Body()
-        Dashboard()
+    Scaffold(topBar = { MyTopWithIconsBar( title = "lany033" ) }) {padding ->
+        Column(modifier = Modifier
+            .padding(padding)
+            .fillMaxSize()
+            .padding(14.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
+            Header()
+            Body()
+            Dashboard()
+        }
     }
+
 }
 
 @Composable
@@ -56,7 +67,6 @@ fun Header() {
     }
 }
 
-
 @Composable
 fun Body() {
     Column {
@@ -67,7 +77,7 @@ fun Body() {
             }
             Text(text = "Last 12 weeks")
         }
-        Image(painter = painterResource(id = R.drawable.statistics), contentDescription = "statis")
+        Image(painter = painterResource(id = R.drawable.statistics), contentDescription = "statis", modifier = Modifier.size(200.dp))
         Row {
             CommonButtonProfileBody("Duration")
             CommonButtonProfileBody("Volumen")

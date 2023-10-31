@@ -8,25 +8,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.lifebetter.simplegymapp.ui.components.CommonAccordion
 import com.lifebetter.simplegymapp.ui.components.CommonButtonHome
 import com.lifebetter.simplegymapp.ui.components.CommonTextTitle
-import com.lifebetter.simplegymapp.ui.navigation.BottomNavItem
-import com.lifebetter.simplegymapp.ui.navigation.MyBottomBar
+import com.lifebetter.simplegymapp.ui.components.MyTopAppBar
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.Clipboard
 import compose.icons.feathericons.Search
@@ -34,13 +23,13 @@ import compose.icons.feathericons.Search
 @Composable
 fun HomeScreen(){
 
-    Scaffold(topBar = { MyTopAppBar("Workouts") }) { padding ->
+    Scaffold(topBar = { MyTopAppBar("Home") }) { padding ->
         Column(
             modifier = Modifier
                 .padding(padding)
                 .padding(14.dp)
         ) {
-            //val availableworkouts = MutableState()
+
             CommonTextTitle("Quick Start", Modifier.padding(top = 5.dp, bottom = 5.dp))
             CommonButtonHome(
                 text = "Start Empty Workout",
@@ -64,17 +53,3 @@ fun HomeScreen(){
 
 
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun MyTopAppBar(title: String) {
-    Column {
-        CenterAlignedTopAppBar(title = {
-            Text(
-                text = title,
-                fontSize = 16.sp,
-                textAlign = TextAlign.Center)
-        }, modifier = Modifier.padding(bottom = 1.dp))
-        Divider(color = Color.LightGray, thickness = 0.5.dp)
-    }
-
-}
