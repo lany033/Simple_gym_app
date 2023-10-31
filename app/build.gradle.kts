@@ -64,6 +64,8 @@ dependencies {
     implementation("br.com.devsrsouza.compose.icons:feather:1.1.0")
     implementation("br.com.devsrsouza.compose.icons:font-awesome:1.1.0")
 
+    implementation("androidx.navigation:navigation-compose:2.5.3")
+    
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
