@@ -9,13 +9,13 @@ import compose.icons.feathericons.User
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.Dumbbell
 
-sealed class BottomNavItem(
+sealed class BottomBarNavItem(
     var title: String,
     var imageVector: ImageVector,
     var route: String
 ) {
-    object Home : BottomNavItem("Home", Icons.Default.Home, "Home")
-    object Workouts : BottomNavItem("Workout", FontAwesomeIcons.Solid.Dumbbell, "Workout")
-    object Profile : BottomNavItem("Profile", FeatherIcons.User, "Profile")
+    object Home : BottomBarNavItem("Home", Icons.Default.Home, "Home")
+    object Workouts : BottomBarNavItem("Workout", FontAwesomeIcons.Solid.Dumbbell, "Workout")
+    object Profile : BottomBarNavItem("Profile", FeatherIcons.User, "Profile")
 }
 

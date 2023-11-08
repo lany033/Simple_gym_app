@@ -16,7 +16,7 @@ fun CommonButtonHome(text: String, modifier: Modifier, imageVector: ImageVector)
         onClick = { /*TODO*/ },
         shape = RoundedCornerShape(4.dp),
         modifier = modifier,
-        contentPadding = PaddingValues(start = 7.dp)
+        //contentPadding = PaddingValues(start = 7.dp)
     ) {
         Icon(imageVector = imageVector, contentDescription = "new")
         CommonTextButtons(text = text)

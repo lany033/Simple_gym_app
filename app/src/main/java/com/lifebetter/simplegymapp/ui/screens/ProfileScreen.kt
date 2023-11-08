@@ -34,20 +34,25 @@ import compose.icons.fontawesomeicons.solid.ChartBar
 import compose.icons.fontawesomeicons.solid.Dumbbell
 import compose.icons.fontawesomeicons.solid.Ruler
 
-
 @Composable
-fun ProfileScreen(){
-    Scaffold(topBar = { MyTopWithIconsBar( title = "lany033" ) }) {padding ->
-        Column(modifier = Modifier
-            .padding(padding)
-            .fillMaxSize()
-            .padding(14.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
+fun ProfileScreen(onClick: () -> Unit) {
+    Scaffold(topBar = { MyTopWithIconsBar(title = "lany033") }) { padding ->
+        Column(
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize()
+                .padding(14.dp), verticalArrangement = Arrangement.spacedBy(14.dp)
+        ) {
             Header()
             Body()
-            Dashboard()
+            Dashboard(onClickExercises = onClick)
+            /*
+            Button(onClick = { onClick() }) {
+                Text(text = "ejerciciosTest")
+            }
+             */
         }
     }
-
 }
 
 @Composable
@@ -56,7 +61,10 @@ fun Header() {
         CommonCirclePhoto(R.drawable.perfilphoto, 70)
 
         Column {
-            CommonTextTitle(text = "Melanie Mantilla", modifier = Modifier.padding(5.dp))
+            CommonTextTitle(
+                text = "Melanie Mantilla",
+                modifier = Modifier.padding(5.dp)
+            )
             Box {
                 Column {
                     CommonLittleText(text = "Workouts")
@@ -77,7 +85,11 @@ fun Body() {
             }
             Text(text = "Last 12 weeks")
         }
-        Image(painter = painterResource(id = R.drawable.statistics), contentDescription = "statis", modifier = Modifier.size(200.dp))
+        Image(
+            painter = painterResource(id = R.drawable.statistics),
+            contentDescription = "statis",
+            modifier = Modifier.size(200.dp)
+        )
         Row {
             CommonButtonProfileBody("Duration")
             CommonButtonProfileBody("Volumen")
@@ -87,18 +99,35 @@ fun Body() {
 }
 
 @Composable
-fun Dashboard() {
+fun Dashboard(onClickExercises: () -> Unit) {
     Column {
         Text(text = "Dashboard")
         Row {
-            CommonButtonProfileDashboard("Statistics",Modifier.weight(1f), imageVector = FontAwesomeIcons.Solid.ChartBar)
+            CommonButtonProfileDashboard(
+                "Statistics",
+                Modifier.weight(1f),
+                imageVector = FontAwesomeIcons.Solid.ChartBar,
+                onclick = {})
             Spacer(modifier = Modifier.padding(2.dp))
-            CommonButtonProfileDashboard("Exercises",Modifier.weight(1f), imageVector  = FontAwesomeIcons.Solid.Dumbbell)
+            CommonButtonProfileDashboard(
+                "Exercises",
+                Modifier.weight(1f),
+                imageVector = FontAwesomeIcons.Solid.Dumbbell,
+                onclick = { onClickExercises() }
+            )
         }
         Row {
-            CommonButtonProfileDashboard("Measures",Modifier.weight(1f), imageVector = FontAwesomeIcons.Solid.Ruler)
+            CommonButtonProfileDashboard(
+                "Measures",
+                Modifier.weight(1f),
+                imageVector = FontAwesomeIcons.Solid.Ruler,
+                onclick = {})
             Spacer(modifier = Modifier.padding(2.dp))
-            CommonButtonProfileDashboard("Calendar",Modifier.weight(1f), imageVector = FontAwesomeIcons.Solid.Calendar)
+            CommonButtonProfileDashboard(
+                "Calendar",
+                Modifier.weight(1f),
+                imageVector = FontAwesomeIcons.Solid.Calendar,
+                onclick = {})
         }
     }
 
@@ -106,16 +135,31 @@ fun Dashboard() {
 }
 
 @Composable
-fun CommonButtonProfileDashboard(textButton: String, modifier: Modifier, imageVector: ImageVector) {
-    Button(onClick = { /*TODO*/ },shape = RoundedCornerShape(4.dp), modifier = modifier) {
-        Icon(imageVector = imageVector, contentDescription = "icon", modifier= Modifier.size(24.dp))
+fun CommonButtonProfileDashboard(
+    textButton: String,
+    modifier: Modifier,
+    imageVector: ImageVector,
+    onclick: () -> Unit
+) {
+    Button(
+        onClick = { onclick() },
+        shape = RoundedCornerShape(4.dp), modifier = modifier
+    ) {
+        Icon(
+            imageVector = imageVector,
+            contentDescription = "icon",
+            modifier = Modifier.size(24.dp)
+        )
         CommonTextButtons(text = textButton)
     }
 }
 
 @Composable
 fun CommonButtonProfileBody(text: String) {
-    Button(onClick = { /*TODO*/ }, contentPadding = PaddingValues(start = 13.dp, end = 13.dp, top = 0.dp, bottom = 0.dp)) {
+    Button(
+        onClick = { /*TODO*/ },
+        contentPadding = PaddingValues(start = 13.dp, end = 13.dp, top = 0.dp, bottom = 0.dp)
+    ) {
         Text(text = text, fontSize = 16.sp)
     }
 }

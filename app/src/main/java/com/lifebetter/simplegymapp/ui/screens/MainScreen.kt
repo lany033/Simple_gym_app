@@ -16,8 +16,8 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.lifebetter.simplegymapp.ui.navigation.BottomNavGraph
-import com.lifebetter.simplegymapp.ui.navigation.BottomNavItem
+import com.lifebetter.simplegymapp.ui.navigation.BottomBarNavGraph
+import com.lifebetter.simplegymapp.ui.navigation.BottomBarNavItem
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -26,16 +26,16 @@ fun MainScreen(){
     Scaffold(
         bottomBar = { MyBottomBar(navController = navController) }
     ) {
-        BottomNavGraph(navController = navController)
+        BottomBarNavGraph(navController = navController)
     }
 }
 
 @Composable
 fun MyBottomBar(navController: NavHostController){
     val items = listOf(
-        BottomNavItem.Home,
-        BottomNavItem.Workouts,
-        BottomNavItem.Profile
+        BottomBarNavItem.Home,
+        BottomBarNavItem.Workouts,
+        BottomBarNavItem.Profile
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination

@@ -29,7 +29,6 @@ fun HomeScreen(){
                 .padding(padding)
                 .padding(14.dp)
         ) {
-
             CommonTextTitle("Quick Start", Modifier.padding(top = 5.dp, bottom = 5.dp))
             CommonButtonHome(
                 text = "Start Empty Workout",
