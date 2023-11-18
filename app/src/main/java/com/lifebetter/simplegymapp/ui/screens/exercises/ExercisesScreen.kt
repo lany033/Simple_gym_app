@@ -1,4 +1,4 @@
-package com.lifebetter.simplegymapp.ui.screens
+package com.lifebetter.simplegymapp.ui.screens.exercises
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -17,17 +19,23 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.lifebetter.simplegymapp.ui.components.CommonButtonHome
-import com.lifebetter.simplegymapp.ui.components.CommonTextButtons
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lifebetter.simplegymapp.ui.components.MyTopWithIconsBar
 
 @Composable
 fun ExercisesScreen() {
+    val viewModel: ExercisesViewModel = viewModel {
+        ExercisesViewModel()
+    }
+    val state by viewModel.state.collectAsState()
+    val coroutinesScope = rememberCoroutineScope()
     Scaffold(topBar = { MyTopWithIconsBar(title = "Exercises") }) { paddingValues ->
         Column(
             modifier = Modifier
@@ -65,6 +73,15 @@ fun ExercisesScreen() {
                     Text(text = "All Muscles", fontSize = 16.sp)
                 }
             }
+            Text(text = "Results")
+            LazyColumn {
+
+                    items(state.exercises){
+                        Text(text = "Name: ${it.name}")
+                    }
+
+            }
         }
     }
 }
+
