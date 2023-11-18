@@ -35,7 +35,7 @@ import compose.icons.fontawesomeicons.solid.Dumbbell
 import compose.icons.fontawesomeicons.solid.Ruler
 
 @Composable
-fun ProfileScreen(onClick: () -> Unit) {
+fun ProfileScreen(onClickExercises: () -> Unit, onClickMeasures:() -> Unit) {
     Scaffold(topBar = { MyTopWithIconsBar(title = "lany033") }) { padding ->
         Column(
             modifier = Modifier
@@ -45,7 +45,7 @@ fun ProfileScreen(onClick: () -> Unit) {
         ) {
             Header()
             Body()
-            Dashboard(onClickExercises = onClick)
+            Dashboard(onClickExercises = onClickExercises, onClickMeasures = onClickMeasures)
             /*
             Button(onClick = { onClick() }) {
                 Text(text = "ejerciciosTest")
@@ -99,7 +99,7 @@ fun Body() {
 }
 
 @Composable
-fun Dashboard(onClickExercises: () -> Unit) {
+fun Dashboard(onClickExercises: () -> Unit, onClickMeasures: () -> Unit) {
     Column {
         Text(text = "Dashboard")
         Row {
@@ -107,7 +107,7 @@ fun Dashboard(onClickExercises: () -> Unit) {
                 "Statistics",
                 Modifier.weight(1f),
                 imageVector = FontAwesomeIcons.Solid.ChartBar,
-                onclick = {})
+                onclick = { })
             Spacer(modifier = Modifier.padding(2.dp))
             CommonButtonProfileDashboard(
                 "Exercises",
@@ -121,7 +121,7 @@ fun Dashboard(onClickExercises: () -> Unit) {
                 "Measures",
                 Modifier.weight(1f),
                 imageVector = FontAwesomeIcons.Solid.Ruler,
-                onclick = {})
+                onclick = { onClickMeasures() })
             Spacer(modifier = Modifier.padding(2.dp))
             CommonButtonProfileDashboard(
                 "Calendar",
@@ -130,8 +130,6 @@ fun Dashboard(onClickExercises: () -> Unit) {
                 onclick = {})
         }
     }
-
-
 }
 
 @Composable
