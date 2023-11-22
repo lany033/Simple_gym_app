@@ -12,7 +12,7 @@ data class ServerExercise(
     val equipment: List<Int>,
     val exercise_base: Int,
     val id: Int,
-    val language: Int,
+    @SerialName("language")val language: Int,
     val license: Int,
     @SerialName("license_author")val licenseAuthor: String?,
     val muscles: List<Int>,
@@ -25,5 +25,6 @@ data class ServerExercise(
 fun ServerExercise.toExercise() = Exercise(
     id = id,
     name = name,
-    description = description
+    description = description,
+    language = language
 )

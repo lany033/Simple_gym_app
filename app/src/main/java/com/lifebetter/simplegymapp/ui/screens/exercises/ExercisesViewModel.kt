@@ -20,8 +20,8 @@ class ExercisesViewModel(private val exercisesRepository: ExercisesRepository): 
         ExercisePagingSource(exercisesRepository)
     }.flow.cachedIn(viewModelScope)
 
-    /*
 
+    /*
     //view
     private val _state = MutableStateFlow(ExercisesState())
     val state: StateFlow<ExercisesState> = _state.asStateFlow()

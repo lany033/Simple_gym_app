@@ -101,7 +101,10 @@ fun ExercisesScreen() {
                     }
                      */
                 items(exerciseList){item ->
-                    item?.let { Text(text = item.name) }
+                    if (item?.language == 2){
+                        Text(text = item.name)
+                    }
+                    //item?.let { Text(text = item.name) }
                 }
 
                 when(exerciseList.loadState.append){
