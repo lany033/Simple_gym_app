@@ -82,7 +82,9 @@ fun ExercisesScreen() {
                     if ( i >= state.exercise.size - 1 && !state.endReached && !state.isLoading){
                         viewModel.loadNextItem()
                     }
-                    Text(text = "Exercise: ${exercise.name}")
+                    if (exercise.language == 2){
+                        Text(text = "Exercise: ${exercise.name}")
+                    }
                 }
                 item {
                     if (state.isLoading){

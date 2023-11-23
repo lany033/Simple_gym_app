@@ -59,23 +59,5 @@ class ExercisesViewModel(private val exercisesRepository: ExercisesRepository) :
         val page: Int = 0
     )
 
-    /*
-    //view
-    private val _state = MutableStateFlow(ExercisesState())
-    val state: StateFlow<ExercisesState> = _state.asStateFlow()
-
-    init {
-        viewModelScope.launch {
-            _state.value = ExercisesState(exercises = exercisesRepository.getExercises().results.map {
-                it.toExercise()
-            })
-        }
-    }
-
-    //interface
-    data class ExercisesState(
-        val exercises: List<Exercise> = emptyList()
-    )
-     */
 }
 

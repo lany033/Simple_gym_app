@@ -1,6 +1,7 @@
 package com.lifebetter.simplegymapp.ui.screens
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -19,14 +20,14 @@ import androidx.navigation.compose.rememberNavController
 import com.lifebetter.simplegymapp.ui.navigation.BottomBarNavGraph
 import com.lifebetter.simplegymapp.ui.navigation.BottomBarNavItem
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+
 @Composable
 fun MainScreen(){
     val navController = rememberNavController()
     Scaffold(
         bottomBar = { MyBottomBar(navController = navController) }
-    ) {
-        BottomBarNavGraph(navController = navController)
+    ) {padding ->
+        BottomBarNavGraph(navController = navController, modifier = Modifier.padding(padding))
     }
 }
 
