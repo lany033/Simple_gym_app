@@ -5,6 +5,6 @@ import retrofit2.http.Query
 
 //https://wger.de/api/v2/exercise/?limit=20&offset=0
 interface ExerciseService {
-    @GET("exercise/")
+    @GET("exerciseinfo/")
     suspend fun getExercise(@Query("limit") limit: Int, @Query("offset") offset: Int): ExerciseResult
 }
