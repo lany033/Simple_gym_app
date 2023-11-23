@@ -16,13 +16,19 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
+<<<<<<< HEAD
+=======
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+>>>>>>> main
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
+<<<<<<< HEAD
+=======
 import androidx.compose.material3.Card
+>>>>>>> main
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -31,7 +37,10 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+<<<<<<< HEAD
+=======
 import androidx.compose.ui.Alignment
+>>>>>>> main
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -95,6 +104,28 @@ fun ExercisesScreen() {
             }
             Text(text = "Results")
             LazyColumn {
+<<<<<<< HEAD
+                items(state.exercise.size){i ->
+                    val exercise = state.exercise[i]
+                    if ( i >= state.exercise.size - 1 && !state.endReached && !state.isLoading){
+                        viewModel.loadNextItem()
+                    }
+                    if (exercise.language == 2){
+                        Text(text = "Exercise: ${exercise.name}")
+                    }
+                }
+                item {
+                    if (state.isLoading){
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    }
+=======
                     /*
                     items(state.exercises){
                         Text(text = "Name: ${it.name}")
@@ -126,6 +157,7 @@ fun ExercisesScreen() {
                         }
                     }
                     is LoadState.NotLoading -> Unit
+>>>>>>> main
                 }
             }
         }
