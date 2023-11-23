@@ -1,18 +1,34 @@
 package com.lifebetter.simplegymapp.ui.screens.exercises
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.R
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
+<<<<<<< HEAD
+=======
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+>>>>>>> main
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
+<<<<<<< HEAD
+=======
+import androidx.compose.material3.Card
+>>>>>>> main
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -21,11 +37,22 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+<<<<<<< HEAD
+=======
+import androidx.compose.ui.Alignment
+>>>>>>> main
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
 import com.lifebetter.simplegymapp.model.ExercisesRepository
 import com.lifebetter.simplegymapp.ui.components.MyTopWithIconsBar
 
@@ -36,7 +63,7 @@ fun ExercisesScreen() {
         ExercisesViewModel(ExercisesRepository())
     }
 
-    val state by viewModel.state.collectAsState()
+    val exerciseList = viewModel.exercisePager.collectAsLazyPagingItems()
 
     Scaffold(topBar = { MyTopWithIconsBar(title = "Exercises") }) { paddingValues ->
         Column(
@@ -77,6 +104,7 @@ fun ExercisesScreen() {
             }
             Text(text = "Results")
             LazyColumn {
+<<<<<<< HEAD
                 items(state.exercise.size){i ->
                     val exercise = state.exercise[i]
                     if ( i >= state.exercise.size - 1 && !state.endReached && !state.isLoading){
@@ -97,8 +125,86 @@ fun ExercisesScreen() {
                             CircularProgressIndicator()
                         }
                     }
+=======
+                    /*
+                    items(state.exercises){
+                        Text(text = "Name: ${it.name}")
+                    }
+                     */
+                items(exerciseList){item ->
+                    if (item?.language == 2){
+                        Text(text = item.name)
+                    }
+                    //item?.let { Text(text = item.name) }
+                }
+
+                when(exerciseList.loadState.append){
+                    is LoadState.Error -> { item {ErrorItem(message = "Some error ocurred")} }
+                    LoadState.Loading -> { item { LoadingItem() } }
+                    is LoadState.NotLoading -> Unit
+                }
+
+                when(exerciseList.loadState.refresh){
+                    is LoadState.Error -> TODO()
+                    LoadState.Loading -> {
+                        item {
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                CircularProgressIndicator()
+                            }
+                        }
+                    }
+                    is LoadState.NotLoading -> Unit
+>>>>>>> main
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun LoadingItem() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight(),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier
+                .width(42.dp)
+                .height(42.dp)
+                .padding(8.dp),
+            strokeWidth = 5.dp
+        )
+
+    }
+}
+
+@Composable
+fun ErrorItem(message: String) {
+    Card(
+        modifier = Modifier
+            .padding(6.dp)
+            .fillMaxWidth()
+            .wrapContentHeight()
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.Red)
+                .padding(8.dp)
+        ) {
+            Text(
+                color = Color.White,
+                text = message,
+                fontSize = 16.sp,
+                modifier = Modifier
+                    .padding(start = 12.dp)
+                    .align(Alignment.CenterVertically)
+            )
         }
     }
 }

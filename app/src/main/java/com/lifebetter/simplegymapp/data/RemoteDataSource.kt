@@ -21,6 +21,7 @@ object RemoteDataSource {
 
     val service: ExerciseService = builder.create()
 
+
     /*
 
     private fun genericHttpLoggingInterceptor(): HttpLoggingInterceptor {
