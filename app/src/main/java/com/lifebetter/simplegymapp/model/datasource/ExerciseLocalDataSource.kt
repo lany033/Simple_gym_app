@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 class ExerciseLocalDataSource(private val exerciseDao: ExerciseDao) {
 
-    val exercises: Flow<List<Exercise>> = exerciseDao.getAll()
+    suspend fun  exercises(): Flow<List<Exercise>> = exerciseDao.getAll()
 
     fun isEmpty(): Boolean = exerciseDao.exerciseCount() == 0
 
