@@ -1,4 +1,4 @@
-package com.lifebetter.simplegymapp.data.test
+package com.lifebetter.simplegymapp.model.data.test
 
 data class License(
     val full_name: String,

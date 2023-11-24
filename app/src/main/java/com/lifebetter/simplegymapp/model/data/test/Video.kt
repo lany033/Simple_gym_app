@@ -1,4 +1,4 @@
-package com.lifebetter.simplegymapp.data.test
+package com.lifebetter.simplegymapp.model.data.test
 
 data class Video(
     val author_history: List<String>,

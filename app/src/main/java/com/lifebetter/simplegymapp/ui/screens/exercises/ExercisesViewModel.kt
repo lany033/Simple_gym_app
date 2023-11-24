@@ -2,13 +2,16 @@ package com.lifebetter.simplegymapp.ui.screens.exercises
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.lifebetter.simplegymapp.data.Exercise
-import com.lifebetter.simplegymapp.data.toExercise
 import com.lifebetter.simplegymapp.model.ExercisesRepository
+import com.lifebetter.simplegymapp.model.data.RemoteExercise
+import com.lifebetter.simplegymapp.model.data.toExercise
+import com.lifebetter.simplegymapp.model.database.Exercise
+import com.lifebetter.simplegymapp.model.datasource.ExerciseRemoteDataSource
 import com.lifebetter.simplegymapp.ui.DefaultPaginator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class ExercisesViewModel(private val exercisesRepository: ExercisesRepository): ViewModel() {
@@ -17,14 +20,15 @@ class ExercisesViewModel(private val exercisesRepository: ExercisesRepository): 
     private var _state = MutableStateFlow(ExerciseState())
     var state: StateFlow<ExerciseState> = _state.asStateFlow()
 
+
+
     private val paginator = DefaultPaginator(
         initialKey = _state.value.page,
         onLoadUpdated = {
             _state.value = _state.value.copy(isLoading = it)
         },
         onRequest = { nextPage ->
-            exercisesRepository.getExercises(nextPage, 20)
-                .mapCatching { e -> e.results.map { it.toExercise() } }
+            Result.success(exercisesRepository.popularExercises)
         },
         getNextKey = {
             _state.value.page + 20
@@ -34,15 +38,15 @@ class ExercisesViewModel(private val exercisesRepository: ExercisesRepository): 
         },
         onSuccess = { exercise, newKey ->
             _state.value = _state.value.copy(
-                exercise = _state.value.exercise + exercise,
+                exercise = _state.value.exercise,
                 page = newKey,
-                endReached = exercise.isEmpty()
+                endReached = exercise.equals("")
             )
         }
     )
 
     init {
-        loadNextItem()
+        requestExercises()
     }
 
     fun loadNextItem(){
@@ -50,6 +54,13 @@ class ExercisesViewModel(private val exercisesRepository: ExercisesRepository): 
             paginator.loadNextItems()
         }
     }
+
+    fun requestExercises(){
+        viewModelScope.launch {
+            exercisesRepository.requestPopularExercises()
+        }
+    }
+
 
     data class ExerciseState(
         val isLoading: Boolean = false,

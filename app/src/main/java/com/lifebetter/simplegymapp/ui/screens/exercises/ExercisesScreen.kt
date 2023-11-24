@@ -35,7 +35,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.lifebetter.simplegymapp.App
 import com.lifebetter.simplegymapp.model.ExercisesRepository
+import com.lifebetter.simplegymapp.model.datasource.ExerciseRemoteDataSource
 import com.lifebetter.simplegymapp.ui.components.MyTopWithIconsBar
 import kotlinx.coroutines.launch
 
@@ -50,11 +52,10 @@ fun ExercisesScreen() {
     }
 
     val viewModel: ExercisesViewModel = viewModel {
-        ExercisesViewModel(ExercisesRepository())
+        ExercisesViewModel(ExercisesRepository(application = App()))
     }
 
     val state by viewModel.state.collectAsState()
-
 
     Scaffold(topBar = { MyTopWithIconsBar(title = "Exercises") }) { paddingValues ->
         Column(
@@ -120,14 +121,12 @@ fun ExercisesScreen() {
             Text(text = "Results")
             LazyColumn {
 
-                items(state.exercise.size){i ->
+                items(state.exercise.size){ i ->
                     val exercise = state.exercise[i]
                     if ( i >= state.exercise.size - 1 && !state.endReached && !state.isLoading){
                         viewModel.loadNextItem()
                     }
-                    if (exercise.language.id == 2){
-                        Text(text = "Exercise: ${exercise.name}")
-                    }
+                    Text(text = "Exercise: ${exercise.name}")
                 }
                 item {
                     if (state.isLoading){

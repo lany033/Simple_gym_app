@@ -1,4 +1,4 @@
-package com.lifebetter.simplegymapp.data.test
+package com.lifebetter.simplegymapp.model.data.test
 
 data class ServiceExercisetest(
     val count: Int,
