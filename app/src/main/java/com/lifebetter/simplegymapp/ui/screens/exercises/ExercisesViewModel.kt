@@ -2,17 +2,11 @@ package com.lifebetter.simplegymapp.ui.screens.exercises
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.lifebetter.simplegymapp.data.Exercise
-import com.lifebetter.simplegymapp.data.ExercisePagingSource
-import com.lifebetter.simplegymapp.data.toExercise
+import com.lifebetter.simplegymapp.model.remotedata.ExercisePagingSource
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.lifebetter.simplegymapp.model.ExercisesRepository
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 
 class ExercisesViewModel(private val exercisesRepository: ExercisesRepository): ViewModel() {
 

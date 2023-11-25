@@ -1,4 +1,4 @@
-package com.lifebetter.simplegymapp.data
+package com.lifebetter.simplegymapp.model.remotedata
 
 import kotlinx.serialization.Serializable
 

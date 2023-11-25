@@ -1,4 +1,4 @@
-package com.lifebetter.simplegymapp.data
+package com.lifebetter.simplegymapp.model.remotedata
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
