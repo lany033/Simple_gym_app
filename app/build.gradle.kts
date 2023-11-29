@@ -86,10 +86,10 @@ dependencies {
     implementation ("androidx.paging:paging-compose:1.0.0-alpha18")
 
 
-    implementation ("androidx.room:room-runtime:2.5.1")
-    kapt ("androidx.room:room-compiler:2.5.1")
-    implementation ("androidx.room:room-ktx:2.5.1")
-    implementation ("androidx.room:room-paging:2.5.1")
+    implementation ("androidx.room:room-runtime:2.6.0")
+    kapt ("androidx.room:room-compiler:2.6.0")
+    implementation ("androidx.room:room-ktx:2.6.0")
+    implementation ("androidx.room:room-paging:2.6.0")
 
 
     testImplementation(libs.junit)
