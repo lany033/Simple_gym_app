@@ -13,7 +13,7 @@ data class ExerciseDto(
     @SerialName("description")val description: String,
     //val equipment: List<String>,
     //val exercise_base_id: Int,
-    @SerialName("id")val id: Int,
+    //@SerialName("id")val id: Int,
     //val images: List<String>,
     //@Contextual val language: Language,
     //val license: String,

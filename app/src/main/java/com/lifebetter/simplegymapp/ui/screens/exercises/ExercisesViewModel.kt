@@ -2,18 +2,15 @@ package com.lifebetter.simplegymapp.ui.screens.exercises
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.lifebetter.simplegymapp.model.remotedata.ExerciseRemoteMediator
 import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.lifebetter.simplegymapp.model.database.ExerciseEntity
-import com.lifebetter.simplegymapp.model.mappers.toExercise
-import com.lifebetter.simplegymapp.model.remotedata.ExercisesRemoteDataSource
-import com.lifebetter.simplegymapp.model.remotedata.RemoteKeys
 import kotlinx.coroutines.flow.map
 
-class ExercisesViewModel(pager: Pager<Int, RemoteKeys>): ViewModel() {
+class ExercisesViewModel(pager: Pager<Int, ExerciseEntity>): ViewModel() {
+
+
     /*
     val exercisePager = Pager(PagingConfig(pageSize = 20)){
         ExerciseRemoteMediator(exercisesRemoteDataSource)

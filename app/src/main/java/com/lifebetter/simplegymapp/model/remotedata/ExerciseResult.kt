@@ -13,16 +13,6 @@ data class ExerciseResult(
     val results: List<ExerciseDto>
 )
 
-@Entity("remote_keys")
-data class RemoteKeys(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int,
-    val count: Int,
-    val next: String?,
-    val previous: String?,
-)
-
-
 /*
 
 //https://wger.de/api/v2/exercise/?limit=20&offset=20
