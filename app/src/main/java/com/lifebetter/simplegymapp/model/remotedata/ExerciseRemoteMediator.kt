@@ -8,10 +8,10 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
+import androidx.paging.log
 import androidx.room.withTransaction
 import com.lifebetter.simplegymapp.model.database.ExerciseDatabase
 import com.lifebetter.simplegymapp.model.database.ExerciseEntity
-import com.lifebetter.simplegymapp.model.database.RemoteKeys
 import com.lifebetter.simplegymapp.model.mappers.toLocalModel
 import okio.IOException
 
@@ -33,16 +33,11 @@ class ExerciseRemoteMediator(
         return try {
             val loadKey = when (loadType) {
                 LoadType.REFRESH -> {
-                    val remoteKeys = getRemoteKeyClosestToCurrentPosition(state)
-                    Log.d("REFRESH", remoteKeys?.nextKey.orEmpty())
-                    remoteKeys?.nextKey ?: "https://wger.de/api/v2/exercise/?limit=20&offset=0"
+                    0
 
                 }
                 LoadType.PREPEND -> {
-                    val remoteKeys = getRemoteKeyForFirstItem(state)
-                    val prevKey = remoteKeys?.prevKey
-                    Log.d("PREPEND", prevKey.orEmpty())
-                    prevKey ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
+                    return MediatorResult.Success(endOfPaginationReached = true)
                 }
                 LoadType.APPEND -> {
                     // If remoteKeys is null, that means the refresh result is not in the database yet.
@@ -50,46 +45,27 @@ class ExerciseRemoteMediator(
                     // will call this method again if RemoteKeys becomes non-null.
                     // If remoteKeys is NOT NULL but its nextKey is null, that means we've reached
                     // the end of pagination for append.
+                    val lastItem  = state.lastItemOrNull()
 
-                    val remoteKeys = getRemoteKeyForLastItem(state)
-                    val nextKey = remoteKeys?.nextKey
-                    Log.d("APPEND", nextKey.orEmpty())
-                    nextKey
-                        ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
+                    if (lastItem == null ){
+                        0
+                    } else {
+
+                        (lastItem.id / state.config.pageSize) * 10
+                        Log.d("APPEND", (lastItem.id / state.config.pageSize).toString())
+                    }
+
                 }
             }
-
-            val loadKeyToInt = loadKey.split("/".toRegex()).last()
-
-            Log.d("loadkey", loadKeyToInt)
-            //val exercises = exerciseService.getExercises(state.config.pageSize, loadKeyToInt)
-            val exercises = exerciseService.getExercise(loadKeyToInt)
+            val exercises = exerciseService.getExercise(state.config.pageSize, loadKey)
 
             exerciseDb.withTransaction {
 
                 if (loadType == LoadType.REFRESH) {
                     exerciseDb.dao().clearAll()
-                    exerciseDb.keydao().clearRemoteKeys()
                 }
-                //val prevKey = if (loadKeyToInt > 0) loadKeyToInt - 20 else null
-                val prevKey = exercises.previous
-                Log.d("prevkey", prevKey.orEmpty())
-                //val nextKey = if (exercises.results.isEmpty()) null else "https://wger.de/api/v2/exercise/?limit=20&offset=${loadKeyToInt + 20}"
-                val nextKey = exercises.next
-                Log.d("nextKey", nextKey.orEmpty())
-
-                val remoteKeys =
-                    exercises.results.map {
-                        RemoteKeys(
-                            exerciseID = it.toLocalModel().id,
-                            prevKey = prevKey,
-                            currentPage = loadKey,
-                            nextKey = nextKey
-                        )
-                    }
 
                 val exercisesEntities = exercises.results.toLocalModel()
-                exerciseDb.keydao().insertAll(remoteKeys)
                 exerciseDb.dao().insertAll(exercisesEntities)
             }
             MediatorResult.Success(
@@ -99,31 +75,6 @@ class ExerciseRemoteMediator(
             MediatorResult.Error(e)
         } catch (e: HttpException) {
             MediatorResult.Error(e)
-        }
-    }
-
-    private suspend fun getRemoteKeyClosestToCurrentPosition(state: PagingState<Int, ExerciseEntity>): RemoteKeys? {
-        return state.anchorPosition?.let { position ->
-            state.closestItemToPosition(position)?.id?.let { id ->
-                exerciseDb.keydao().getRemoteKeyByExerciseID(id)
-            }
-        }
-
-    }
-
-    private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, ExerciseEntity>): RemoteKeys? {
-        return state.pages.firstOrNull {
-            it.data.isNotEmpty()
-        }?.data?.firstOrNull()?.let { exercise ->
-            exerciseDb.keydao().getRemoteKeyByExerciseID(exercise.id)
-        }
-    }
-
-    private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, ExerciseEntity>): RemoteKeys? {
-        return state.pages.lastOrNull {
-            it.data.isNotEmpty()
-        }?.data?.lastOrNull()?.let { exercise ->
-            exerciseDb.keydao().getRemoteKeyByExerciseID(exercise.id)
         }
     }
 
