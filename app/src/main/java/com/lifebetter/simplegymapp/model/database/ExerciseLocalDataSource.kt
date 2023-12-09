@@ -10,9 +10,10 @@ class ExerciseLocalDataSource(private val exerciseDao: ExerciseDao) {
 
 
     fun isEmpty(): Boolean = exerciseDao.ExerciseCount() == 0
-
+    /*
     suspend fun save(exercises: List<ExerciseEntity>){
         exerciseDao.upsertAll(exercises)
     }
+     */
 
 }

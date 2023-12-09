@@ -6,26 +6,12 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 @Database(
-    entities = [ExerciseEntity::class],
+    entities = [ExerciseEntity::class, RemoteKeys::class],
     version = 1
 )
 abstract class ExerciseDatabase: RoomDatabase() {
-    abstract val dao: ExerciseDao
-
-    companion object {
-        fun createDatabase(context: Context): ExerciseDatabase {
-            return Room.databaseBuilder(
-                context.applicationContext,
-                ExerciseDatabase::class.java,
-                "db-test"
-            ).build()
-        }
-
-        fun createExerciseDao(context: Context): ExerciseDao{
-            return createDatabase(context).dao
-        }
-
-    }
+    abstract fun dao(): ExerciseDao
+    abstract fun keydao(): RemoteKeysDao
 
 }
 

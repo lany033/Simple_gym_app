@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -28,42 +29,19 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
-import com.lifebetter.simplegymapp.model.database.ExerciseDatabase
-import com.lifebetter.simplegymapp.model.remotedata.ExerciseRemoteMediator
-import com.lifebetter.simplegymapp.model.remotedata.ExercisesRemoteDataSource
 import com.lifebetter.simplegymapp.ui.components.MyTopWithIconsBar
 
-@OptIn(ExperimentalPagingApi::class)
 @Composable
 fun ExercisesScreen() {
-
     //val exerciseApi: ExerciseService
-
+    val exerciseViewModel = hiltViewModel<ExercisesViewModel>()
     val context = LocalContext.current
-
-    val viewModel: ExercisesViewModel = viewModel {
-        ExercisesViewModel(
-            pager = Pager(
-                config = PagingConfig(pageSize = 20),
-                remoteMediator = ExerciseRemoteMediator(
-                    ExerciseDatabase.createDatabase(context),
-                    ExercisesRemoteDataSource()
-                ),
-                pagingSourceFactory = {
-                    ExerciseDatabase.createExerciseDao(context).pagingSource()
-                })
-        )
-    }
-
     //val exerciseList = viewModel.exercisePager.collectAsLazyPagingItems()
-    val exerciseList = viewModel.exercisePagingFlow.collectAsLazyPagingItems()
+    val exerciseList = exerciseViewModel.getExercisesFromPaging().collectAsLazyPagingItems()
 
     Scaffold(topBar = { MyTopWithIconsBar(title = "Exercises") }) { paddingValues ->
         Column(
@@ -127,9 +105,10 @@ fun ExercisesScreen() {
                         modifier = Modifier.fillMaxSize(),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        items(exerciseList) { exercise ->
+
+                        items( exerciseList.itemSnapshotList) { exercise ->
                             if (exercise != null) {
-                                Text(text = "Exercise: ${exercise.name}")
+                              Text(text = "Exercise: ${exercise.name}")
                             }
                         }
                         item {

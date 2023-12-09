@@ -3,6 +3,7 @@ package com.lifebetter.simplegymapp.model.database
 import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Upsert
 
@@ -12,8 +13,8 @@ interface ExerciseDao {
     @Query("SELECT * FROM exerciseEntity")
     fun getAll(): List<ExerciseEntity>
 
-    @Upsert
-    suspend fun upsertAll(exercises: List<ExerciseEntity>)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(exercises: List<ExerciseEntity>)
 
     @Query("SELECT * FROM Exerciseentity")
     fun pagingSource(): PagingSource<Int, ExerciseEntity>
