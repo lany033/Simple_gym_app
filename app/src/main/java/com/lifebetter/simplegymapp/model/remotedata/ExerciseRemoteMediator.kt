@@ -59,11 +59,11 @@ class ExerciseRemoteMediator(
                 }
             }
 
-            val loadKeyToInt = loadKey.split("/".toRegex()).last()
+            val loadKeyToInt = (loadKey.split("/".toRegex()).last().split("=".toRegex()).last()).toInt()
 
-            Log.d("loadkey", loadKeyToInt)
-            //val exercises = exerciseService.getExercises(state.config.pageSize, loadKeyToInt)
-            val exercises = exerciseService.getExercise(loadKeyToInt)
+            //Log.d("loadkey", loadKeyToInt)
+            val exercises = exerciseService.getExercise(state.config.pageSize, loadKeyToInt)
+
 
             exerciseDb.withTransaction {
 

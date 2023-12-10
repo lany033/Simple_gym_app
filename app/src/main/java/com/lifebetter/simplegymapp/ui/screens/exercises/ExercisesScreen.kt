@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.paging.compose.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -97,8 +98,8 @@ fun ExercisesScreen() {
             }
 
             Box(modifier = Modifier.fillMaxSize()) {
-                val loadState = exerciseList.loadState.mediator
-                if (loadState?.refresh is LoadState.Loading) {
+                val loadState = exerciseList.loadState
+                if (loadState.refresh is LoadState.Loading) {
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 } else {
                     LazyColumn(
@@ -106,13 +107,13 @@ fun ExercisesScreen() {
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
 
-                        items( exerciseList.itemSnapshotList) { exercise ->
+                        items( exerciseList ) { exercise ->
                             if (exercise != null) {
                               Text(text = "Exercise: ${exercise.name}")
                             }
                         }
                         item {
-                            if (loadState?.refresh is LoadState.Loading) {
+                            if (loadState.refresh is LoadState.Loading) {
                                 CircularProgressIndicator()
                             }
                         }
