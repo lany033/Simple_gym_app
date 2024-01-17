@@ -48,7 +48,7 @@ fun ExercisesScreen() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
+                .padding(paddingValues) 
                 .padding(14.dp),
             verticalArrangement = Arrangement.spacedBy(15.dp)
         ) {

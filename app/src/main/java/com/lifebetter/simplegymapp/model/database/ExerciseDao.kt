@@ -16,6 +16,9 @@ interface ExerciseDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(exercises: List<ExerciseEntity>)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun getExercisesInLanguageEnglish(exercises: List<ExerciseEntity>)
+
     @Query("SELECT * FROM Exerciseentity")
     fun pagingSource(): PagingSource<Int, ExerciseEntity>
 

@@ -87,7 +87,6 @@ dependencies {
     implementation ("androidx.paging:paging-compose:1.0.0-alpha18")
 
     //Hilt
-
     implementation (libs.hilt.android)
     kapt (libs.hilt.compiler)
     implementation (libs.androidx.hilt.navigation.compose)

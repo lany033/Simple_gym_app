@@ -6,12 +6,16 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.lifebetter.simplegymapp.model.getWorkouts
+import com.lifebetter.simplegymapp.ui.components.CardWorkout
 import com.lifebetter.simplegymapp.ui.components.CommonAccordion
 import com.lifebetter.simplegymapp.ui.components.CommonButtonHome
 import com.lifebetter.simplegymapp.ui.components.CommonTextTitle
@@ -23,29 +27,13 @@ import compose.icons.feathericons.Search
 @Composable
 fun HomeScreen(){
 
-    Scaffold(topBar = { MyTopAppBar("Home") }) { padding ->
-        Column(
-            modifier = Modifier
-                .padding(padding)
-                .padding(14.dp)
-        ) {
-            CommonTextTitle("Quick Start", Modifier.padding(top = 5.dp, bottom = 5.dp))
-            CommonButtonHome(
-                text = "Start Empty Workout",
-                modifier = Modifier.fillMaxWidth(),
-                imageVector = Icons.Filled.Add
-            )
-            CommonTextTitle(text = "Routines", Modifier.padding(top = 5.dp, bottom = 5.dp))
-            Row {
-                CommonButtonHome("New Routine", Modifier.weight(1f), FeatherIcons.Clipboard)
-                Spacer(modifier = Modifier.size(7.dp))
-                CommonButtonHome(
-                    text = "Explore",
-                    modifier = Modifier.weight(1f),
-                    imageVector = FeatherIcons.Search
-                )
+    Scaffold(topBar = { MyTopAppBar(title = "Workout")}) {padding ->
+        Column(modifier = Modifier.padding(padding)) {
+            LazyColumn {
+                items(getWorkouts()) { workout ->
+                    CardWorkout(workout.name)
+                }
             }
-            CommonAccordion()
         }
     }
 }

@@ -20,4 +20,5 @@ fun ExerciseDto.toLocalModel(): ExerciseEntity = ExerciseEntity(
     id=0,
     name,
     description
+
 )

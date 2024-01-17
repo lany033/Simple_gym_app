@@ -1,5 +1,7 @@
 package com.lifebetter.simplegymapp.model.remotedata
 
+import com.lifebetter.simplegymapp.model.remotedata.items.Language
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -15,7 +17,7 @@ data class ExerciseDto(
     //val exercise_base_id: Int,
     //@SerialName("id")val id: Int,
     //val images: List<String>,
-    //@Contextual val language: Language,
+    @Contextual val language: Language,
     //val license: String,
     //val license_author: String,
     //val muscles: List<String>,
