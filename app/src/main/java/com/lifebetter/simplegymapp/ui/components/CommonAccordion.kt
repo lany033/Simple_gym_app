@@ -64,7 +64,7 @@ fun AccordionItem(workoutName: String, exercises: String) {
                 Icon(imageVector = FeatherIcons.MoreHorizontal, contentDescription = "more")
             }
             CommonTextContent(exercises)
-            CommonButtonItems("Start Routine")
+            CommonButtonItems("Start Routine", {})
         }
     }
 }
@@ -75,8 +75,8 @@ fun CommonTextContent(exercises: String) {
 }
 
 @Composable
-fun CommonButtonItems(text: String) {
-    Button(onClick = { /*TODO*/ }, shape = RoundedCornerShape(4.dp), modifier = Modifier.fillMaxWidth()) {
+fun CommonButtonItems(text: String, onClick: ()-> Unit) {
+    Button(onClick = { onClick() }, shape = RoundedCornerShape(4.dp), modifier = Modifier.fillMaxWidth()) {
         CommonTextButtons(text = text)
     }
 }

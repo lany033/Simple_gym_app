@@ -26,7 +26,7 @@ import compose.icons.feathericons.Search
 
 
 @Composable
-fun WorkoutScreen( ) {
+fun WorkoutScreen(onClickNewRoutines: () -> Unit) {
 
     Scaffold(topBar = { MyTopAppBar("Home") }) { padding ->
         Column(
@@ -38,16 +38,22 @@ fun WorkoutScreen( ) {
             CommonButtonHome(
                 text = "Start Empty Workout",
                 modifier = Modifier.fillMaxWidth(),
-                imageVector = Icons.Filled.Add
+                imageVector = Icons.Filled.Add,
+                onclick = {}
             )
             CommonTextTitle(text = "Routines", Modifier.padding(top = 5.dp, bottom = 5.dp))
             Row {
-                CommonButtonHome("New Routine", Modifier.weight(1f), FeatherIcons.Clipboard)
+                CommonButtonHome(
+                    "New Routine",
+                    Modifier.weight(1f),
+                    FeatherIcons.Clipboard,
+                    onclick = {onClickNewRoutines()})
                 Spacer(modifier = Modifier.size(7.dp))
                 CommonButtonHome(
                     text = "Explore",
                     modifier = Modifier.weight(1f),
-                    imageVector = FeatherIcons.Search
+                    imageVector = FeatherIcons.Search,
+                    onclick = {}
                 )
             }
             CommonAccordion()

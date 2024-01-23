@@ -46,11 +46,6 @@ fun ProfileScreen(onClickExercises: () -> Unit, onClickMeasures:() -> Unit) {
             Header()
             Body()
             Dashboard(onClickExercises = onClickExercises, onClickMeasures = onClickMeasures)
-            /*
-            Button(onClick = { onClick() }) {
-                Text(text = "ejerciciosTest")
-            }
-             */
         }
     }
 }

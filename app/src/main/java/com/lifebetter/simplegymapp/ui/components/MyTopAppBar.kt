@@ -54,3 +54,24 @@ fun MyTopWithIconsBar(title: String) {
         Divider(color = Color.LightGray, thickness = 0.5.dp)
     }
 }
+
+
+@Composable
+fun MyTopBarWithText(subtitleOne:String, title: String, subtitleTwo:String) {
+    Column() {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            TextButton(onClick = { /*TODO*/ }) {
+                Text(text = subtitleOne, fontSize = 16.sp)
+            }
+            Text(text = title, fontSize = 16.sp)
+            TextButton(onClick = { /*TODO*/ }) {
+                Text(text = subtitleTwo, fontSize = 16.sp)
+            }
+        }
+        Divider(color = Color.LightGray, thickness = 0.5.dp)
+    }
+}
