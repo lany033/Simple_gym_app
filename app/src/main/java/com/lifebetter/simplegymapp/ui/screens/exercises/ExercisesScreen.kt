@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.paging.compose.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -29,6 +28,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
@@ -37,23 +38,24 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.paging.ExperimentalPagingApi
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.LoadState
-import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.rememberAsyncImagePainter
-import com.lifebetter.simplegymapp.ui.components.CommonCirclePhoto
+import com.lifebetter.simplegymapp.model.ExercisesRepository
 import com.lifebetter.simplegymapp.ui.components.CommonMediumText
 import com.lifebetter.simplegymapp.ui.components.CommonTextTitle
 import com.lifebetter.simplegymapp.ui.components.MyTopWithIconsBar
 
 @Composable
 fun ExercisesScreen() {
-    //val exerciseApi: ExerciseService
-    val exerciseViewModel = hiltViewModel<ExercisesViewModel>()
+
     val context = LocalContext.current
-    //val exerciseList = viewModel.exercisePager.collectAsLazyPagingItems()
-    val exerciseList = exerciseViewModel.getExercisesFromPaging().collectAsLazyPagingItems()
+    val viewModel: ExercisesViewModel = viewModel {
+        ExercisesViewModel(ExercisesRepository())
+    }
+
+    val state by viewModel.state.collectAsState()
+
 
     Scaffold(topBar = { MyTopWithIconsBar(title = "Exercises") }) { paddingValues ->
         Column(
@@ -98,38 +100,12 @@ fun ExercisesScreen() {
             }
             Text(text = "Results")
 
-            LaunchedEffect(key1 = exerciseList.loadState) {
-                if (exerciseList.loadState.refresh is LoadState.Error) {
-                    Toast.makeText(
-                        context,
-                        "Error: " + (exerciseList.loadState.refresh as LoadState.Error).error.message,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-
             Box(modifier = Modifier.fillMaxSize()) {
-                val loadState = exerciseList.loadState
-                if (loadState.refresh is LoadState.Loading) {
-                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                } else {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-
-                        items( exerciseList ) { exercise ->
-                            if (exercise != null) {
-                              Text(text = "Exercise: ${exercise.name}")
-
-                            }
-                        }
-                        item {
-                            if (loadState.refresh is LoadState.Loading) {
-                                CircularProgressIndicator()
-                            }
-                        }
+                LazyColumn {
+                    items(state.exercises){
+                        Text(text = "Name: ${it.name}")
                     }
+
                 }
             }
 

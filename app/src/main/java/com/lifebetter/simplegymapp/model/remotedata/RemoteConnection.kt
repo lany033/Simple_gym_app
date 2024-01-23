@@ -1,22 +1,13 @@
 package com.lifebetter.simplegymapp.model.remotedata
 
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
-import javax.inject.Singleton
 
-@Module
-@InstallIn(SingletonComponent::class)
 object RemoteConnection {
 
-    @Singleton
-    @Provides
+
     fun provideHttpLoggingInterceptor(): OkHttpClient =
 
         HttpLoggingInterceptor().run {
@@ -24,8 +15,6 @@ object RemoteConnection {
             OkHttpClient.Builder().addInterceptor(this).build()
         }
 
-    @Singleton
-    @Provides
     fun  provideBuilder(): ExerciseService = Retrofit.Builder()
         .baseUrl("https://wger.de/api/v2/")
         .client(provideHttpLoggingInterceptor())
@@ -33,6 +22,6 @@ object RemoteConnection {
         .build().create(ExerciseService::class.java)
 
 
-    //fun service(): ExerciseService = provideBuilder().create()
+    fun service(): ExerciseService = provideBuilder()
 
 }
