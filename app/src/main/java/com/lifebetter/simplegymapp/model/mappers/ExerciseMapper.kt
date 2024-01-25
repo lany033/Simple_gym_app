@@ -1,8 +1,10 @@
 package com.lifebetter.simplegymapp.model.mappers
 
+import android.provider.MediaStore
 import com.lifebetter.simplegymapp.domain.Exercise
-import com.lifebetter.simplegymapp.model.database.ExerciseEntity
 import com.lifebetter.simplegymapp.model.remotedata.ExerciseDto
+import com.lifebetter.simplegymapp.model.remotedata.items.Image
+import com.lifebetter.simplegymapp.model.remotedata.items.Muscle
 
 /*
 fun ExerciseEntity.toExercise(): Exercise {
@@ -11,14 +13,29 @@ fun ExerciseEntity.toExercise(): Exercise {
         description = description
     )
 }
+ */
+/*
+fun ExerciseDto.toExercise() = ExerciseDto(
+    name = name,
+    description = description,
+    images = images,
+    muscles = muscles
+)
 
  */
 
-fun List<ExerciseDto>.toLocalModel(): List<ExerciseEntity> = map { it.toLocalModel() }
 
-fun ExerciseDto.toLocalModel(): ExerciseEntity = ExerciseEntity(
-    id=0,
-    name,
-    description
+//fun List<ExerciseDto>.toLocalModel(): List<Exercise> = map { it.toLocalModel() }
+
+fun ExerciseDto.toLocalModel(): Exercise = Exercise(
+
+    name = name,
+    description = description,
+    images = images.toImage(),
+    muscles = muscles.map { it.name }.firstOrNull().orEmpty()
 
 )
+
+val icono = "https://static.thenounproject.com/png/3347062-200.png"
+fun List<Image>.toImage(): String = map { it.image }.joinToString{it}.ifEmpty { icono }
+

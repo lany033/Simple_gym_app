@@ -4,8 +4,6 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.serialization.Serializable
 
-
-@Serializable
 data class ExerciseResult(
     val count: Int,
     val next: String?,

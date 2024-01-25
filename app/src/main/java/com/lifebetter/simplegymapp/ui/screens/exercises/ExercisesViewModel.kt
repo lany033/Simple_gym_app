@@ -2,7 +2,9 @@ package com.lifebetter.simplegymapp.ui.screens.exercises
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.lifebetter.simplegymapp.domain.Exercise
 import com.lifebetter.simplegymapp.model.ExercisesRepository
+import com.lifebetter.simplegymapp.model.mappers.toLocalModel
 import com.lifebetter.simplegymapp.model.remotedata.ExerciseDto
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,13 +20,13 @@ class ExercisesViewModel(private val exercisesRepository: ExercisesRepository): 
     init {
         viewModelScope.launch {
             _state.value = ExercisesState(exercises = exercisesRepository.getExercises().results.map {
-                it
+                it.toLocalModel()
             })
         }
     }
 
     //interface
     data class ExercisesState(
-        val exercises: List<ExerciseDto> = emptyList()
+        val exercises: List<Exercise> = emptyList()
     )
 }
