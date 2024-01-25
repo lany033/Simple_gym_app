@@ -1,7 +1,9 @@
 package com.lifebetter.simplegymapp.ui.screens.exercises
 
 import android.util.Log
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,9 +23,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -31,8 +31,13 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -50,13 +55,13 @@ import com.lifebetter.simplegymapp.ui.components.MyTopWithIconsBar
 @Composable
 fun ExercisesScreen() {
 
+    var showButton by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val viewModel: ExercisesViewModel = viewModel {
         ExercisesViewModel(ExercisesRepository())
     }
 
     val state by viewModel.state.collectAsState()
-
 
     Scaffold(topBar = { MyTopWithIconsBar(title = "Exercises") }) { paddingValues ->
         Column(
@@ -99,7 +104,7 @@ fun ExercisesScreen() {
                     Text(text = "All Muscles", fontSize = 16.sp)
                 }
             }
-            Text(text = "Results")
+            Text(text = "Ejercicios Populares")
 
             Box(modifier = Modifier.fillMaxSize()) {
                 LazyColumn {
@@ -110,11 +115,26 @@ fun ExercisesScreen() {
                             imageUrl = it.images,
                             description = it.name,
                             width = 50,
-                            height = 50
+                            height = 50,
+                            onExerciseClick = { showButton = true }
                         )
                         CommonDivider()
                     }
 
+                }
+                if (showButton) {
+                    Button(
+                        onClick = { showButton = false },
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .fillMaxWidth()
+                            .height(40.dp)
+                            .animateContentSize()
+                            .align(Alignment.BottomCenter),
+                        shape = RoundedCornerShape(5.dp)
+                    ) {
+                        Text(text = "Agrega 1 ejercicio")
+                    }
                 }
             }
 
@@ -123,8 +143,9 @@ fun ExercisesScreen() {
 }
 
 @Composable
-fun ExerciseItem(nameExercise: String, muscle: String, imageUrl: String, description: String, width: Int, height: Int){
+fun ExerciseItem(nameExercise: String, muscle: String, imageUrl: String, description: String, width: Int, height: Int, onExerciseClick:()->Unit){
     Card(modifier = Modifier
+        .clickable(onClick = onExerciseClick)
         .fillMaxWidth()
         .padding(top = 10.dp, bottom = 10.dp), colors = CardDefaults.cardColors(containerColor = Color.Transparent)) {
         Row {
@@ -153,3 +174,4 @@ fun ImageWorkout(url: String, contentDescription: String?, width: Int, height: I
             .height(height.dp)
     )
 }
+
