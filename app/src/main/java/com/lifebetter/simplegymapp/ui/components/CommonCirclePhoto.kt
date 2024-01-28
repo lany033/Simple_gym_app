@@ -14,6 +14,11 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun CommonCirclePhoto(@DrawableRes painter: Int, size: Int) {
     Card(shape = CircleShape) {
-        Image(painter = painterResource(id = painter), contentDescription = "photo", modifier = Modifier.size(size.dp), contentScale = ContentScale.Crop)
+        Image(
+            painter = painterResource(id = painter),
+            contentDescription = "photo",
+            modifier = Modifier.size(size.dp),
+            contentScale = ContentScale.Crop
+        )
     }
 }

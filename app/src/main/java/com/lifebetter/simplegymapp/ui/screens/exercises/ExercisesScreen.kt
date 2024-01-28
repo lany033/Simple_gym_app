@@ -24,44 +24,62 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import com.lifebetter.simplegymapp.model.ExercisesRepository
+import com.lifebetter.simplegymapp.ui.components.CommonCirclePhoto
 import com.lifebetter.simplegymapp.ui.components.CommonDivider
 import com.lifebetter.simplegymapp.ui.components.CommonMediumText
 import com.lifebetter.simplegymapp.ui.components.CommonTextTitle
+import com.lifebetter.simplegymapp.ui.components.MyTopBarWithOneText
 import com.lifebetter.simplegymapp.ui.components.MyTopWithIconsBar
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExercisesScreen() {
+    val scope = rememberCoroutineScope()
 
-    var showButton by remember { mutableStateOf(false) }
-    val context = LocalContext.current
+    val sheetEquipmentState = rememberModalBottomSheetState()
+    var showBottomEquipmentSheet by remember { mutableStateOf(false) }
+
+    val sheetMuscleState = rememberModalBottomSheetState()
+    var showBottomMuscleSheet by remember { mutableStateOf(false) }
+
+    var showButtonAddExercise by remember { mutableStateOf(false) }
+
     val viewModel: ExercisesViewModel = viewModel {
         ExercisesViewModel(ExercisesRepository())
     }
 
+    val muscleViewModel: MuscleViewModel = viewModel {
+        MuscleViewModel(ExercisesRepository())
+    }
+
     val state by viewModel.state.collectAsState()
+    val equipment by muscleViewModel.muscleState.collectAsState()
 
     Scaffold(topBar = { MyTopWithIconsBar(title = "Exercises") }) { paddingValues ->
         Column(
@@ -89,7 +107,9 @@ fun ExercisesScreen() {
                 })
             Row() {
                 Button(
-                    onClick = { /*TODO*/ }, shape = RoundedCornerShape(4.dp), modifier = Modifier
+                    onClick = { showBottomEquipmentSheet = true },
+                    shape = RoundedCornerShape(4.dp),
+                    modifier = Modifier
                         .weight(1f)
                         .size(40.dp)
                 ) {
@@ -97,7 +117,7 @@ fun ExercisesScreen() {
                 }
                 Spacer(modifier = Modifier.size(15.dp))
                 Button(
-                    onClick = { /*TODO*/ }, shape = RoundedCornerShape(4.dp), modifier = Modifier
+                    onClick = { showBottomMuscleSheet = true }, shape = RoundedCornerShape(4.dp), modifier = Modifier
                         .weight(1f)
                         .size(40.dp)
                 ) {
@@ -108,7 +128,7 @@ fun ExercisesScreen() {
 
             Box(modifier = Modifier.fillMaxSize()) {
                 LazyColumn {
-                    items(state.exercises){
+                    items(state.exercises) {
                         ExerciseItem(
                             nameExercise = it.name,
                             muscle = it.muscles,
@@ -116,15 +136,15 @@ fun ExercisesScreen() {
                             description = it.name,
                             width = 50,
                             height = 50,
-                            onExerciseClick = { showButton = true }
+                            onExerciseClick = { showButtonAddExercise = true }
                         )
                         CommonDivider()
                     }
 
                 }
-                if (showButton) {
+                if (showButtonAddExercise) {
                     Button(
-                        onClick = { showButton = false },
+                        onClick = { showButtonAddExercise = false },
                         modifier = Modifier
                             .padding(8.dp)
                             .fillMaxWidth()
@@ -138,19 +158,97 @@ fun ExercisesScreen() {
                 }
             }
 
+            if (showBottomEquipmentSheet) {
+                ModalBottomSheet(
+                    onDismissRequest = {
+                        showBottomEquipmentSheet = false
+                    },
+                    sheetState = sheetEquipmentState
+                ) {
+                    // Sheet content
+                    MyTopBarWithOneText(
+                        title = "Tipo de categoria",
+                        subtitleTwo = "Cancel",
+                        onClickCancel = {
+                            scope.launch { sheetEquipmentState.hide() }.invokeOnCompletion {
+                                if (!sheetEquipmentState.isVisible) {
+                                    showBottomEquipmentSheet = false
+                                }
+                            }
+                        }
+                    )
+                    LazyColumn {
+                        items(getEquipments()) {
+                            CommonDivider()
+                            EquipmentItem(nameEquipment = it.name, imageEquipment = it.image)
+                        }
+                    }
+
+                }
+
+            }
+
+            if (showBottomMuscleSheet) {
+                ModalBottomSheet(
+                    onDismissRequest = {
+                        showBottomMuscleSheet = false
+                    },
+                    sheetState = sheetMuscleState
+                ) {
+                    // Sheet content
+                    MyTopBarWithOneText(
+                        title = "Grupo Muscular",
+                        subtitleTwo = "Cancel",
+                        onClickCancel = {
+                            scope.launch { sheetMuscleState.hide() }.invokeOnCompletion {
+                                if (!sheetMuscleState.isVisible) {
+                                    showBottomMuscleSheet = false
+                                }
+                            }
+                        }
+                    )
+                    LazyColumn {
+                        items(getMuscles()) {
+                            CommonDivider()
+                            EquipmentItem(nameEquipment = it.name, imageEquipment = it.image)
+                        }
+                    }
+
+                }
+
+            }
         }
     }
 }
 
 @Composable
-fun ExerciseItem(nameExercise: String, muscle: String, imageUrl: String, description: String, width: Int, height: Int, onExerciseClick:()->Unit){
-    Card(modifier = Modifier
-        .clickable(onClick = onExerciseClick)
-        .fillMaxWidth()
-        .padding(top = 10.dp, bottom = 10.dp), colors = CardDefaults.cardColors(containerColor = Color.Transparent)) {
+fun ExerciseItem(
+    nameExercise: String,
+    muscle: String,
+    imageUrl: String,
+    description: String,
+    width: Int,
+    height: Int,
+    onExerciseClick: () -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .clickable(onClick = onExerciseClick)
+            .fillMaxWidth()
+            .padding(top = 10.dp, bottom = 10.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent)
+    ) {
         Row {
-            Card(shape = CircleShape, colors = CardDefaults.cardColors(containerColor = Color.White)) {
-                ImageWorkout(url = imageUrl, contentDescription = description, width = width, height = height)
+            Card(
+                shape = CircleShape,
+                colors = CardDefaults.cardColors(containerColor = Color.White)
+            ) {
+                ImageWorkout(
+                    url = imageUrl,
+                    contentDescription = description,
+                    width = width,
+                    height = height
+                )
             }
             Spacer(modifier = Modifier.size(20.dp))
             Column {
@@ -173,5 +271,22 @@ fun ImageWorkout(url: String, contentDescription: String?, width: Int, height: I
             .width(width.dp)
             .height(height.dp)
     )
+}
+
+@Composable
+fun EquipmentItem(nameEquipment: String, imageEquipment: Int) {
+    Card(
+        modifier = Modifier
+            .clickable(onClick = { })
+            .fillMaxWidth()
+            .padding(10.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent)
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            CommonCirclePhoto(painter = imageEquipment, size = 56)
+            Spacer(modifier = Modifier.size(20.dp))
+            Text(text = nameEquipment)
+        }
+    }
 }
 

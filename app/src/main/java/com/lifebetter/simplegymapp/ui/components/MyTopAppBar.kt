@@ -1,6 +1,7 @@
 package com.lifebetter.simplegymapp.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -57,7 +58,7 @@ fun MyTopWithIconsBar(title: String) {
 
 
 @Composable
-fun MyTopBarWithText(subtitleOne:String, title: String, subtitleTwo:String) {
+fun MyTopBarWithTwoText(subtitleOne:String, title: String, subtitleTwo:String) {
     Column() {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -69,6 +70,23 @@ fun MyTopBarWithText(subtitleOne:String, title: String, subtitleTwo:String) {
             }
             Text(text = title, fontSize = 16.sp)
             TextButton(onClick = { /*TODO*/ }) {
+                Text(text = subtitleTwo, fontSize = 16.sp)
+            }
+        }
+        Divider(color = Color.LightGray, thickness = 0.5.dp)
+    }
+}
+
+
+
+@Composable
+fun MyTopBarWithOneText(title: String, subtitleTwo:String, onClickCancel:()-> Unit) {
+    Column() {
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Text(text = title, fontSize = 16.sp, modifier = Modifier.align(Alignment.Center))
+            TextButton(onClick = onClickCancel, modifier = Modifier.align(Alignment.CenterEnd)) {
                 Text(text = subtitleTwo, fontSize = 16.sp)
             }
         }
