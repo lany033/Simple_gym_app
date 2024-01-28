@@ -100,6 +100,9 @@ dependencies {
     implementation ("androidx.room:room-ktx:2.6.1")
     implementation ("androidx.room:room-paging:2.6.1")
 
+    //chart
+    implementation ("com.github.tehras:charts:0.2.4-alpha")
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)

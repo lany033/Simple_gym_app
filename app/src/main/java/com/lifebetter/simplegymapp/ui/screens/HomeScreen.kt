@@ -14,7 +14,7 @@ import com.lifebetter.simplegymapp.ui.components.MyTopAppBar
 @Composable
 fun HomeScreen(){
 
-    Scaffold(topBar = { MyTopAppBar(title = "Workout")}) {padding ->
+    Scaffold(topBar = { MyTopAppBar(title = "Home")}) {padding ->
         Column(modifier = Modifier.padding(padding)) {
             LazyColumn {
                 items(getWorkouts()) { workout ->

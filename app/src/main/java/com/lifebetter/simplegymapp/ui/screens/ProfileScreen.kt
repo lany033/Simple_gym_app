@@ -1,6 +1,5 @@
 package com.lifebetter.simplegymapp.ui.screens
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,20 +7,28 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.github.tehras.charts.bar.BarChart
+import com.github.tehras.charts.bar.BarChartData
+import com.github.tehras.charts.bar.renderer.label.SimpleValueDrawer
 import com.lifebetter.simplegymapp.R
+import com.lifebetter.simplegymapp.model.statistics.Statistics
 import com.lifebetter.simplegymapp.ui.components.CommonCirclePhoto
 import com.lifebetter.simplegymapp.ui.components.CommonLittleText
 import com.lifebetter.simplegymapp.ui.components.CommonTextButtons
@@ -35,7 +42,7 @@ import compose.icons.fontawesomeicons.solid.Dumbbell
 import compose.icons.fontawesomeicons.solid.Ruler
 
 @Composable
-fun ProfileScreen(onClickExercises: () -> Unit, onClickMeasures:() -> Unit) {
+fun ProfileScreen(onClickExercises: () -> Unit, onClickMeasures: () -> Unit) {
     Scaffold(topBar = { MyTopWithIconsBar(title = "lany033") }) { padding ->
         Column(
             modifier = Modifier
@@ -44,7 +51,7 @@ fun ProfileScreen(onClickExercises: () -> Unit, onClickMeasures:() -> Unit) {
                 .padding(14.dp), verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
             Header()
-            Body()
+            Chart()
             Dashboard(onClickExercises = onClickExercises, onClickMeasures = onClickMeasures)
         }
     }
@@ -54,11 +61,11 @@ fun ProfileScreen(onClickExercises: () -> Unit, onClickMeasures:() -> Unit) {
 fun Header() {
     Row {
         CommonCirclePhoto(R.drawable.perfilphoto, 70)
-
+        Spacer(modifier = Modifier.size(12.dp))
         Column {
             CommonTextTitle(
                 text = "Melanie Mantilla",
-                modifier = Modifier.padding(5.dp)
+                modifier = Modifier.padding(1.dp)
             )
             Box {
                 Column {
@@ -71,25 +78,41 @@ fun Header() {
 }
 
 @Composable
-fun Body() {
-    Column {
-        Row {
-            Row {
-                Text(text = "5 hours")
-                Text(text = "this week")
-            }
-            Text(text = "Last 12 weeks")
-        }
-        Image(
-            painter = painterResource(id = R.drawable.statistics),
-            contentDescription = "statis",
-            modifier = Modifier.size(200.dp)
+fun Chart() {
+    Card(modifier = Modifier
+        .fillMaxWidth()
+        .padding(vertical = 10.dp), colors = CardDefaults.cardColors(containerColor = Color.Transparent)) {
+
+        val data: List<Statistics> = listOf(
+            Statistics("lunes", 2f),
+            Statistics("Martes", 1f),
+            Statistics("Miercoles", 3f),
+            Statistics("Jueves", 2f),
+            Statistics("Viernes", 4f)
         )
-        Row {
-            CommonButtonProfileBody("Duration")
-            CommonButtonProfileBody("Volumen")
-            CommonButtonProfileBody("Reps")
+
+        var barras = ArrayList<BarChartData.Bar>()
+
+        data.mapIndexed { index, statistics ->
+            barras.add(
+                BarChartData.Bar(
+                    label = statistics.dia,
+                    value = statistics.hours,
+                    color = Color.Blue
+                )
+            )
         }
+        Text(text = "2 horas esta semana")
+        BarChart(
+            barChartData = BarChartData(bars = barras),
+            modifier = Modifier
+                .padding(vertical = 15.dp)
+                .height(200.dp)
+                .fillMaxWidth(),
+            labelDrawer = SimpleValueDrawer(
+                drawLocation = SimpleValueDrawer.DrawLocation.XAxis
+            )
+        )
     }
 }
 

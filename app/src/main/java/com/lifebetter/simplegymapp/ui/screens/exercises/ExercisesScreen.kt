@@ -74,12 +74,8 @@ fun ExercisesScreen() {
         ExercisesViewModel(ExercisesRepository())
     }
 
-    val muscleViewModel: MuscleViewModel = viewModel {
-        MuscleViewModel(ExercisesRepository())
-    }
-
     val state by viewModel.state.collectAsState()
-    val equipment by muscleViewModel.muscleState.collectAsState()
+
 
     Scaffold(topBar = { MyTopWithIconsBar(title = "Exercises") }) { paddingValues ->
         Column(
@@ -105,6 +101,7 @@ fun ExercisesScreen() {
                         contentDescription = "search"
                     )
                 })
+
             Row() {
                 Button(
                     onClick = { showBottomEquipmentSheet = true },

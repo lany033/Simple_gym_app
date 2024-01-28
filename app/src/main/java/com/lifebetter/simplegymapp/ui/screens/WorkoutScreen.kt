@@ -28,7 +28,7 @@ import compose.icons.feathericons.Search
 @Composable
 fun WorkoutScreen(onClickNewRoutines: () -> Unit) {
 
-    Scaffold(topBar = { MyTopAppBar("Home") }) { padding ->
+    Scaffold(topBar = { MyTopAppBar("Workout") }) { padding ->
         Column(
             modifier = Modifier
                 .padding(padding)
