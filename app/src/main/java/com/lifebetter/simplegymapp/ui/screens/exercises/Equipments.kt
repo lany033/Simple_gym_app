@@ -8,7 +8,7 @@ data class Equipment(val name: String, val image: Int, val id: Int)
 fun getEquipments(): List<Equipment> {
     return listOf(
         Equipment("All equipment", R.drawable.all,11 ),
-        Equipment("Bodyweight exercise", R.drawable.bodyweight,7 ),
+        Equipment("none (bodyweight exercise)", R.drawable.bodyweight,7 ),
         Equipment("Barbell", R.drawable.barbell,1),
         Equipment("Bench", R.drawable.bench,8),
         Equipment("Dumbbell", R.drawable.dumbbell,3 ),

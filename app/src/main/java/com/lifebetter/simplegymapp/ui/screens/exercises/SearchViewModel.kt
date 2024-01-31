@@ -5,15 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lifebetter.simplegymapp.domain.Exercise
 import com.lifebetter.simplegymapp.model.ExercisesRepository
-import com.lifebetter.simplegymapp.model.mappers.toId
 import com.lifebetter.simplegymapp.model.mappers.toLocalModel
 import com.lifebetter.simplegymapp.model.mappers.toText
 import com.lifebetter.simplegymapp.model.mappers.toTextEquipment
-import com.lifebetter.simplegymapp.model.remotedata.ExerciseDto
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
@@ -27,21 +23,92 @@ class SearchViewModel(private val exercisesRepository: ExercisesRepository) : Vi
     private val _searchText = MutableStateFlow("")
     val searchText = _searchText.asStateFlow()
 
-    private val _equipmentId = MutableStateFlow(0)
+    private val _equipmentId = MutableStateFlow(11)
     val equipmentId = _equipmentId.asStateFlow()
 
-    private val _isVisible = MutableStateFlow(false)
-    val isVisible = _isVisible.asStateFlow()
+    private val _muscleId = MutableStateFlow(3)
+
 
     private val _exerciseList = MutableStateFlow(ExerciseListState())
-    /*
-    val exerciseList = combine(searchText,equipmentId,_exerciseList){text, id, exercises ->
-        if (text.isBlank()) {
+    val exerciseList = combine(searchText,equipmentId,_muscleId,_exerciseList){text, equipmentId,muscleId, exercises ->
+        if (equipmentId == 11 && muscleId == 3 && text.isBlank()){
             ExerciseListState(exerciseList = exercises.exerciseList)
-        } else if (id == 1){
+        } else if (equipmentId == 1){
             ExerciseListState(exerciseList = exercises.exerciseList.filter { exercise ->
                 exercise.equipment.toTextEquipment().contains("Barbell")
             })
+        } else if (equipmentId == 2){
+            ExerciseListState(exerciseList = exercises.exerciseList.filter { exercise ->
+                exercise.equipment.toTextEquipment().contains("SZ-Bar")
+            })
+        } else if (equipmentId == 3){
+            ExerciseListState(exerciseList = exercises.exerciseList.filter { exercise ->
+                exercise.equipment.toTextEquipment().contains("Dumbbell")
+            })
+        } else if (equipmentId == 4){
+            ExerciseListState(exerciseList = exercises.exerciseList.filter { exercise ->
+                exercise.equipment.toTextEquipment().contains("Gym mat")
+            })
+        } else if (equipmentId == 5){
+            ExerciseListState(exerciseList = exercises.exerciseList.filter { exercise ->
+                exercise.equipment.toTextEquipment().contains("Swiss Ball")
+            })
+        } else if (equipmentId == 6){
+            ExerciseListState(exerciseList = exercises.exerciseList.filter { exercise ->
+                exercise.equipment.toTextEquipment().contains("Pull-up bar")
+            })
+        } else if (equipmentId == 7){
+            ExerciseListState(exerciseList = exercises.exerciseList.filter { exercise ->
+                exercise.equipment.toTextEquipment().contains("none (bodyweight exercise)")
+            })
+        }else if (equipmentId == 8){
+            ExerciseListState(exerciseList = exercises.exerciseList.filter { exercise ->
+                exercise.equipment.toTextEquipment().contains("Bench")
+            })
+        }else if (equipmentId == 9){
+            ExerciseListState(exerciseList = exercises.exerciseList.filter { exercise ->
+                exercise.equipment.toTextEquipment().contains("Incline bench")
+            })
+        }else if (equipmentId == 10){
+            ExerciseListState(exerciseList = exercises.exerciseList.filter { exercise ->
+                exercise.equipment.toTextEquipment().contains("Kettlebell")
+            })
+        } else if (muscleId == 1){
+            ExerciseListState(exerciseList = exercises.exerciseList.filter { exercise ->
+                exercise.muscles.toText().contains("Biceps brachii")
+            })
+        } else if (muscleId == 2){
+            ExerciseListState(exerciseList = exercises.exerciseList.filter { exercise ->
+                exercise.muscles.toText().contains("Anterior deltoid")
+            })
+        } else if (muscleId == 4){
+            ExerciseListState(exerciseList = exercises.exerciseList.filter { exercise ->
+                exercise.muscles.toText().contains("Pectoralis major")
+            })
+        } else if (muscleId == 5){
+            ExerciseListState(exerciseList = exercises.exerciseList.filter { exercise ->
+                exercise.muscles.toText().contains("Triceps brachii")
+            })
+        } else if (muscleId == 6){
+            ExerciseListState(exerciseList = exercises.exerciseList.filter { exercise ->
+                exercise.muscles.toText().contains("Rectus abdominis")
+            })
+        } else if (muscleId == 7){
+            ExerciseListState(exerciseList = exercises.exerciseList.filter { exercise ->
+                exercise.muscles.toText().contains("Gastrocnemius")
+            })
+        }else if (muscleId == 8){
+            ExerciseListState(exerciseList = exercises.exerciseList.filter { exercise ->
+                exercise.muscles.toText().contains("Gluteus maximus")
+            })
+        }else if (muscleId == 10){
+            ExerciseListState(exerciseList = exercises.exerciseList.filter { exercise ->
+                exercise.muscles.toText().contains("Quadriceps femoris")
+            })
+        }else if (muscleId == 11){
+            ExerciseListState(exerciseList = exercises.exerciseList.filter { exercise ->
+                exercise.muscles.toText().contains("Biceps femoris")
+            })
         }
         else {
             ExerciseListState(exerciseList = exercises.exerciseList.filter { exercise ->
@@ -54,59 +121,8 @@ class SearchViewModel(private val exercisesRepository: ExercisesRepository) : Vi
         initialValue = _exerciseList.value
     )
 
-     */
-
-    val exerciseList = searchText.combine(_exerciseList) { text, exercises  ->
-        if (text.isBlank()) {
-            ExerciseListState(exerciseList = exercises.exerciseList)
-        }
-        else {
-            ExerciseListState(exerciseList = exercises.exerciseList.filter { exercise ->
-                exercise.name.uppercase().contains(text.trim().uppercase())
-            })
-        }
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = _exerciseList.value
-    )
-
-    val exerciseListByEquipment = equipmentId.combine(_exerciseList){id, exercises ->
-        if (id == 1){
-            ExerciseListState(exerciseList = exercises.exerciseList.filter { exercise ->
-            exercise.equipment.toTextEquipment().contains("Barbell")
-            })
-        } else {
-            ExerciseListState(exerciseList = exercises.exerciseList)
-        }
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = _exerciseList.value
-    )
-
-
-    /*
-    private val _searchByEquipment = MutableStateFlow(ExerciseListState())
-    val searchByEquipment = _equipment.combine(_exerciseList){ id, exercise ->
-        if ( id == 1){
-            ExerciseListState(exerciseList = exercise.exerciseList.filter { exercise ->
-                exercise.equipment.toId().equals(1)
-            })
-        } else {
-            ExerciseListState(exerciseList = exercise.exerciseList)
-        }
-
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = _exerciseList.value
-    )
-
-     */
     fun onSearchTextChange(text: String) {
         _searchText.value = text
-        _isVisible.value = true
         Log.d("onSearch", text)
     }
 
@@ -119,7 +135,11 @@ class SearchViewModel(private val exercisesRepository: ExercisesRepository) : Vi
 
     fun onFilterByEquipment(id: Int) {
         _equipmentId.value = id
-        _isVisible.value = false
+        Log.d("id",_equipmentId.value.toString())
+    }
+
+    fun onFilterByMuscle(id: Int) {
+        _muscleId.value = id
         Log.d("id",_equipmentId.value.toString())
     }
 
@@ -132,16 +152,10 @@ class SearchViewModel(private val exercisesRepository: ExercisesRepository) : Vi
     }
 
     data class ExerciseListState(
-        val isVisible: Boolean = false,
+
         val exerciseList: List<Exercise> = emptyList(),
 
     )
 }
 
 
-
-/*
-
-
-
- */

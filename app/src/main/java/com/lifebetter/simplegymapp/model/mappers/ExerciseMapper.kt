@@ -6,6 +6,7 @@ import com.lifebetter.simplegymapp.model.remotedata.ExerciseDto
 import com.lifebetter.simplegymapp.model.remotedata.items.Equipment
 import com.lifebetter.simplegymapp.model.remotedata.items.Image
 import com.lifebetter.simplegymapp.model.remotedata.items.Muscle
+import com.lifebetter.simplegymapp.ui.screens.exercises.Muscles
 
 /*
 fun ExerciseEntity.toExercise(): Exercise {
@@ -43,7 +44,7 @@ fun List<Image>.toImage(): String = map { it.image }.joinToString{it}.ifEmpty { 
 
 fun List<Muscle>.toText(): String = map { it.name }.joinToString { it }
 
-fun List<Equipment>.toId(): List<Int> = map { it.id }
+fun List<Muscles>.toEquipmentText(): String = map { it.name }.joinToString { it }
 
 fun List<Equipment>.toTextEquipment(): String = map { it.name }.joinToString { it }
 

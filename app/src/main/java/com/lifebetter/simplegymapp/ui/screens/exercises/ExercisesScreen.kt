@@ -76,16 +76,6 @@ fun ExercisesScreen() {
     val searchText: String by searchViewModel.searchText.collectAsState()
     val isSearching by searchViewModel.isSearching.collectAsState()
     val exerciseList by searchViewModel.exerciseList.collectAsState()
-    val equipmentId by searchViewModel.equipmentId.collectAsState()
-    val exerciseListByEquipment by searchViewModel.exerciseListByEquipment.collectAsState()
-
-    val viewModel: ExercisesViewModel = viewModel {
-        ExercisesViewModel(ExercisesRepository())
-    }
-
-    val state by viewModel.state.collectAsState()
-
-    val isVisible by searchViewModel.isVisible.collectAsState()
 
     Scaffold(topBar = { MyTopWithIconsBar(title = "Exercises") }) { paddingValues ->
         Column(
@@ -129,13 +119,20 @@ fun ExercisesScreen() {
 
             Text(text = "Ejercicios Populares")
             Box(modifier = Modifier.fillMaxSize()) {
-
-                if (isVisible){
-                    ExerciseList(listExercises = exerciseList.exerciseList, onShowButtonAddExercise = {showButtonAddExercise = false})
-                } else {
-                    ExerciseList(listExercises = exerciseListByEquipment.exerciseList, onShowButtonAddExercise = {showButtonAddExercise = false})
+                LazyColumn {
+                    items(exerciseList.exerciseList) {
+                        ExerciseItem(
+                            nameExercise = it.name,
+                            muscle = it.muscles.toText(),
+                            imageUrl = it.images,
+                            description = it.name,
+                            width = 50,
+                            height = 50,
+                            onExerciseClick = { showButtonAddExercise = true }
+                        )
+                        CommonDivider()
+                    }
                 }
-
                 if (showButtonAddExercise) {
                     Button(
                         onClick = { showButtonAddExercise = false },
@@ -211,7 +208,7 @@ fun ExercisesScreen() {
                                 nameEquipment = it.name,
                                 imageEquipment = it.image,
                                 id = it.id,
-                                onClickEquipment = {})
+                                onClickEquipment = searchViewModel::onFilterByMuscle)
                         }
                     }
 
