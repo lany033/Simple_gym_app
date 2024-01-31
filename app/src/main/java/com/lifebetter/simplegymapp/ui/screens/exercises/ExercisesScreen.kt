@@ -19,17 +19,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -43,12 +41,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
+import com.lifebetter.simplegymapp.domain.Exercise
 import com.lifebetter.simplegymapp.model.ExercisesRepository
+import com.lifebetter.simplegymapp.model.mappers.toText
 import com.lifebetter.simplegymapp.ui.components.CommonCirclePhoto
 import com.lifebetter.simplegymapp.ui.components.CommonDivider
 import com.lifebetter.simplegymapp.ui.components.CommonMediumText
@@ -70,12 +69,23 @@ fun ExercisesScreen() {
 
     var showButtonAddExercise by remember { mutableStateOf(false) }
 
+    val searchViewModel: SearchViewModel = viewModel {
+        SearchViewModel(ExercisesRepository())
+    }
+
+    val searchText: String by searchViewModel.searchText.collectAsState()
+    val isSearching by searchViewModel.isSearching.collectAsState()
+    val exerciseList by searchViewModel.exerciseList.collectAsState()
+    val equipmentId by searchViewModel.equipmentId.collectAsState()
+    val exerciseListByEquipment by searchViewModel.exerciseListByEquipment.collectAsState()
+
     val viewModel: ExercisesViewModel = viewModel {
         ExercisesViewModel(ExercisesRepository())
     }
 
     val state by viewModel.state.collectAsState()
 
+    val isVisible by searchViewModel.isVisible.collectAsState()
 
     Scaffold(topBar = { MyTopWithIconsBar(title = "Exercises") }) { paddingValues ->
         Column(
@@ -86,21 +96,14 @@ fun ExercisesScreen() {
             verticalArrangement = Arrangement.spacedBy(15.dp)
         ) {
             TextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .size(40.dp),
-                shape = RoundedCornerShape(4.dp),
-                textStyle = TextStyle(fontSize = 16.sp),
+                value = searchText,
+                onValueChange = searchViewModel::onSearchTextChange,
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = { Text(text = "Search") },
                 singleLine = true,
-                value = " ",
-                onValueChange = {},
-                placeholder = { Text(text = "Search exercise", fontSize = 16.sp) },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Search,
-                        contentDescription = "search"
-                    )
-                })
+                maxLines = 1,
+                colors = TextFieldDefaults.colors()
+            )
 
             Row() {
                 Button(
@@ -114,31 +117,25 @@ fun ExercisesScreen() {
                 }
                 Spacer(modifier = Modifier.size(15.dp))
                 Button(
-                    onClick = { showBottomMuscleSheet = true }, shape = RoundedCornerShape(4.dp), modifier = Modifier
+                    onClick = { showBottomMuscleSheet = true },
+                    shape = RoundedCornerShape(4.dp),
+                    modifier = Modifier
                         .weight(1f)
                         .size(40.dp)
                 ) {
                     Text(text = "All Muscles", fontSize = 16.sp)
                 }
             }
+
             Text(text = "Ejercicios Populares")
-
             Box(modifier = Modifier.fillMaxSize()) {
-                LazyColumn {
-                    items(state.exercises) {
-                        ExerciseItem(
-                            nameExercise = it.name,
-                            muscle = it.muscles,
-                            imageUrl = it.images,
-                            description = it.name,
-                            width = 50,
-                            height = 50,
-                            onExerciseClick = { showButtonAddExercise = true }
-                        )
-                        CommonDivider()
-                    }
 
+                if (isVisible){
+                    ExerciseList(listExercises = exerciseList.exerciseList, onShowButtonAddExercise = {showButtonAddExercise = false})
+                } else {
+                    ExerciseList(listExercises = exerciseListByEquipment.exerciseList, onShowButtonAddExercise = {showButtonAddExercise = false})
                 }
+
                 if (showButtonAddExercise) {
                     Button(
                         onClick = { showButtonAddExercise = false },
@@ -154,7 +151,6 @@ fun ExercisesScreen() {
                     }
                 }
             }
-
             if (showBottomEquipmentSheet) {
                 ModalBottomSheet(
                     onDismissRequest = {
@@ -177,7 +173,11 @@ fun ExercisesScreen() {
                     LazyColumn {
                         items(getEquipments()) {
                             CommonDivider()
-                            EquipmentItem(nameEquipment = it.name, imageEquipment = it.image)
+                            EquipmentItem(
+                                nameEquipment = it.name,
+                                imageEquipment = it.image,
+                                id = it.id,
+                                onClickEquipment = searchViewModel::onFilterByEquipment)
                         }
                     }
 
@@ -207,7 +207,11 @@ fun ExercisesScreen() {
                     LazyColumn {
                         items(getMuscles()) {
                             CommonDivider()
-                            EquipmentItem(nameEquipment = it.name, imageEquipment = it.image)
+                            EquipmentItem(
+                                nameEquipment = it.name,
+                                imageEquipment = it.image,
+                                id = it.id,
+                                onClickEquipment = {})
                         }
                     }
 
@@ -215,6 +219,7 @@ fun ExercisesScreen() {
 
             }
         }
+
     }
 }
 
@@ -271,10 +276,10 @@ fun ImageWorkout(url: String, contentDescription: String?, width: Int, height: I
 }
 
 @Composable
-fun EquipmentItem(nameEquipment: String, imageEquipment: Int) {
+fun EquipmentItem(nameEquipment: String, imageEquipment: Int, onClickEquipment: (Int) -> Unit, id:Int) {
     Card(
         modifier = Modifier
-            .clickable(onClick = { })
+            .clickable(onClick = { onClickEquipment(id) })
             .fillMaxWidth()
             .padding(10.dp),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent)
@@ -285,5 +290,24 @@ fun EquipmentItem(nameEquipment: String, imageEquipment: Int) {
             Text(text = nameEquipment)
         }
     }
+}
+@Composable
+fun ExerciseList(listExercises: List<Exercise>, onShowButtonAddExercise:()->Unit){
+
+        LazyColumn {
+            items(listExercises) {
+                ExerciseItem(
+                    nameExercise = it.name,
+                    muscle = it.muscles.toText(),
+                    imageUrl = it.images,
+                    description = it.name,
+                    width = 50,
+                    height = 50,
+                    onExerciseClick = { onShowButtonAddExercise()}
+                )
+                CommonDivider()
+            }
+        }
+
 }
 

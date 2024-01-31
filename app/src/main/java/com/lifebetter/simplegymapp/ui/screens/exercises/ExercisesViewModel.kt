@@ -11,16 +11,17 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 
-class ExercisesViewModel(private val exercisesRepository: ExercisesRepository): ViewModel() {
+class ExercisesViewModel(private val exercisesRepository: ExercisesRepository) : ViewModel() {
     //view
     private val _state = MutableStateFlow(ExercisesState())
     val state: StateFlow<ExercisesState> = _state.asStateFlow()
 
     init {
         viewModelScope.launch {
-            _state.value = ExercisesState(exercises = exercisesRepository.getExercises().results.map {
-                it.toLocalModel()
-            })
+            _state.value =
+                ExercisesState(exercises = exercisesRepository.getExercises().results.map {
+                    it.toLocalModel()
+                })
         }
     }
 

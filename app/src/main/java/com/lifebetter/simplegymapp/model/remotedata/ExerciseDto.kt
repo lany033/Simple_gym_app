@@ -1,5 +1,6 @@
 package com.lifebetter.simplegymapp.model.remotedata
 
+import com.lifebetter.simplegymapp.model.remotedata.items.Equipment
 import com.lifebetter.simplegymapp.model.remotedata.items.Image
 import com.lifebetter.simplegymapp.model.remotedata.items.Language
 import com.lifebetter.simplegymapp.model.remotedata.items.Muscle
@@ -14,8 +15,8 @@ data class ExerciseDto(
     //val category: Category,
     //val comments: List<String>,
     //val created: String,
-   val description: String,
-    //val equipment: List<String>,
+    val description: String,
+    val equipment: List<Equipment>,
     //val exercise_base_id: Int,
     //@SerialName("id")val id: Int,
     val images: List<Image>,
