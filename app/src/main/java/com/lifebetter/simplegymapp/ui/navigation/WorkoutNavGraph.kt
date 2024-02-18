@@ -3,15 +3,10 @@ package com.lifebetter.simplegymapp.ui.navigation
 import android.util.Log
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import androidx.navigation.navArgument
-import com.lifebetter.simplegymapp.domain.Exercise
 import com.lifebetter.simplegymapp.ui.screens.WorkoutScreen
-import com.lifebetter.simplegymapp.ui.screens.WorkoutViewModel
 import com.lifebetter.simplegymapp.ui.screens.exercises.ExercisesScreen
-import com.lifebetter.simplegymapp.ui.screens.exercises.SearchViewModel
 import com.lifebetter.simplegymapp.ui.screens.newroutine.NewRoutineScreen
 
 fun NavGraphBuilder.workoutNavGraph(navController: NavHostController) {
@@ -27,8 +22,8 @@ fun NavGraphBuilder.workoutNavGraph(navController: NavHostController) {
             NewRoutineScreen(
                 exerciseId = exerciseId,
                 onClickAddExercises = {
-                    navController.navigate(WorkoutScreens.AddExercise.route )
-                    Log.d("ID  New Routine", it.toString())
+                    navController.navigate(WorkoutScreens.AddExercise.route)
+
                 }
             )
         }

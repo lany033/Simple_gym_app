@@ -1,6 +1,7 @@
 package com.lifebetter.simplegymapp.ui.screens.exercises
 
 import android.util.Log
+import androidx.activity.ComponentActivity
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -41,11 +42,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
-import com.lifebetter.simplegymapp.model.ExercisesRepository
 import com.lifebetter.simplegymapp.model.mappers.toText
 import com.lifebetter.simplegymapp.ui.components.CommonCirclePhoto
 import com.lifebetter.simplegymapp.ui.components.CommonDivider
@@ -53,7 +54,6 @@ import com.lifebetter.simplegymapp.ui.components.CommonMediumText
 import com.lifebetter.simplegymapp.ui.components.CommonTextTitle
 import com.lifebetter.simplegymapp.ui.components.MyTopBarWithOneText
 import com.lifebetter.simplegymapp.ui.components.MyTopWithIconsBar
-import com.lifebetter.simplegymapp.ui.screens.WorkoutViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -67,13 +67,11 @@ fun ExercisesScreen(onScreenAddExercises: (Int) -> Unit) {
     val sheetMuscleState = rememberModalBottomSheetState()
     var showBottomMuscleSheet by remember { mutableStateOf(false) }
 
-    val searchViewModel: SearchViewModel = viewModel {
-        SearchViewModel(ExercisesRepository())
-    }
+   val exerciseViewModel: ExerciseViewModel = hiltViewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
 
-    val searchText: String by searchViewModel.searchText.collectAsState()
-    val exerciseList by searchViewModel.exerciseListState.collectAsState()
-    val showButton by searchViewModel.workoutListState.collectAsState()
+    val searchText: String by exerciseViewModel.searchText.collectAsState()
+    val exerciseList by exerciseViewModel.exerciseListState.collectAsState()
+    val showButton by exerciseViewModel.workoutListState.collectAsState()
 
     Scaffold(topBar = { MyTopWithIconsBar(title = "Exercises") }) { paddingValues ->
         Column(
@@ -85,7 +83,7 @@ fun ExercisesScreen(onScreenAddExercises: (Int) -> Unit) {
         ) {
             TextField(
                 value = searchText,
-                onValueChange = searchViewModel::onSearchTextChange,
+                onValueChange = exerciseViewModel::onSearchTextChange,
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = { Text(text = "Search") },
                 singleLine = true,
@@ -127,7 +125,7 @@ fun ExercisesScreen(onScreenAddExercises: (Int) -> Unit) {
                             id = it.id,
                             width = 50,
                             height = 50,
-                            onExerciseClick = searchViewModel::onShowButtonAddExercise
+                            onExerciseClick = exerciseViewModel::onShowButtonAddExercise
                         )
                         CommonDivider()
                     }
@@ -135,7 +133,7 @@ fun ExercisesScreen(onScreenAddExercises: (Int) -> Unit) {
                 if (showButton.showButtonAddExercise) {
 
                     Button(
-                        onClick = { showButton.exerciseId?.let { onScreenAddExercises(it) } } ,
+                        onClick = { onScreenAddExercises(showButton.exerciseId) } ,
                         modifier = Modifier
                             .padding(8.dp)
                             .fillMaxWidth()
@@ -174,7 +172,7 @@ fun ExercisesScreen(onScreenAddExercises: (Int) -> Unit) {
                                 nameEquipment = it.name,
                                 imageEquipment = it.image,
                                 id = it.id,
-                                onClickEquipment = searchViewModel::onFilterByEquipment)
+                                onClickEquipment = exerciseViewModel::onFilterByEquipment)
                         }
                     }
 
@@ -208,7 +206,7 @@ fun ExercisesScreen(onScreenAddExercises: (Int) -> Unit) {
                                 nameEquipment = it.name,
                                 imageEquipment = it.image,
                                 id = it.id,
-                                onClickEquipment = searchViewModel::onFilterByMuscle)
+                                onClickEquipment = exerciseViewModel::onFilterByMuscle)
                         }
                     }
 

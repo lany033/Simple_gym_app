@@ -6,16 +6,20 @@ import androidx.lifecycle.viewModelScope
 import com.lifebetter.simplegymapp.domain.Exercise
 import com.lifebetter.simplegymapp.model.ExercisesRepository
 import com.lifebetter.simplegymapp.model.mappers.toLocalModel
-import com.lifebetter.simplegymapp.ui.screens.WorkoutViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SearchViewModel(private val exercisesRepository: ExercisesRepository) : ViewModel() {
+
+@HiltViewModel
+class ExerciseViewModel @Inject constructor(
+    private val exercisesRepository: ExercisesRepository
+) : ViewModel() {
 
     private val _searchText = MutableStateFlow("")
     val searchText = _searchText.asStateFlow()
@@ -27,49 +31,53 @@ class SearchViewModel(private val exercisesRepository: ExercisesRepository) : Vi
     val workoutListState = _workoutListState.asStateFlow()
 
     private val _exerciseListState = MutableStateFlow(ExerciseListState())
-    val exerciseListState = combine(searchText,_equipmentId,_muscleId,_exerciseListState){ text, equipmentId, muscleId, exercises ->
-        if (equipmentId == 11 && muscleId == 3 && text.isBlank()){
+    val exerciseListState = combine(
+        searchText,
+        _equipmentId,
+        _muscleId,
+        _exerciseListState
+    ) { text, equipmentId, muscleId, exercises ->
+        if (equipmentId == 11 && muscleId == 3 && text.isBlank()) {
             ExerciseListState(exerciseList = exercises.exerciseList)
-        } else if (equipmentId == 1){
+        } else if (equipmentId == 1) {
             ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByBarbell())
-        } else if (equipmentId == 2){
+        } else if (equipmentId == 2) {
             ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterBySZBar())
-        } else if (equipmentId == 3){
+        } else if (equipmentId == 3) {
             ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByDumbbell())
-        } else if (equipmentId == 4){
+        } else if (equipmentId == 4) {
             ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByGymMat())
-        } else if (equipmentId == 5){
+        } else if (equipmentId == 5) {
             ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterBySwissBall())
-        } else if (equipmentId == 6){
+        } else if (equipmentId == 6) {
             ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByPullupBar())
-        } else if (equipmentId == 7){
+        } else if (equipmentId == 7) {
             ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByNone())
-        }else if (equipmentId == 8){
+        } else if (equipmentId == 8) {
             ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByBench())
-        }else if (equipmentId == 9){
+        } else if (equipmentId == 9) {
             ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByInclineBench())
-        }else if (equipmentId == 10){
+        } else if (equipmentId == 10) {
             ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByKettlebell())
-        } else if (muscleId == 1){
+        } else if (muscleId == 1) {
             ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByBiceps())
-        } else if (muscleId == 2){
+        } else if (muscleId == 2) {
             ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByDeltoids())
-        } else if (muscleId == 4){
+        } else if (muscleId == 4) {
             ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByChest())
-        } else if (muscleId == 5){
+        } else if (muscleId == 5) {
             ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByTriceps())
-        } else if (muscleId == 6){
+        } else if (muscleId == 6) {
             ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByAbd())
-        } else if (muscleId == 7){
+        } else if (muscleId == 7) {
             ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByGast())
-        }else if (muscleId == 8){
+        } else if (muscleId == 8) {
             ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByGluteus())
-        }else if (muscleId == 10){
+        } else if (muscleId == 10) {
             ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByQuad())
-        }else if (muscleId == 11){
+        } else if (muscleId == 11) {
             ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByFemor())
-        }
-        else {
+        } else {
             ExerciseListState(exerciseList = exercises.exerciseList.filter { exercise ->
                 exercise.name.uppercase().contains(text.trim().uppercase())
             })
@@ -80,9 +88,6 @@ class SearchViewModel(private val exercisesRepository: ExercisesRepository) : Vi
         initialValue = _exerciseListState.value
     )
 
-init {
-    Log.e("SearchViewModel - hashcode - ","SearchViewModel - hashcode -"+this.hashCode())
-}
     fun onSearchTextChange(text: String) {
         _searchText.value = text
         Log.d("onSearch", text)
@@ -98,22 +103,36 @@ init {
 
     fun onShowButtonAddExercise(id: Int) {
         viewModelScope.launch {
-            _workoutListState.value = ExerciseListState(showButtonAddExercise = true, exerciseId = id, exerciseList = exercisesRepository.findById(id))
-            Log.d("onShowButtonAddExercise", workoutListState.value.showButtonAddExercise.toString())
+            _workoutListState.value = ExerciseListState(
+                showButtonAddExercise = true,
+                exerciseId = id,
+                exercisesSelectedList = exercisesRepository.findById(id)
+            )
+            Log.d(
+                "onShowButtonAddExercise",
+                workoutListState.value.showButtonAddExercise.toString()
+            )
             Log.d("onShowButtonAddExerciseID", id.toString())
-
         }
+
+    }
+
+    fun offShowButtonExercise(){
+        _workoutListState.value = ExerciseListState(showButtonAddExercise = false)
     }
 
     init {
+        Log.e("SearchViewModel - hashcode - ", "SearchViewModel - hashcode -" + this.hashCode())
         viewModelScope.launch {
-            _exerciseListState.value = ExerciseListState(exerciseList = exercisesRepository.getExercises().results.map { it.toLocalModel() })
+            _exerciseListState.value = ExerciseListState(
+                exerciseList = exercisesRepository.getExercises().results.map { it.toLocalModel() }
+            )
         }
     }
 
     data class ExerciseListState(
         val showButtonAddExercise: Boolean = false,
-        val exerciseId: Int? = 0,
+        val exerciseId: Int = 0,
         val isSearching: Boolean = false,
         val exerciseList: List<Exercise> = emptyList(),
         val exercisesSelectedList: List<Exercise> = emptyList(),

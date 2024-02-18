@@ -1,6 +1,8 @@
 package com.lifebetter.simplegymapp.ui.screens.newroutine
 
 import android.util.Log
+import androidx.activity.ComponentActivity
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,7 +19,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -29,36 +30,30 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.lifebetter.simplegymapp.model.ExercisesRepository
-import com.lifebetter.simplegymapp.ui.components.CommonButtonItems
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.lifebetter.simplegymapp.ui.components.CommonTextButtons
 import com.lifebetter.simplegymapp.ui.components.MyTopBarWithTwoText
-import com.lifebetter.simplegymapp.ui.screens.WorkoutViewModel
 import com.lifebetter.simplegymapp.ui.screens.exercises.ImageWorkout
-import com.lifebetter.simplegymapp.ui.screens.exercises.SearchViewModel
+import com.lifebetter.simplegymapp.ui.screens.exercises.ExerciseViewModel
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.Dumbbell
 
 
 @Composable
-fun NewRoutineScreen(onClickAddExercises: (Int?) -> Unit, exerciseId: Int?) {
+fun NewRoutineScreen(onClickAddExercises: () -> Unit, exerciseId: Int?) {
 
-    //val workoutViewModel: WorkoutViewModel = viewModel { WorkoutViewModel(98()) }
 
-    val searchViewModel: SearchViewModel = viewModel{
+    val exerciseViewModel: ExerciseViewModel =
+        hiltViewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
 
-        SearchViewModel(ExercisesRepository())
-    }
-    //val exerciseList by searchViewModel.exerciseListState.collectAsState()
-    val workoutListState by searchViewModel.workoutListState.collectAsState()
+    val workoutListState by exerciseViewModel.workoutListState.collectAsState()
 
-    //val exerciseList by workoutViewModel.workoutListState.collectAsState()
 
     Scaffold(topBar = { MyTopBarWithTwoText("Cancel", "Build Routine", "Save") }) { padding ->
         Column(
@@ -87,7 +82,7 @@ fun NewRoutineScreen(onClickAddExercises: (Int?) -> Unit, exerciseId: Int?) {
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(15.dp)
                 ) {
-                    if (workoutListState.exerciseId == 0){
+                    if (workoutListState.exerciseId == 0) {
                         Icon(
                             imageVector = FontAwesomeIcons.Solid.Dumbbell,
                             contentDescription = "pesa",
@@ -99,18 +94,19 @@ fun NewRoutineScreen(onClickAddExercises: (Int?) -> Unit, exerciseId: Int?) {
                         )
                     } else {
                         LazyColumn() {
-                            Log.d("lazycolumn", workoutListState.exerciseList.joinToString { it.name })
-                            items(workoutListState.exerciseList) {
+                            Log.d(
+                                "lazycolumn",
+                                workoutListState.exerciseList.joinToString { it.name })
+                            items(workoutListState.exercisesSelectedList) {
                                 Log.d("exercise Id lazy", it.name)
-                                Text(text = it.name)
+                                WorkoutItem(nameExercise = it.name, imageUrl = it.images, width = 30, height = 30)
                             }
                         }
                     }
 
-
-                    CommonButtonItems2(text = "+ Agregar Ejercicio", exerciseId = exerciseId ,onClick = {
-                        onClickAddExercises(exerciseId)
-
+                    CommonButtonItems2(text = "+ Agregar Ejercicio", onClick = {
+                        exerciseViewModel::offShowButtonExercise.invoke()
+                        onClickAddExercises()
                     })
 
                     exerciseId?.let {
@@ -132,7 +128,8 @@ fun WorkoutItem(
     width: Int,
     height: Int
 ) {
-    Card {
+    Card(modifier = Modifier.fillMaxWidth().padding(top = 10.dp, bottom = 10.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent)) {
         Column {
             Row {
                 Card(
@@ -155,9 +152,9 @@ fun WorkoutItem(
 
 
 @Composable
-fun CommonButtonItems2(text: String, exerciseId: Int?,onClick: (Int?) -> Unit) {
+fun CommonButtonItems2(text: String, onClick: () -> Unit) {
     Button(onClick = {
-        onClick(exerciseId)
+        onClick()
     }, shape = RoundedCornerShape(4.dp), modifier = Modifier.fillMaxWidth()) {
         CommonTextButtons(text = text)
     }

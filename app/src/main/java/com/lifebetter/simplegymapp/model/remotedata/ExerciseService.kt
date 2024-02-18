@@ -9,5 +9,4 @@ interface ExerciseService {
     @GET("exerciseinfo/")
     suspend fun getExercise(): ExerciseResult
 
-
 }

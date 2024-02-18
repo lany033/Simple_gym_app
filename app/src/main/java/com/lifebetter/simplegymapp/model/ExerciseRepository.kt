@@ -6,9 +6,18 @@ import com.lifebetter.simplegymapp.model.mappers.toLocalModel
 import com.lifebetter.simplegymapp.model.mappers.toText
 import com.lifebetter.simplegymapp.model.mappers.toTextEquipment
 import com.lifebetter.simplegymapp.model.remotedata.ExerciseResult
+import com.lifebetter.simplegymapp.model.remotedata.ExerciseService
 import com.lifebetter.simplegymapp.model.remotedata.RemoteConnection
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class ExercisesRepository {
+
+class ExercisesRepository @Inject constructor() {
+
     suspend fun getExercises(): ExerciseResult {
 
         return RemoteConnection.service().getExercise()
