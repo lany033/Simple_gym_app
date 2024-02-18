@@ -70,6 +70,9 @@ dependencies {
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
 
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
+
     implementation("br.com.devsrsouza.compose.icons:feather:1.1.0")
     implementation("br.com.devsrsouza.compose.icons:font-awesome:1.1.0")
 
@@ -102,7 +105,6 @@ dependencies {
 
     //chart
     implementation ("com.github.tehras:charts:0.2.4-alpha")
-
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)

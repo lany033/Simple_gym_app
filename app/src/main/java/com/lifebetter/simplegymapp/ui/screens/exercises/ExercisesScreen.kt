@@ -45,7 +45,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
-import com.lifebetter.simplegymapp.domain.Exercise
 import com.lifebetter.simplegymapp.model.ExercisesRepository
 import com.lifebetter.simplegymapp.model.mappers.toText
 import com.lifebetter.simplegymapp.ui.components.CommonCirclePhoto
@@ -54,11 +53,12 @@ import com.lifebetter.simplegymapp.ui.components.CommonMediumText
 import com.lifebetter.simplegymapp.ui.components.CommonTextTitle
 import com.lifebetter.simplegymapp.ui.components.MyTopBarWithOneText
 import com.lifebetter.simplegymapp.ui.components.MyTopWithIconsBar
+import com.lifebetter.simplegymapp.ui.screens.WorkoutViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExercisesScreen() {
+fun ExercisesScreen(onScreenAddExercises: (Int) -> Unit) {
     val scope = rememberCoroutineScope()
 
     val sheetEquipmentState = rememberModalBottomSheetState()
@@ -67,15 +67,13 @@ fun ExercisesScreen() {
     val sheetMuscleState = rememberModalBottomSheetState()
     var showBottomMuscleSheet by remember { mutableStateOf(false) }
 
-    var showButtonAddExercise by remember { mutableStateOf(false) }
-
     val searchViewModel: SearchViewModel = viewModel {
         SearchViewModel(ExercisesRepository())
     }
 
     val searchText: String by searchViewModel.searchText.collectAsState()
-    val isSearching by searchViewModel.isSearching.collectAsState()
-    val exerciseList by searchViewModel.exerciseList.collectAsState()
+    val exerciseList by searchViewModel.exerciseListState.collectAsState()
+    val showButton by searchViewModel.workoutListState.collectAsState()
 
     Scaffold(topBar = { MyTopWithIconsBar(title = "Exercises") }) { paddingValues ->
         Column(
@@ -126,16 +124,18 @@ fun ExercisesScreen() {
                             muscle = it.muscles.toText(),
                             imageUrl = it.images,
                             description = it.name,
+                            id = it.id,
                             width = 50,
                             height = 50,
-                            onExerciseClick = { showButtonAddExercise = true }
+                            onExerciseClick = searchViewModel::onShowButtonAddExercise
                         )
                         CommonDivider()
                     }
                 }
-                if (showButtonAddExercise) {
+                if (showButton.showButtonAddExercise) {
+
                     Button(
-                        onClick = { showButtonAddExercise = false },
+                        onClick = { showButton.exerciseId?.let { onScreenAddExercises(it) } } ,
                         modifier = Modifier
                             .padding(8.dp)
                             .fillMaxWidth()
@@ -225,14 +225,15 @@ fun ExerciseItem(
     nameExercise: String,
     muscle: String,
     imageUrl: String,
+    id: Int,
     description: String,
     width: Int,
     height: Int,
-    onExerciseClick: () -> Unit
+    onExerciseClick: (Int) -> Unit
 ) {
     Card(
         modifier = Modifier
-            .clickable(onClick = onExerciseClick)
+            .clickable(onClick = { onExerciseClick(id) })
             .fillMaxWidth()
             .padding(top = 10.dp, bottom = 10.dp),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent)
@@ -288,23 +289,3 @@ fun EquipmentItem(nameEquipment: String, imageEquipment: Int, onClickEquipment: 
         }
     }
 }
-@Composable
-fun ExerciseList(listExercises: List<Exercise>, onShowButtonAddExercise:()->Unit){
-
-        LazyColumn {
-            items(listExercises) {
-                ExerciseItem(
-                    nameExercise = it.name,
-                    muscle = it.muscles.toText(),
-                    imageUrl = it.images,
-                    description = it.name,
-                    width = 50,
-                    height = 50,
-                    onExerciseClick = { onShowButtonAddExercise()}
-                )
-                CommonDivider()
-            }
-        }
-
-}
-

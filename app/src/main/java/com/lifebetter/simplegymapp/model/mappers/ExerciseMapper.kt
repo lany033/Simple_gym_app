@@ -35,6 +35,8 @@ fun ExerciseDto.toLocalModel(): Exercise = Exercise(
     description = description,
     images = images.toImage(),
     muscles = muscles,
+    language = language,
+    id = id,
     equipment = equipment
 
 )
