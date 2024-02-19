@@ -27,9 +27,13 @@ class ExercisesRepository @Inject constructor() {
         return getExercises().results.map { it.toLocalModel() }.filter { it.language.short_name == "en" }
     }
 
-    suspend fun findById(id: Int): List<Exercise>{
+    suspend fun findById(id: Int): Exercise{
         Log.d("findById", id.toString())
-        return getExercises().results.map { it.toLocalModel() }.filter { it.id == id }
+        return getExercises().results.map { it.toLocalModel() }.single { it.id == id }
+    }
+
+    suspend fun getIds(id: Int): List<Int>{
+       return emptyList<Int>().plus(id)
     }
 
     suspend fun getExercisesFilterByBarbell(): List<Exercise> {

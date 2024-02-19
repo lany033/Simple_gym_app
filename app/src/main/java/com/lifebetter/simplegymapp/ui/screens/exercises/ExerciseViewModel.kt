@@ -27,8 +27,13 @@ class ExerciseViewModel @Inject constructor(
     private val _equipmentId = MutableStateFlow(11)
     private val _muscleId = MutableStateFlow(3)
 
-    private val _workoutListState = MutableStateFlow(ExerciseListState())
-    val workoutListState = _workoutListState.asStateFlow()
+    private val _selectedExercises = MutableStateFlow(mutableListOf<Exercise>())
+    val selectedExercises = _selectedExercises.asStateFlow()
+
+    private val _showAddButton = MutableStateFlow(ExerciseListState())
+    val showAddButton = _showAddButton.asStateFlow()
+
+
 
     private val _exerciseListState = MutableStateFlow(ExerciseListState())
     val exerciseListState = combine(
@@ -103,23 +108,30 @@ class ExerciseViewModel @Inject constructor(
 
     fun onShowButtonAddExercise(id: Int) {
         viewModelScope.launch {
-            _workoutListState.value = ExerciseListState(
+            _showAddButton.value = ExerciseListState(
                 showButtonAddExercise = true,
+                isSelected = true,
                 exerciseId = id,
-                exercisesSelectedList = exercisesRepository.findById(id)
+                exerciseSelected = exercisesRepository.findById(id)
             )
             Log.d(
-                "onShowButtonAddExercise",
-                workoutListState.value.showButtonAddExercise.toString()
+                "LIST SELECTED", _showAddButton.value.exercisesSelectedList.joinToString { it.name }
             )
-            Log.d("onShowButtonAddExerciseID", id.toString())
+            Log.d("ID LIST", _showAddButton.value.exerciseIdList.joinToString { it.toString() })
+            _selectedExercises
         }
 
     }
 
-    fun offShowButtonExercise(){
-        _workoutListState.value = ExerciseListState(showButtonAddExercise = false)
+    fun offShowButtonExercise() {
+        viewModelScope.launch {
+            _showAddButton.value = ExerciseListState(
+                showButtonAddExercise = false
+            )
+
+        }
     }
+
 
     init {
         Log.e("SearchViewModel - hashcode - ", "SearchViewModel - hashcode -" + this.hashCode())
@@ -132,11 +144,14 @@ class ExerciseViewModel @Inject constructor(
 
     data class ExerciseListState(
         val showButtonAddExercise: Boolean = false,
+        val isSelected: Boolean = false,
+        val selectedItemsList: List<Exercise> = mutableListOf(),
         val exerciseId: Int = 0,
+        val exerciseSelected: Exercise? = null,
         val isSearching: Boolean = false,
-        val exerciseList: List<Exercise> = emptyList(),
-        val exercisesSelectedList: List<Exercise> = emptyList(),
-        val exerciseIdList: List<Int> = emptyList(),
+        val exerciseList: List<Exercise> = mutableListOf(),
+        val exercisesSelectedList: List<Exercise> = mutableListOf(),
+        val exerciseIdList: List<Int> = mutableListOf(),
     )
 }
 

@@ -67,11 +67,12 @@ fun ExercisesScreen(onScreenAddExercises: (Int) -> Unit) {
     val sheetMuscleState = rememberModalBottomSheetState()
     var showBottomMuscleSheet by remember { mutableStateOf(false) }
 
-   val exerciseViewModel: ExerciseViewModel = hiltViewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
+    val exerciseViewModel: ExerciseViewModel = hiltViewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
 
     val searchText: String by exerciseViewModel.searchText.collectAsState()
     val exerciseList by exerciseViewModel.exerciseListState.collectAsState()
-    val showButton by exerciseViewModel.workoutListState.collectAsState()
+    val showButton by exerciseViewModel.showAddButton.collectAsState()
+    val selectedExercise by exerciseViewModel.selectedExercises.collectAsState()
 
     Scaffold(topBar = { MyTopWithIconsBar(title = "Exercises") }) { paddingValues ->
         Column(
@@ -133,7 +134,10 @@ fun ExercisesScreen(onScreenAddExercises: (Int) -> Unit) {
                 if (showButton.showButtonAddExercise) {
 
                     Button(
-                        onClick = { onScreenAddExercises(showButton.exerciseId) } ,
+                        onClick = {
+                            showButton.exerciseSelected?.let { selectedExercise.add(it) }
+                            onScreenAddExercises(showButton.exerciseId)
+                                  } ,
                         modifier = Modifier
                             .padding(8.dp)
                             .fillMaxWidth()

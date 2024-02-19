@@ -2,7 +2,6 @@ package com.lifebetter.simplegymapp.ui.screens.newroutine
 
 import android.util.Log
 import androidx.activity.ComponentActivity
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,10 +15,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -48,11 +50,11 @@ import compose.icons.fontawesomeicons.solid.Dumbbell
 @Composable
 fun NewRoutineScreen(onClickAddExercises: () -> Unit, exerciseId: Int?) {
 
-
     val exerciseViewModel: ExerciseViewModel =
         hiltViewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
 
-    val workoutListState by exerciseViewModel.workoutListState.collectAsState()
+
+    val selectedExercises by exerciseViewModel.selectedExercises.collectAsState()
 
 
     Scaffold(topBar = { MyTopBarWithTwoText("Cancel", "Build Routine", "Save") }) { padding ->
@@ -82,7 +84,7 @@ fun NewRoutineScreen(onClickAddExercises: () -> Unit, exerciseId: Int?) {
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(15.dp)
                 ) {
-                    if (workoutListState.exerciseId == 0) {
+                    if (selectedExercises.isEmpty()) {
                         Icon(
                             imageVector = FontAwesomeIcons.Solid.Dumbbell,
                             contentDescription = "pesa",
@@ -96,10 +98,10 @@ fun NewRoutineScreen(onClickAddExercises: () -> Unit, exerciseId: Int?) {
                         LazyColumn() {
                             Log.d(
                                 "lazycolumn",
-                                workoutListState.exerciseList.joinToString { it.name })
-                            items(workoutListState.exercisesSelectedList) {
+                                selectedExercises.joinToString { it.name })
+                            items(selectedExercises) {
                                 Log.d("exercise Id lazy", it.name)
-                                WorkoutItem(nameExercise = it.name, imageUrl = it.images, width = 30, height = 30)
+                                WorkoutItem(nameExercise = it.name, imageUrl = it.images, width = 30, height = 30, { selectedExercises.remove(it) })
                             }
                         }
                     }
@@ -109,15 +111,9 @@ fun NewRoutineScreen(onClickAddExercises: () -> Unit, exerciseId: Int?) {
                         onClickAddExercises()
                     })
 
-                    exerciseId?.let {
-                        Text(text = exerciseId.toString())
-                        Text(text = workoutListState.exerciseId.toString())
-                    }
                 }
             }
         }
-
-
     }
 }
 
@@ -126,12 +122,15 @@ fun WorkoutItem(
     nameExercise: String,
     imageUrl: String,
     width: Int,
-    height: Int
+    height: Int,
+    onDelete: () -> Unit
 ) {
-    Card(modifier = Modifier.fillMaxWidth().padding(top = 10.dp, bottom = 10.dp),
+    Card(modifier = Modifier
+        .fillMaxWidth()
+        .padding(top = 10.dp, bottom = 10.dp),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent)) {
         Column {
-            Row {
+            Row(horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Card(
                     shape = CircleShape,
                     colors = CardDefaults.cardColors(containerColor = Color.White)
@@ -145,6 +144,9 @@ fun WorkoutItem(
                 }
                 Spacer(modifier = Modifier.size(20.dp))
                 Text(text = nameExercise)
+                IconButton(onClick = { onDelete() } ) {
+                    Icon(imageVector = Icons.Filled.Delete, contentDescription = "delete")
+                }
             }
         }
     }
