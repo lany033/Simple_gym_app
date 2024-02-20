@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 @HiltViewModel
 class ExerciseViewModel @Inject constructor(
     private val exercisesRepository: ExercisesRepository
@@ -122,7 +121,6 @@ class ExerciseViewModel @Inject constructor(
             _showAddButton.value = ExerciseListState(
                 showButtonAddExercise = false
             )
-
         }
     }
 
@@ -152,7 +150,6 @@ class ExerciseViewModel @Inject constructor(
         val isSearching: Boolean = false,
         val exerciseList: List<Exercise> = mutableListOf(),
         val exercisesSelectedList: List<Exercise> = mutableListOf(),
-        val exerciseIdList: List<Int> = mutableListOf(),
     )
 }
 

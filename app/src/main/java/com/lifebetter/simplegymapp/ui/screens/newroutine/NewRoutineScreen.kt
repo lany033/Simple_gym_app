@@ -107,7 +107,6 @@ fun NewRoutineScreen(onClickAddExercises: () -> Unit) {
                                     height = 30
                                 ) {  exerciseViewModel.deleteElement(exercise)  }
                             }
-
                         }
                     }
                     CommonButtonItems2(text = "+ Agregar Ejercicio", onClick = {

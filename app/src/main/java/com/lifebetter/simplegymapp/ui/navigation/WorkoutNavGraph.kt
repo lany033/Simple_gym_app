@@ -16,13 +16,10 @@ fun NavGraphBuilder.workoutNavGraph(navController: NavHostController) {
                 onClickNewRoutines = { navController.navigate(WorkoutScreens.NewRoutine.route) }
             )
         }
-        composable(route = WorkoutScreens.NewRoutine.route) { entry ->
-            val exerciseId = entry.savedStateHandle.get<Int>("ExerciseId")
-            Log.d("exercise id en workout screen", exerciseId.toString())
+        composable(route = WorkoutScreens.NewRoutine.route) {
             NewRoutineScreen(
                 onClickAddExercises = {
                     navController.navigate(WorkoutScreens.AddExercise.route)
-
                 }
             )
         }
@@ -32,8 +29,6 @@ fun NavGraphBuilder.workoutNavGraph(navController: NavHostController) {
             ExercisesScreen(
                 onScreenAddExercises = {
                     navController.popBackStack()
-                    navController.currentBackStackEntry?.savedStateHandle?.set("ExerciseId", it)
-                    Log.d("id en exercise screen", it.toString())
                 }
             )
         }

@@ -59,7 +59,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExercisesScreen(onScreenAddExercises: (Int) -> Unit) {
+fun ExercisesScreen(onScreenAddExercises: () -> Unit) {
     val scope = rememberCoroutineScope()
 
     val sheetEquipmentState = rememberModalBottomSheetState()
@@ -137,7 +137,7 @@ fun ExercisesScreen(onScreenAddExercises: (Int) -> Unit) {
                     Button(
                         onClick = {
                             showButton.exerciseSelected?.let { selectedExercise.add(it) }
-                            onScreenAddExercises(showButton.exerciseId)
+                            onScreenAddExercises()
                                   } ,
                         modifier = Modifier
                             .padding(8.dp)
