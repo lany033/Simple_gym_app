@@ -26,7 +26,7 @@ class ExerciseViewModel @Inject constructor(
     val searchText = _searchText.asStateFlow()
 
     private val _equipmentId = MutableStateFlow(11)
-    private val _muscleId = MutableStateFlow(3)
+    private val _muscleId = MutableStateFlow(11)
 
     private val _selectedExercises = MutableStateFlow(SnapshotStateList<Exercise>())
     val selectedExercises = _selectedExercises.asStateFlow()
@@ -41,51 +41,53 @@ class ExerciseViewModel @Inject constructor(
         _muscleId,
         _exerciseListState
     ) { text, equipmentId, muscleId, exercises ->
-        if (equipmentId == 11 && muscleId == 3 && text.isBlank()) {
+        if (equipmentId == 11 && muscleId == 11 && text.isBlank()) {
             ExerciseListState(exerciseList = exercises.exerciseList)
-        } else if (equipmentId == 1) {
-            ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByBarbell())
-        } else if (equipmentId == 2) {
-            ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterBySZBar())
-        } else if (equipmentId == 3) {
-            ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByDumbbell())
-        } else if (equipmentId == 4) {
-            ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByGymMat())
-        } else if (equipmentId == 5) {
-            ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterBySwissBall())
-        } else if (equipmentId == 6) {
-            ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByPullupBar())
-        } else if (equipmentId == 7) {
-            ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByNone())
-        } else if (equipmentId == 8) {
-            ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByBench())
-        } else if (equipmentId == 9) {
-            ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByInclineBench())
-        } else if (equipmentId == 10) {
-            ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByKettlebell())
-        } else if (muscleId == 1) {
-            ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByBiceps())
-        } else if (muscleId == 2) {
-            ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByDeltoids())
-        } else if (muscleId == 4) {
-            ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByChest())
-        } else if (muscleId == 5) {
-            ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByTriceps())
-        } else if (muscleId == 6) {
-            ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByAbd())
-        } else if (muscleId == 7) {
-            ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByGast())
-        } else if (muscleId == 8) {
-            ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByGluteus())
-        } else if (muscleId == 10) {
-            ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByQuad())
-        } else if (muscleId == 11) {
-            ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByFemor())
+        } else if (equipmentId != 11){
+            if (text.isBlank()){
+                when(equipmentId){
+                    1 -> ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByBarbell())
+                    2 -> ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterBySZBar())
+                    3 -> ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByDumbbell())
+                    4 -> ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByGymMat())
+                    5 -> ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterBySwissBall())
+                    6 -> ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByPullupBar())
+                    7 -> ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByNone())
+                    8 -> ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByBench())
+                    9 -> ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByInclineBench())
+                    10 -> ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByKettlebell())
+                    else -> ExerciseListState(exerciseList = exercises.exerciseList)
+                }
+            } else {
+                ExerciseListState(exerciseList = exercises.exerciseList.filter { exercise ->
+                    exercise.name.uppercase().contains(text.trim().uppercase())
+                })
+            }
+        } else if(muscleId != 11){
+            if (text.isBlank()){
+                when(muscleId){
+                    1 -> ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByDeltoids())
+                    2 -> ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByBiceps())
+                    3 -> ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByFemor())
+                    4 -> ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByGast())
+                    5 -> ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByGluteus())
+                    7 -> ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByChest())
+                    8 -> ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByQuad())
+                    9 -> ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByAbd())
+                    10 -> ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByTriceps())
+                    else -> ExerciseListState(exerciseList = exercises.exerciseList)
+                }
+            } else {
+                ExerciseListState(exerciseList = exercises.exerciseList.filter { exercise ->
+                    exercise.name.uppercase().contains(text.trim().uppercase())
+                })
+            }
         } else {
             ExerciseListState(exerciseList = exercises.exerciseList.filter { exercise ->
                 exercise.name.uppercase().contains(text.trim().uppercase())
             })
         }
+
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),

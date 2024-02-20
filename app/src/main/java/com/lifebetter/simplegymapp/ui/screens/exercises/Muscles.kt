@@ -7,16 +7,15 @@ data class Muscles(val name: String, val image: Int, val id: Int)
 
 fun getMuscles(): List<Muscles> {
     return listOf(
-        Muscles("All equipment", R.drawable.all,3 ),
-        Muscles("Shoulders", R.drawable.shoulders,2 ),
-        Muscles("Biceps", R.drawable.biceps,1),
-        Muscles("Hamstrings", R.drawable.hamstrings,11),
-        Muscles("Calves", R.drawable.calves,7 ),
-        Muscles("Glutes", R.drawable.glutes,8 ),
-        Muscles("Lats", R.drawable.lats,12 ),
-        Muscles("Chest", R.drawable.chest,4 ),
-        Muscles("Quads", R.drawable.quadriceps,10 ),
-        Muscles("Abs", R.drawable.abs,6 ),
-        Muscles("Triceps", R.drawable.triceps,5 )
+        Muscles("All equipment", R.drawable.all,11 ),
+        Muscles("Shoulders", R.drawable.shoulders,1 ),
+        Muscles("Biceps", R.drawable.biceps,2),
+        Muscles("Hamstrings", R.drawable.hamstrings,3),
+        Muscles("Calves", R.drawable.calves,4 ),
+        Muscles("Glutes", R.drawable.glutes,5 ),
+        Muscles("Chest", R.drawable.chest,7 ),
+        Muscles("Quads", R.drawable.quadriceps,8 ),
+        Muscles("Abs", R.drawable.abs,9 ),
+        Muscles("Triceps", R.drawable.triceps,10 )
     )
 }
