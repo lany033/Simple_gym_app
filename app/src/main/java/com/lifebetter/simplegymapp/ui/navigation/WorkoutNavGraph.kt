@@ -20,7 +20,6 @@ fun NavGraphBuilder.workoutNavGraph(navController: NavHostController) {
             val exerciseId = entry.savedStateHandle.get<Int>("ExerciseId")
             Log.d("exercise id en workout screen", exerciseId.toString())
             NewRoutineScreen(
-                exerciseId = exerciseId,
                 onClickAddExercises = {
                     navController.navigate(WorkoutScreens.AddExercise.route)
 

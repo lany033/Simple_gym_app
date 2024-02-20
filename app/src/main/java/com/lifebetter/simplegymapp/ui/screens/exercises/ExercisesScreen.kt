@@ -31,6 +31,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -115,6 +116,7 @@ fun ExercisesScreen(onScreenAddExercises: (Int) -> Unit) {
             }
 
             Text(text = "Ejercicios Populares")
+
             Box(modifier = Modifier.fillMaxSize()) {
                 LazyColumn {
                     items(exerciseList.exerciseList) {
@@ -132,7 +134,6 @@ fun ExercisesScreen(onScreenAddExercises: (Int) -> Unit) {
                     }
                 }
                 if (showButton.showButtonAddExercise) {
-
                     Button(
                         onClick = {
                             showButton.exerciseSelected?.let { selectedExercise.add(it) }

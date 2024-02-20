@@ -1,6 +1,7 @@
 package com.lifebetter.simplegymapp.ui.screens.exercises
 
 import android.util.Log
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lifebetter.simplegymapp.domain.Exercise
@@ -12,6 +13,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,13 +29,11 @@ class ExerciseViewModel @Inject constructor(
     private val _equipmentId = MutableStateFlow(11)
     private val _muscleId = MutableStateFlow(3)
 
-    private val _selectedExercises = MutableStateFlow(mutableListOf<Exercise>())
+    private val _selectedExercises = MutableStateFlow(SnapshotStateList<Exercise>())
     val selectedExercises = _selectedExercises.asStateFlow()
 
     private val _showAddButton = MutableStateFlow(ExerciseListState())
     val showAddButton = _showAddButton.asStateFlow()
-
-
 
     private val _exerciseListState = MutableStateFlow(ExerciseListState())
     val exerciseListState = combine(
@@ -114,13 +114,7 @@ class ExerciseViewModel @Inject constructor(
                 exerciseId = id,
                 exerciseSelected = exercisesRepository.findById(id)
             )
-            Log.d(
-                "LIST SELECTED", _showAddButton.value.exercisesSelectedList.joinToString { it.name }
-            )
-            Log.d("ID LIST", _showAddButton.value.exerciseIdList.joinToString { it.toString() })
-            _selectedExercises
         }
-
     }
 
     fun offShowButtonExercise() {
@@ -132,6 +126,13 @@ class ExerciseViewModel @Inject constructor(
         }
     }
 
+    fun deleteElement(exercise: Exercise){
+        viewModelScope.launch {
+             _selectedExercises.value.remove(exercise)
+
+        }
+        Log.d("updateElement", _selectedExercises.value.joinToString { it.name })
+    }
 
     init {
         Log.e("SearchViewModel - hashcode - ", "SearchViewModel - hashcode -" + this.hashCode())
