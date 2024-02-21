@@ -1,9 +1,11 @@
 package com.lifebetter.simplegymapp.ui.screens
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -20,23 +22,28 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.lifebetter.simplegymapp.ui.components.AccordionItem
 import com.lifebetter.simplegymapp.ui.components.CommonButtonHome
 import com.lifebetter.simplegymapp.ui.components.CommonTextTitle
 import com.lifebetter.simplegymapp.ui.components.MyTopAppBar
 import compose.icons.FeatherIcons
+import compose.icons.FontAwesomeIcons
 import compose.icons.feathericons.Clipboard
 import compose.icons.feathericons.Search
+import compose.icons.fontawesomeicons.Solid
+import compose.icons.fontawesomeicons.solid.Smile
 
 
 @Composable
 fun WorkoutScreen(onClickNewRoutines: () -> Unit) {
-    val scope = rememberCoroutineScope()
 
     val workoutViewModel: WorkoutViewModel = hiltViewModel()
 
@@ -73,34 +80,62 @@ fun WorkoutScreen(onClickNewRoutines: () -> Unit) {
                 )
             }
 
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                if (!openAccordion) {
-                    IconButton(onClick = workoutViewModel::onOpenAccordion) {
-                        Icon(
-                            imageVector = Icons.Filled.KeyboardArrowRight,
-                            contentDescription = "arrowRight"
-                        )
-                    }
-                } else {
-                    IconButton(onClick = workoutViewModel::offOpenAccordion) {
-                        Icon(
-                            imageVector = Icons.Filled.KeyboardArrowDown,
-                            contentDescription = "arrowRight"
-                        )
-                    }
+            if (workoutList.workoutList.isEmpty()) {
+                Box(
+                    modifier = Modifier
+                        .padding(20.dp)
+                        .fillMaxSize()
+                ) {
+                    Text(
+                        text = "Empieza agregando una nueva rutina.",
+                        modifier = Modifier
+                            .padding(14.dp)
+                            .align(
+                                Alignment.Center
+                            ),
+                        fontSize = 25.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Gray,
+                        textAlign = TextAlign.Center
+                    )
+                    Icon(
+                        imageVector = FontAwesomeIcons.Solid.Smile,
+                        tint = Color.Gray,
+                        contentDescription = "icon",
+                        modifier = Modifier
+                            .size(30.dp)
+                            .align(
+                                Alignment.BottomCenter
+                            )
+                    )
                 }
 
-                Text(text = "My Routines ()")
-            }
-
-
-            if (workoutList.workoutList.isEmpty()){
-                Text(text = "Empieza añadiendo una nueva rutina")
             } else {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    if (!openAccordion) {
+                        IconButton(onClick = workoutViewModel::onOpenAccordion) {
+                            Icon(
+                                imageVector = Icons.Filled.KeyboardArrowRight,
+                                contentDescription = "arrowRight"
+                            )
+                        }
+                    } else {
+                        IconButton(onClick = workoutViewModel::offOpenAccordion) {
+                            Icon(
+                                imageVector = Icons.Filled.KeyboardArrowDown,
+                                contentDescription = "arrowRight"
+                            )
+                        }
+                    }
+
+                    Text(text = "My Routines ( ${workoutList.workoutList.size} )")
+                }
+
                 AnimatedVisibility(visible = openAccordion) {
-                    LazyColumn(modifier = Modifier.padding(14.dp)){
-                        items(workoutList.workoutList){
-                            AccordionItem(workout = it)
+                    LazyColumn(modifier = Modifier.padding(14.dp)) {
+                        items(workoutList.workoutList) {
+                            AccordionItem(workout = it, onDelete = workoutViewModel::deleteWorkout)
+                            Spacer(modifier = Modifier.size(5.dp))
                         }
                     }
                 }

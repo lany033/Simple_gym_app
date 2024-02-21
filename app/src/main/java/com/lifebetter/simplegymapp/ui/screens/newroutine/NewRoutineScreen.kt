@@ -12,13 +12,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -26,14 +25,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,7 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.lifebetter.simplegymapp.model.database.Workout
+import com.lifebetter.simplegymapp.domain.Exercise
 import com.lifebetter.simplegymapp.ui.components.CommonTextButtons
 import com.lifebetter.simplegymapp.ui.components.MyTopBarWithTwoText
 import com.lifebetter.simplegymapp.ui.screens.exercises.ImageWorkout
@@ -51,25 +48,32 @@ import com.lifebetter.simplegymapp.ui.screens.exercises.ExerciseViewModel
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.Dumbbell
-import kotlinx.coroutines.launch
 
 @Composable
-fun NewRoutineScreen(onClickAddExercises: () -> Unit) {
+fun NewRoutineScreen(onClickAddExercises: () -> Unit, onCancel:()->Unit) {
     val exerciseViewModel: ExerciseViewModel =
         hiltViewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
     val selectedExercises by exerciseViewModel.selectedExercises.collectAsState()
     val titleText by exerciseViewModel.nameWorkout.collectAsState()
+    val openAlertDialog by exerciseViewModel.openAlertDialog.collectAsState()
 
     Scaffold(topBar = {
         MyTopBarWithTwoText(
             "Cancel",
             "Build Routine",
             "Save",
-            nameTitle = titleText,
-            listWorkout = selectedExercises,
-            {},
-            exerciseViewModel::onSaveRoutine)
+            {onCancel()},
+            exerciseViewModel::openAlertDialog)
     }) { padding ->
+        if (openAlertDialog){
+            SaveAlertDialog(
+                nameTitle = titleText,
+                listWorkout = selectedExercises,
+                onDismissRequest = exerciseViewModel::closeAlertDialog ,
+                onConfirmation = exerciseViewModel::onSaveRoutine ,
+                dialogTitle = "¿Guardar Rutina?",
+            )
+        }
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -185,4 +189,41 @@ fun CommonButtonItems2(text: String, onClick: () -> Unit) {
     }, shape = RoundedCornerShape(4.dp), modifier = Modifier.fillMaxWidth()) {
         CommonTextButtons(text = text)
     }
+}
+
+
+@Composable
+fun SaveAlertDialog(
+    nameTitle: String,
+    listWorkout: List<Exercise>,
+    onDismissRequest: () -> Unit,
+    onConfirmation: (String, List<Exercise>) -> Unit,
+    dialogTitle: String,
+) {
+    AlertDialog(
+        title = {
+            Text(text = dialogTitle)
+        },
+        onDismissRequest = {
+            onDismissRequest()
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onConfirmation(nameTitle,listWorkout)
+                }
+            ) {
+                Text("Save")
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = {
+                    onDismissRequest()
+                }
+            ) {
+                Text("Cancel")
+            }
+        }
+    )
 }

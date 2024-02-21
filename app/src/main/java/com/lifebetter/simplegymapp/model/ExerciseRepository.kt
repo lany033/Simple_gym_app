@@ -17,14 +17,12 @@ class ExercisesRepository @Inject constructor(
 ) {
     val workouts = exerciseLocalDataSource.workouts
 
-    suspend fun getWorkouts() {
-        if (exerciseLocalDataSource.isEmpty()) {
-
-        }
-    }
-
     suspend fun saveNewWorkout(list: List<Workout>) {
         exerciseLocalDataSource.save(list)
+    }
+
+    suspend fun deleteWokout(workout: Workout){
+        exerciseLocalDataSource.deleteWorkout(workout)
     }
 
     suspend fun requestExercises(): List<Exercise> {

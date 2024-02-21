@@ -64,10 +64,8 @@ fun MyTopBarWithTwoText(
     subtitleOne: String,
     title: String,
     subtitleTwo: String,
-    nameTitle: String,
-    listWorkout: List<Exercise>,
     onClickCancel: () -> Unit,
-    onClickSave: (String,List<Exercise>) -> Unit,
+    onClickSave: () -> Unit,
 ) {
     Column() {
         Row(
@@ -79,7 +77,7 @@ fun MyTopBarWithTwoText(
                 Text(text = subtitleOne, fontSize = 16.sp)
             }
             Text(text = title, fontSize = 16.sp)
-            TextButton(onClick = { onClickSave(nameTitle,listWorkout) }) {
+            TextButton(onClick = { onClickSave() }) {
                 Text(text = subtitleTwo, fontSize = 16.sp)
             }
         }

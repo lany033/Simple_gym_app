@@ -22,6 +22,8 @@ import javax.inject.Inject
 class ExerciseViewModel @Inject constructor(
     private val exercisesRepository: ExercisesRepository
 ) : ViewModel() {
+    private val _openAlertDialog = MutableStateFlow(false)
+    val openAlertDialog = _openAlertDialog.asStateFlow()
 
     private val _workout = MutableStateFlow(mutableListOf<Workout>())
     val workout = _workout.asStateFlow()
@@ -146,7 +148,18 @@ class ExerciseViewModel @Inject constructor(
         viewModelScope.launch {
             _workout.value.add(Workout(nameWorkout = title, exerciseList = list))
             exercisesRepository.saveNewWorkout(_workout.value)
+            _workout.value.clear()
+            _selectedExercises.value.clear()
+            _nameWorkout.value = ""
         }
+    }
+
+    fun openAlertDialog(){
+        _openAlertDialog.value = true
+    }
+
+    fun closeAlertDialog(){
+        _openAlertDialog.value = false
     }
 
     init {

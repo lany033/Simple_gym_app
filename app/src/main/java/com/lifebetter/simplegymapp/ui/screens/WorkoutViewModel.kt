@@ -28,6 +28,12 @@ class WorkoutViewModel @Inject constructor(
         _openAccordion.value = false
     }
 
+    fun deleteWorkout(workout: Workout){
+        viewModelScope.launch {
+            exercisesRepository.deleteWokout(workout)
+        }
+    }
+
     init {
         viewModelScope.launch {
             exercisesRepository.workouts.collect{ workout:List<Workout> -> _workoutListState.update {  WorkoutListState(workoutList = workout) }
@@ -37,6 +43,7 @@ class WorkoutViewModel @Inject constructor(
 
     data class WorkoutListState(
         val isloading: Boolean = false,
+        val openAccordion: Boolean = false,
         val workoutList: List<Workout> = emptyList(),
     )
 }

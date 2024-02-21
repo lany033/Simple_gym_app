@@ -18,6 +18,7 @@ fun NavGraphBuilder.workoutNavGraph(navController: NavHostController) {
         }
         composable(route = WorkoutScreens.NewRoutine.route) {
             NewRoutineScreen(
+                onCancel = {navController.popBackStack()},
                 onClickAddExercises = {
                     navController.navigate(WorkoutScreens.AddExercise.route)
                 }

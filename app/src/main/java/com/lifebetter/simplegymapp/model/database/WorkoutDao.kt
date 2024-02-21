@@ -1,6 +1,7 @@
 package com.lifebetter.simplegymapp.model.database
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -13,6 +14,8 @@ interface WorkoutDao {
 
     @Query("SELECT COUNT(id) FROM Workout")
     suspend fun workoutCount(): Int
+    @Delete
+    suspend fun deleteWorkout(workout: Workout)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertWorkout(list: List<Workout>)
