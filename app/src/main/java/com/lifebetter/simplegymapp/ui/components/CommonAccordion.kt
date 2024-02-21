@@ -12,58 +12,26 @@ import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.lifebetter.simplegymapp.model.database.Workout
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.MoreHorizontal
 
-@Composable
-fun CommonAccordion() {
-    Column(modifier = Modifier.padding(top = 8.dp)) {
-        AccordionHeader()
-        AnimatedVisibility(visible = true) {
-            Surface(
-                modifier = Modifier.padding(top = 8.dp)
-            ) {
-                LazyColumn {
-                    /*
-                    items(getWorkouts()) { cardItem ->
-                        AccordionItem(cardItem.name, cardItem.exercises)
-                        Spacer(modifier = Modifier.padding(8.dp))
-                    }
-
-                     */
-                }
-            }
-        }
-    }
-}
 
 @Composable
-fun AccordionHeader() {
-    Surface(
-
-    ) {
-        Row {
-            Icon(imageVector = Icons.Filled.KeyboardArrowRight, contentDescription = "arrowRight")
-            Text(text = "My Routines ()")
-        }
-    }
-}
-
-@Composable
-fun AccordionItem(workoutName: String, exercises: String) {
+fun AccordionItem(workout: Workout) {
     Card(modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(4.dp)) {
         Column(modifier = Modifier.padding(10.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                CommonTextTitle(text = workoutName, Modifier.weight(1f))
+                CommonTextTitle(text = workout.nameWorkout, Modifier.weight(1f))
                 Icon(imageVector = FeatherIcons.MoreHorizontal, contentDescription = "more")
             }
-            CommonTextContent(exercises)
             CommonButtonItems("Start Routine", {})
         }
     }

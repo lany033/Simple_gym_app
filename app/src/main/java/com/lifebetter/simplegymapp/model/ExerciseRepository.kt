@@ -2,97 +2,118 @@ package com.lifebetter.simplegymapp.model
 
 import android.util.Log
 import com.lifebetter.simplegymapp.domain.Exercise
+import com.lifebetter.simplegymapp.model.database.ExerciseLocalDataSource
+import com.lifebetter.simplegymapp.model.database.Workout
 import com.lifebetter.simplegymapp.model.mappers.toLocalModel
 import com.lifebetter.simplegymapp.model.mappers.toText
 import com.lifebetter.simplegymapp.model.mappers.toTextEquipment
-import com.lifebetter.simplegymapp.model.remotedata.ExerciseResult
-import com.lifebetter.simplegymapp.model.remotedata.ExerciseService
-import com.lifebetter.simplegymapp.model.remotedata.RemoteConnection
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
+import com.lifebetter.simplegymapp.model.remotedata.ExercisesRemoteDataSource
 import javax.inject.Inject
-import javax.inject.Singleton
 
 
-class ExercisesRepository @Inject constructor() {
+class ExercisesRepository @Inject constructor(
+    private val exercisesRemoteDataSource: ExercisesRemoteDataSource,
+    private val exerciseLocalDataSource: ExerciseLocalDataSource
+) {
+    val workouts = exerciseLocalDataSource.workouts
 
-    suspend fun getExercises(): ExerciseResult {
-        return RemoteConnection.service().getExercise()
+    suspend fun getWorkouts() {
+        if (exerciseLocalDataSource.isEmpty()) {
+
+        }
     }
 
-    suspend fun getExercisesByLanguageEN(): List<Exercise>{
-        return getExercises().results.map { it.toLocalModel() }.filter { it.language.short_name == "en" }
+    suspend fun saveNewWorkout(list: List<Workout>) {
+        exerciseLocalDataSource.save(list)
     }
 
-    suspend fun findById(id: Int): Exercise{
+    suspend fun requestExercises(): List<Exercise> {
+        return exercisesRemoteDataSource.getExercises().results.map { it.toLocalModel() }
+    }
+
+    suspend fun findById(id: Int): Exercise {
         Log.d("findById", id.toString())
-        return getExercises().results.map { it.toLocalModel() }.single { it.id == id }
+        return requestExercises().single { it.id == id }
     }
 
     suspend fun getExercisesFilterByBarbell(): List<Exercise> {
-        return getExercisesByLanguageEN().filter { it.equipment.toTextEquipment().contains("Barbell") }
+        return requestExercises().filter { it.equipment.toTextEquipment().contains("Barbell") }
     }
 
     suspend fun getExercisesFilterBySZBar(): List<Exercise> {
-        return getExercises().results.map { it.toLocalModel() }.filter { it.equipment.toTextEquipment().contains("SZ-Bar") }
+        return requestExercises().filter { it.equipment.toTextEquipment().contains("SZ-Bar") }
     }
 
     suspend fun getExercisesFilterByDumbbell(): List<Exercise> {
-        return getExercises().results.map { it.toLocalModel() }.filter { it.equipment.toTextEquipment().contains("Dumbbell") }
+        return requestExercises().filter { it.equipment.toTextEquipment().contains("Dumbbell") }
     }
 
     suspend fun getExercisesFilterByGymMat(): List<Exercise> {
-        return getExercises().results.map { it.toLocalModel() }.filter { it.equipment.toTextEquipment().contains("Gym mat") }
+        return requestExercises().filter { it.equipment.toTextEquipment().contains("Gym mat") }
     }
 
     suspend fun getExercisesFilterBySwissBall(): List<Exercise> {
-        return getExercises().results.map { it.toLocalModel() }.filter { it.equipment.toTextEquipment().contains("Swiss Ball") }
+        return requestExercises().filter { it.equipment.toTextEquipment().contains("Swiss Ball") }
     }
 
     suspend fun getExercisesFilterByPullupBar(): List<Exercise> {
-        return getExercises().results.map { it.toLocalModel() }.filter { it.equipment.toTextEquipment().contains("Pull-up bar") }
+        return requestExercises().filter { it.equipment.toTextEquipment().contains("Pull-up bar") }
     }
+
     suspend fun getExercisesFilterByNone(): List<Exercise> {
-        return getExercises().results.map { it.toLocalModel() }.filter { it.equipment.toTextEquipment().contains("none (bodyweight exercise)") }
+        return requestExercises().filter {
+            it.equipment.toTextEquipment().contains("none (bodyweight exercise)")
+        }
     }
+
     suspend fun getExercisesFilterByBench(): List<Exercise> {
-        return getExercises().results.map { it.toLocalModel() }.filter { it.equipment.toTextEquipment().contains("Bench") }
+        return requestExercises().filter { it.equipment.toTextEquipment().contains("Bench") }
     }
+
     suspend fun getExercisesFilterByInclineBench(): List<Exercise> {
-        return getExercises().results.map { it.toLocalModel() }.filter { it.equipment.toTextEquipment().contains("Incline bench") }
+        return requestExercises().filter {
+            it.equipment.toTextEquipment().contains("Incline bench")
+        }
     }
+
     suspend fun getExercisesFilterByKettlebell(): List<Exercise> {
-        return getExercises().results.map { it.toLocalModel() }.filter { it.equipment.toTextEquipment().contains("Kettlebell") }
+        return requestExercises().filter { it.equipment.toTextEquipment().contains("Kettlebell") }
     }
 
     suspend fun getExercisesFilterByBiceps(): List<Exercise> {
-        return getExercises().results.map { it.toLocalModel() }.filter { it.muscles.toText().contains("Biceps brachii") }
+        return requestExercises().filter { it.muscles.toText().contains("Biceps brachii") }
     }
+
     suspend fun getExercisesFilterByDeltoids(): List<Exercise> {
-        return getExercises().results.map { it.toLocalModel() }.filter { it.muscles.toText().contains("Anterior deltoid") }
+        return requestExercises().filter { it.muscles.toText().contains("Anterior deltoid") }
     }
+
     suspend fun getExercisesFilterByChest(): List<Exercise> {
-        return getExercises().results.map { it.toLocalModel() }.filter { it.muscles.toText().contains("Pectoralis major") }
+        return requestExercises().filter { it.muscles.toText().contains("Pectoralis major") }
     }
+
     suspend fun getExercisesFilterByTriceps(): List<Exercise> {
-        return getExercises().results.map { it.toLocalModel() }.filter { it.muscles.toText().contains("Triceps brachii") }
+        return requestExercises().filter { it.muscles.toText().contains("Triceps brachii") }
     }
+
     suspend fun getExercisesFilterByAbd(): List<Exercise> {
-        return getExercises().results.map { it.toLocalModel() }.filter { it.muscles.toText().contains("Rectus abdominis") }
+        return requestExercises().filter { it.muscles.toText().contains("Rectus abdominis") }
     }
+
     suspend fun getExercisesFilterByGast(): List<Exercise> {
-        return getExercises().results.map { it.toLocalModel() }.filter { it.muscles.toText().contains("Gastrocnemius") }
+        return requestExercises().filter { it.muscles.toText().contains("Gastrocnemius") }
     }
+
     suspend fun getExercisesFilterByGluteus(): List<Exercise> {
-        return getExercises().results.map { it.toLocalModel() }.filter { it.muscles.toText().contains("Gluteus maximus") }
+        return requestExercises().filter { it.muscles.toText().contains("Gluteus maximus") }
     }
+
     suspend fun getExercisesFilterByQuad(): List<Exercise> {
-        return getExercises().results.map { it.toLocalModel() }.filter { it.muscles.toText().contains("Quadriceps femoris") }
+        return requestExercises().filter { it.muscles.toText().contains("Quadriceps femoris") }
     }
+
     suspend fun getExercisesFilterByFemor(): List<Exercise> {
-        return getExercises().results.map { it.toLocalModel() }.filter { it.muscles.toText().contains("Biceps femoris") }
+        return requestExercises().filter { it.muscles.toText().contains("Biceps femoris") }
     }
 
 

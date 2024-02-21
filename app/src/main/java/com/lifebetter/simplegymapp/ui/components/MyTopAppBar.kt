@@ -21,6 +21,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.lifebetter.simplegymapp.domain.Exercise
+import com.lifebetter.simplegymapp.model.database.Workout
 
 @Composable
 fun MyTopAppBar(title: String) {
@@ -58,18 +60,26 @@ fun MyTopWithIconsBar(title: String) {
 
 
 @Composable
-fun MyTopBarWithTwoText(subtitleOne:String, title: String, subtitleTwo:String) {
+fun MyTopBarWithTwoText(
+    subtitleOne: String,
+    title: String,
+    subtitleTwo: String,
+    nameTitle: String,
+    listWorkout: List<Exercise>,
+    onClickCancel: () -> Unit,
+    onClickSave: (String,List<Exercise>) -> Unit,
+) {
     Column() {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            TextButton(onClick = { /*TODO*/ }) {
+            TextButton(onClick = { onClickCancel() }) {
                 Text(text = subtitleOne, fontSize = 16.sp)
             }
             Text(text = title, fontSize = 16.sp)
-            TextButton(onClick = { /*TODO*/ }) {
+            TextButton(onClick = { onClickSave(nameTitle,listWorkout) }) {
                 Text(text = subtitleTwo, fontSize = 16.sp)
             }
         }
@@ -78,9 +88,8 @@ fun MyTopBarWithTwoText(subtitleOne:String, title: String, subtitleTwo:String) {
 }
 
 
-
 @Composable
-fun MyTopBarWithOneText(title: String, subtitleTwo:String, onClickCancel:()-> Unit) {
+fun MyTopBarWithOneText(title: String, subtitleTwo: String, onClickCancel: () -> Unit) {
     Column() {
         Box(
             modifier = Modifier.fillMaxWidth(),

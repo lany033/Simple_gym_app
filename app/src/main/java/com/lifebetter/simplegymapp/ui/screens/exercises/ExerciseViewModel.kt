@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lifebetter.simplegymapp.domain.Exercise
 import com.lifebetter.simplegymapp.model.ExercisesRepository
+import com.lifebetter.simplegymapp.model.database.Workout
 import com.lifebetter.simplegymapp.model.mappers.toLocalModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,6 +22,12 @@ import javax.inject.Inject
 class ExerciseViewModel @Inject constructor(
     private val exercisesRepository: ExercisesRepository
 ) : ViewModel() {
+
+    private val _workout = MutableStateFlow(mutableListOf<Workout>())
+    val workout = _workout.asStateFlow()
+
+    private val _nameWorkout = MutableStateFlow("")
+    val nameWorkout = _nameWorkout.asStateFlow()
 
     private val _searchText = MutableStateFlow("")
     val searchText = _searchText.asStateFlow()
@@ -96,7 +103,10 @@ class ExerciseViewModel @Inject constructor(
 
     fun onSearchTextChange(text: String) {
         _searchText.value = text
-        Log.d("onSearch", text)
+    }
+
+    fun onNameText(text: String){
+        _nameWorkout.value = text
     }
 
     fun onFilterByEquipment(id: Int) {
@@ -129,16 +139,21 @@ class ExerciseViewModel @Inject constructor(
     fun deleteElement(exercise: Exercise){
         viewModelScope.launch {
              _selectedExercises.value.remove(exercise)
-
         }
-        Log.d("updateElement", _selectedExercises.value.joinToString { it.name })
+    }
+
+    fun onSaveRoutine(title: String, list: List<Exercise>){
+        viewModelScope.launch {
+            _workout.value.add(Workout(nameWorkout = title, exerciseList = list))
+            exercisesRepository.saveNewWorkout(_workout.value)
+        }
     }
 
     init {
         Log.e("SearchViewModel - hashcode - ", "SearchViewModel - hashcode -" + this.hashCode())
         viewModelScope.launch {
             _exerciseListState.value = ExerciseListState(
-                exerciseList = exercisesRepository.getExercises().results.map { it.toLocalModel() }
+                exerciseList = exercisesRepository.requestExercises()
             )
         }
     }
@@ -146,7 +161,6 @@ class ExerciseViewModel @Inject constructor(
     data class ExerciseListState(
         val showButtonAddExercise: Boolean = false,
         val isSelected: Boolean = false,
-        val selectedItemsList: List<Exercise> = mutableListOf(),
         val exerciseId: Int = 0,
         val exerciseSelected: Exercise? = null,
         val isSearching: Boolean = false,

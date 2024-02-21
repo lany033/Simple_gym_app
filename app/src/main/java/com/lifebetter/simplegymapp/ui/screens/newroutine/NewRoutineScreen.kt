@@ -43,6 +43,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.lifebetter.simplegymapp.model.database.Workout
 import com.lifebetter.simplegymapp.ui.components.CommonTextButtons
 import com.lifebetter.simplegymapp.ui.components.MyTopBarWithTwoText
 import com.lifebetter.simplegymapp.ui.screens.exercises.ImageWorkout
@@ -52,14 +53,23 @@ import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.Dumbbell
 import kotlinx.coroutines.launch
 
-
 @Composable
 fun NewRoutineScreen(onClickAddExercises: () -> Unit) {
     val exerciseViewModel: ExerciseViewModel =
         hiltViewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
     val selectedExercises by exerciseViewModel.selectedExercises.collectAsState()
-    val scope = rememberCoroutineScope()
-    Scaffold(topBar = { MyTopBarWithTwoText("Cancel", "Build Routine", "Save") }) { padding ->
+    val titleText by exerciseViewModel.nameWorkout.collectAsState()
+
+    Scaffold(topBar = {
+        MyTopBarWithTwoText(
+            "Cancel",
+            "Build Routine",
+            "Save",
+            nameTitle = titleText,
+            listWorkout = selectedExercises,
+            {},
+            exerciseViewModel::onSaveRoutine)
+    }) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -68,8 +78,16 @@ fun NewRoutineScreen(onClickAddExercises: () -> Unit) {
             verticalArrangement = Arrangement.spacedBy(15.dp)
         ) {
             TextField(
-                value = "Titulo de la rutina",
-                onValueChange = {},
+                value = titleText,
+                onValueChange = exerciseViewModel::onNameText,
+                placeholder = {
+                    Text(
+                        text = "Titulo de la rutina",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 24.sp,
+                        color = Color.Gray
+                    )
+                },
                 textStyle = TextStyle(
                     fontSize = 24.sp,
                     color = Color.Gray,
@@ -105,7 +123,7 @@ fun NewRoutineScreen(onClickAddExercises: () -> Unit) {
                                     imageUrl = exercise.images,
                                     width = 30,
                                     height = 30
-                                ) {  exerciseViewModel.deleteElement(exercise)  }
+                                ) { exerciseViewModel.deleteElement(exercise) }
                             }
                         }
                     }
