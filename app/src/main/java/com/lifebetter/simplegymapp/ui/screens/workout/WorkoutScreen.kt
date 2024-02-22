@@ -1,4 +1,4 @@
-package com.lifebetter.simplegymapp.ui.screens
+package com.lifebetter.simplegymapp.ui.screens.workout
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
@@ -43,7 +43,7 @@ import compose.icons.fontawesomeicons.solid.Smile
 
 
 @Composable
-fun WorkoutScreen(onClickNewRoutines: () -> Unit) {
+fun WorkoutScreen(onClickNewRoutines: () -> Unit, onClickStartRoutine: ()->Unit) {
 
     val workoutViewModel: WorkoutViewModel = hiltViewModel()
 
@@ -134,7 +134,7 @@ fun WorkoutScreen(onClickNewRoutines: () -> Unit) {
                 AnimatedVisibility(visible = openAccordion) {
                     LazyColumn(modifier = Modifier.padding(14.dp)) {
                         items(workoutList.workoutList) {
-                            AccordionItem(workout = it, onDelete = workoutViewModel::deleteWorkout)
+                            AccordionItem(workout = it, onDelete = workoutViewModel::deleteWorkout, onStartRoutine = { onClickStartRoutine()})
                             Spacer(modifier = Modifier.size(5.dp))
                         }
                     }

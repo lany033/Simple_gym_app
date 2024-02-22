@@ -1,4 +1,4 @@
-package com.lifebetter.simplegymapp.ui.screens
+package com.lifebetter.simplegymapp.ui.screens.workout
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -39,6 +39,10 @@ class WorkoutViewModel @Inject constructor(
             exercisesRepository.workouts.collect{ workout:List<Workout> -> _workoutListState.update {  WorkoutListState(workoutList = workout) }
             }
         }
+    }
+
+    fun getExercisesById(){
+
     }
 
     data class WorkoutListState(

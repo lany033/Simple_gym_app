@@ -1,4 +1,4 @@
-package com.lifebetter.simplegymapp.ui.screens.newroutine
+package com.lifebetter.simplegymapp.ui.screens.workout
 
 import android.util.Log
 import androidx.activity.ComponentActivity

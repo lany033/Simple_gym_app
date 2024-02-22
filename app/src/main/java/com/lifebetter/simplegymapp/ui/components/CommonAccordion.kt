@@ -25,7 +25,7 @@ import com.lifebetter.simplegymapp.model.database.Workout
 
 
 @Composable
-fun AccordionItem(workout: Workout, onDelete: (Workout)-> Unit) {
+fun AccordionItem(workout: Workout, onDelete: (Workout)-> Unit, onStartRoutine: () -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(4.dp),
@@ -48,7 +48,7 @@ fun AccordionItem(workout: Workout, onDelete: (Workout)-> Unit) {
                 }
             }
             CommonTextContent(exercises = workout.exerciseList)
-            CommonButtonItems("Start Routine", {})
+            CommonButtonItems("Start Routine") { onStartRoutine() }
         }
     }
 }

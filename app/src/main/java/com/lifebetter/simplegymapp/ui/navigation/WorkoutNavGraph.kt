@@ -1,19 +1,20 @@
 package com.lifebetter.simplegymapp.ui.navigation
 
-import android.util.Log
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import com.lifebetter.simplegymapp.ui.screens.WorkoutScreen
+import com.lifebetter.simplegymapp.ui.screens.workout.WorkoutScreen
 import com.lifebetter.simplegymapp.ui.screens.exercises.ExercisesScreen
-import com.lifebetter.simplegymapp.ui.screens.newroutine.NewRoutineScreen
+import com.lifebetter.simplegymapp.ui.screens.workout.LogWorkoutScreen
+import com.lifebetter.simplegymapp.ui.screens.workout.NewRoutineScreen
 
 fun NavGraphBuilder.workoutNavGraph(navController: NavHostController) {
     navigation(route = Graph.WORKOUT, startDestination = BottomBarNavItem.Workouts.route) {
         composable(route = BottomBarNavItem.Workouts.route) {
             WorkoutScreen(
-                onClickNewRoutines = { navController.navigate(WorkoutScreens.NewRoutine.route) }
+                onClickNewRoutines = { navController.navigate(WorkoutScreens.NewRoutine.route) },
+                onClickStartRoutine = { navController.navigate(WorkoutScreens.StartRoutine.route)}
             )
         }
         composable(route = WorkoutScreens.NewRoutine.route) {
@@ -24,14 +25,11 @@ fun NavGraphBuilder.workoutNavGraph(navController: NavHostController) {
                 }
             )
         }
-        composable(
-            route = WorkoutScreens.AddExercise.route
-        ) {
-            ExercisesScreen(
-                onScreenAddExercises = {
-                    navController.popBackStack()
-                }
-            )
+        composable(route = WorkoutScreens.AddExercise.route) {
+            ExercisesScreen(onScreenAddExercises = { navController.popBackStack() })
+        }
+        composable(route = WorkoutScreens.StartRoutine.route){
+            LogWorkoutScreen(onFinish = {navController.popBackStack()})
         }
     }
 }
@@ -39,5 +37,5 @@ fun NavGraphBuilder.workoutNavGraph(navController: NavHostController) {
 sealed class WorkoutScreens(val route: String) {
     object AddExercise : WorkoutScreens("ADDEXERCISE")
     object NewRoutine : WorkoutScreens("NEWROUTINE")
-    object Explore : WorkoutScreens("EXPLORE")
+    object StartRoutine : WorkoutScreens("StartRoutine")
 }
