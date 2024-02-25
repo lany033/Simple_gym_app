@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.lifebetter.simplegymapp.domain.Exercise
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -14,6 +15,10 @@ interface WorkoutDao {
 
     @Query("SELECT COUNT(id) FROM Workout")
     suspend fun workoutCount(): Int
+
+    @Query("SELECT * FROM Workout WHERE id = :id")
+    fun findById(id: Int): Flow<Workout>
+
     @Delete
     suspend fun deleteWorkout(workout: Workout)
 

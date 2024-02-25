@@ -18,9 +18,13 @@ object DatabaseModule {
         app,
         ExerciseDatabase::class.java,
         "workout-db"
-    ).build()
+    ).fallbackToDestructiveMigration().build()
 
     @Provides
     @Singleton
     fun provideWorkoutDao(db: ExerciseDatabase) = db.workoutDao()
+
+    @Provides
+    @Singleton
+    fun provideSetDao(db: ExerciseDatabase) = db.setDao()
 }

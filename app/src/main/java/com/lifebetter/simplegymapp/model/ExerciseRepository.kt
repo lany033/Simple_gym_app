@@ -8,6 +8,7 @@ import com.lifebetter.simplegymapp.model.mappers.toLocalModel
 import com.lifebetter.simplegymapp.model.mappers.toText
 import com.lifebetter.simplegymapp.model.mappers.toTextEquipment
 import com.lifebetter.simplegymapp.model.remotedata.ExercisesRemoteDataSource
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 
@@ -21,15 +22,19 @@ class ExercisesRepository @Inject constructor(
         exerciseLocalDataSource.save(list)
     }
 
-    suspend fun deleteWokout(workout: Workout){
+    suspend fun deleteWorkout(workout: Workout){
         exerciseLocalDataSource.deleteWorkout(workout)
+    }
+
+    suspend fun findByWorkoutId(id: Int): Flow<List<Exercise>>{
+        return exerciseLocalDataSource.findById(id)
     }
 
     suspend fun requestExercises(): List<Exercise> {
         return exercisesRemoteDataSource.getExercises().results.map { it.toLocalModel() }
     }
 
-    suspend fun findById(id: Int): Exercise {
+    suspend fun findByExerciseId(id: Int): Exercise {
         Log.d("findById", id.toString())
         return requestExercises().single { it.id == id }
     }

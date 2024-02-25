@@ -43,7 +43,7 @@ import compose.icons.fontawesomeicons.solid.Smile
 
 
 @Composable
-fun WorkoutScreen(onClickNewRoutines: () -> Unit, onClickStartRoutine: ()->Unit) {
+fun WorkoutScreen(onClickNewRoutines: () -> Unit, onClickStartRoutine: (Int)->Unit) {
 
     val workoutViewModel: WorkoutViewModel = hiltViewModel()
 
@@ -134,7 +134,7 @@ fun WorkoutScreen(onClickNewRoutines: () -> Unit, onClickStartRoutine: ()->Unit)
                 AnimatedVisibility(visible = openAccordion) {
                     LazyColumn(modifier = Modifier.padding(14.dp)) {
                         items(workoutList.workoutList) {
-                            AccordionItem(workout = it, onDelete = workoutViewModel::deleteWorkout, onStartRoutine = { onClickStartRoutine()})
+                            AccordionItem(workout = it, onDelete = workoutViewModel::deleteWorkout, onStartRoutine = { onClickStartRoutine(it.id)})
                             Spacer(modifier = Modifier.size(5.dp))
                         }
                     }

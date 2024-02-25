@@ -62,7 +62,7 @@ fun CommonTextContent(exercises: List<Exercise>) {
 fun CommonButtonItems(text: String, onClick: () -> Unit) {
     Button(
         onClick = { onClick() },
-        shape = RoundedCornerShape(4.dp),
+        shape = RoundedCornerShape(2.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
         CommonTextButtons(text = text)

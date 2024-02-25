@@ -30,7 +30,7 @@ class WorkoutViewModel @Inject constructor(
 
     fun deleteWorkout(workout: Workout){
         viewModelScope.launch {
-            exercisesRepository.deleteWokout(workout)
+            exercisesRepository.deleteWorkout(workout)
         }
     }
 
@@ -39,10 +39,6 @@ class WorkoutViewModel @Inject constructor(
             exercisesRepository.workouts.collect{ workout:List<Workout> -> _workoutListState.update {  WorkoutListState(workoutList = workout) }
             }
         }
-    }
-
-    fun getExercisesById(){
-
     }
 
     data class WorkoutListState(
