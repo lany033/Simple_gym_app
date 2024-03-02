@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Button
@@ -34,7 +35,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.lifebetter.simplegymapp.ui.components.CommonButtonItems
+import com.lifebetter.simplegymapp.model.database.SetValue
+import com.lifebetter.simplegymapp.ui.components.CommonTextButtons
 import com.lifebetter.simplegymapp.ui.components.CommonTextTitle
 import com.lifebetter.simplegymapp.ui.screens.exercises.ImageWorkout
 
@@ -52,10 +54,14 @@ fun LogWorkoutScreen(onFinish: () -> Unit, id: Int?) {
     val workoutId by logWorkoutViewModel.workoutId.collectAsState()
 
     val setNumber by logWorkoutViewModel.numberSet.collectAsState()
+    /*
     val kg by logWorkoutViewModel.kgState.collectAsState()
     val rep by logWorkoutViewModel.repSet.collectAsState()
     val isChecked by logWorkoutViewModel.isCheckedState.collectAsState()
-    val listSet by logWorkoutViewModel.listSetWorkout.collectAsState()
+    */
+    val workoutList by logWorkoutViewModel.listSetWorkout.collectAsState()
+    val setList by logWorkoutViewModel.setList.collectAsState()
+    val setState by logWorkoutViewModel.setState.collectAsState()
 
     Scaffold(topBar = { LogWorkoutBar(onFinish) }) { padding ->
         Column(modifier = Modifier.padding(padding)) {
@@ -73,23 +79,38 @@ fun LogWorkoutScreen(onFinish: () -> Unit, id: Int?) {
                 logWorkoutViewModel.getWorkoutById(id)
             }
             LazyColumn() {
-                items(listSet) {
-                    LogWorkoutItem(
-                        nameExercise = it.exerciseName,
-                        imageUrl = it.exerciseImage,
-                        setNumber = setNumber,
-                        kg = kg,
-                        rep = rep,
-                        isChecked = isChecked,
-                        description = it.exerciseName,
-                        width = 30,
-                        height = 30,
-                        onSetNumber =  logWorkoutViewModel::onNumberTextChange ,
-                        onKg = logWorkoutViewModel::onKgTextChange,
-                        onRep = logWorkoutViewModel::onRepTextChange,
-                        onChecked = {},
-                        onAddExercise = {}
-                    )
+                workoutList.forEachIndexed { index, setWorkout ->
+                    item {
+                        LogWorkoutItem(
+                            nameExercise = setWorkout.exerciseName,
+                            imageUrl = setWorkout.exerciseImage,
+                            id = index,
+                            description = setWorkout.exerciseName,
+                            width = 30,
+                            height = 30,
+                        )
+                    }
+                    items(setList) {
+                        SetItem(
+                            id = index,
+                            setNumber = it.setNumber,
+                            kg = setState.kg,
+                            rep = setState.rep,
+                            isChecked = false,
+                            onKg = logWorkoutViewModel::onKgTextChange,
+                            onRep = logWorkoutViewModel::onRepTextChange,
+                            onChecked = logWorkoutViewModel::isChecked
+                        )
+                    }
+                    item{
+                        AddButtonSet(
+                            text = "+ Add Set",
+                            id = index,
+                            setValue = setState,
+                            onAddExercise = logWorkoutViewModel::newSet
+                        )
+                    }
+
                 }
             }
         }
@@ -123,18 +144,11 @@ fun LogWorkoutBar(onFinish: () -> Unit) {
 fun LogWorkoutItem(
     nameExercise: String,
     imageUrl: String,
-    setNumber: Int,
-    kg: String,
-    rep: Int,
-    isChecked: Boolean,
+    id: Int,
     description: String,
     width: Int,
     height: Int,
-    onSetNumber: (String) -> Unit,
-    onKg: (String) -> Unit,
-    onRep: (String) -> Unit,
-    onChecked: (Boolean) -> Unit,
-    onAddExercise: () -> Unit
+
 ) {
     Card(
         modifier = Modifier
@@ -163,29 +177,86 @@ fun LogWorkoutItem(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = "SET", textAlign = TextAlign.Center ,modifier = Modifier.weight(1f).padding(5.dp))
-            Text(text = "KG", textAlign = TextAlign.Center,modifier = Modifier.weight(1f).padding(5.dp))
-            Text(text = "REPS", textAlign = TextAlign.Center,modifier = Modifier.weight(1f).padding(5.dp))
-            Icon(imageVector = Icons.Filled.Check, contentDescription = "check", modifier = Modifier.weight(1f).padding(5.dp))
-        }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            TextField(value = setNumber.toString(), onValueChange = {onSetNumber(String())}, modifier = Modifier.weight(1f).padding(5.dp))
-            TextField(value = kg, onValueChange = {onKg(String())}, modifier = Modifier.weight(1f).padding(5.dp))
-            TextField(value = rep.toString(), onValueChange = {onRep(String())}, modifier = Modifier.weight(1f).padding(5.dp))
-            IconButton(onClick = {onChecked(isChecked)}, modifier = Modifier.weight(1f).padding(5.dp)) {
-                Icon(imageVector = Icons.Filled.Check, contentDescription = "check")
-            }
-
+            Text(
+                text = "SET", textAlign = TextAlign.Center, modifier = Modifier
+                    .weight(1f)
+                    .padding(5.dp)
+            )
+            Text(
+                text = "KG", textAlign = TextAlign.Center, modifier = Modifier
+                    .weight(1f)
+                    .padding(5.dp)
+            )
+            Text(
+                text = "REPS", textAlign = TextAlign.Center, modifier = Modifier
+                    .weight(1f)
+                    .padding(5.dp)
+            )
+            Icon(
+                imageVector = Icons.Filled.Check, contentDescription = "check", modifier = Modifier
+                    .weight(1f)
+                    .padding(5.dp)
+            )
         }
         Spacer(modifier = Modifier.size(5.dp))
-        CommonButtonItems(text = "+ Add Set") { onAddExercise() }
+
     }
 }
 
+@Composable
+fun SetItem(
+    id: Int,
+    setNumber: Int,
+    kg: String,
+    rep: Int,
+    isChecked: Boolean,
+    onKg: (String) -> Unit,
+    onRep: (String) -> Unit,
+    onChecked: (Boolean) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 12.dp, end = 12.dp, top = 3.dp, bottom = 3.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        TextField(
+            value = setNumber.toString(),
+            onValueChange = { },
+            modifier = Modifier
+                .weight(1f)
+                .padding(5.dp)
+        )
+        TextField(
+            value = kg,
+            onValueChange = { onKg(String()) },
+            modifier = Modifier
+                .weight(1f)
+                .padding(5.dp),
+            placeholder = {
+                Text(
+                    text = "000"
+                )
+            })
+        TextField(
+            value = rep.toString(),
+            onValueChange = { onRep(String()) },
+            modifier = Modifier
+                .weight(1f)
+                .padding(5.dp)
+        )
+        IconButton(
+            onClick = { onChecked(isChecked) }, modifier = Modifier
+                .weight(1f)
+                .padding(5.dp)
+        ) {
+            Icon(imageVector = Icons.Filled.Check, contentDescription = "check")
+        }
+
+    }
+
+}
 
 @Composable
 fun BasicCountdownTimer(
@@ -202,5 +273,24 @@ fun BasicCountdownTimer(
 
     if (isPlaying) {
         Text(text = timerValue.formatTime(), fontSize = 24.sp)
+    }
+}
+
+
+@Composable
+fun AddButtonSet(
+    text: String,
+    id: Int,
+    setValue: LogWorkoutViewModel.SetValueState,
+    onAddExercise: (Int) -> Unit
+) {
+    Button(
+        onClick = { onAddExercise(id) },
+        shape = RoundedCornerShape(2.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(12.dp)
+    ) {
+        CommonTextButtons(text = text)
     }
 }

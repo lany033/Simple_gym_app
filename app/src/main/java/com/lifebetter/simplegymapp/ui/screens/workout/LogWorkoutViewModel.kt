@@ -1,6 +1,7 @@
 package com.lifebetter.simplegymapp.ui.screens.workout
 
 import android.util.Log
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lifebetter.simplegymapp.domain.Exercise
@@ -12,6 +13,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,23 +28,29 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
     private val _workoutId = MutableStateFlow(0)
     val workoutId = _workoutId.asStateFlow()
 
-    private val _kgState = MutableStateFlow("")
-    val kgState = _kgState.asStateFlow()
+    //private val _kgState = MutableStateFlow("")
+    //val kgState = _kgState.asStateFlow()
 
-    private val _repState = MutableStateFlow(0)
-    val repSet = _repState.asStateFlow()
+    //private val _repState = MutableStateFlow(0)
+    //val repSet = _repState.asStateFlow()
 
-    private val _numberSet = MutableStateFlow(1)
+    private val _numberSet = MutableStateFlow(mutableListOf<Int>())
     val numberSet = _numberSet.asStateFlow()
 
-    private val _isCheckedState = MutableStateFlow(false)
-    val isCheckedState = _isCheckedState.asStateFlow()
+    //private val _isCheckedState = MutableStateFlow(false)
+    //val isCheckedState = _isCheckedState.asStateFlow()
 
     private val _timer = MutableStateFlow(0L)
     val timer = _timer.asStateFlow()
 
     private val _listSetWorkout = MutableStateFlow(mutableListOf<SetWorkout>())
     val listSetWorkout = _listSetWorkout.asStateFlow()
+
+    private val _setState = MutableStateFlow(SetValueState())
+    val setState = _setState.asStateFlow()
+
+    private val _setList = MutableStateFlow(SnapshotStateList<SetValueState>())
+    val setList = _setList.asStateFlow()
 
     private var timerJob: Job? = null
 
@@ -59,20 +67,40 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
         }
     }
 
-    fun onNumberTextChange(text: String) {
-        _numberSet.value = text.toInt()
+    fun newSet(id: Int) {
+
+        _setList.value.add(_setState.value)
+
+        _setList.value.forEachIndexed{index, setValueState ->
+            setValueState.setNumber = index + 1
+        }
+
+        Log.d("newset", _setList.value.joinToString { it.setNumber.toString() })
+
+    }
+    fun addSet(index:Int, set: SetValueState) {
+        Log.d("index", index.toString())
+        val currentList = _listSetWorkout.value
+        val currentSets = currentList[index].listSet.toMutableList()
+        currentSets.add(set)
+        currentList[index] = currentList[index].copy(listSet = currentSets)
+        _listSetWorkout.value = currentList
     }
 
     fun onKgTextChange(text: String) {
-        _kgState.value = text
+        _setState.update {
+            SetValueState(kg = text)
+        }
     }
 
     fun onRepTextChange(text: String) {
-        _repState.value = text.toInt()
+        _setState.update {
+            SetValueState(rep = text.toInt())
+        }
     }
 
     fun isChecked(boolean: Boolean) {
-        _isCheckedState.value = boolean
+
     }
 
     fun getWorkoutById(id: Int?) {
@@ -81,6 +109,7 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
                 _workoutId.value = id
                 Log.d("id en LWVM", "$id")
             }
+
             exercisesRepository.findByWorkoutId(_workoutId.value)
                 .collect { exercises ->
                     exercises.map {
@@ -88,17 +117,16 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
                             SetWorkout(
                                 exerciseName = it.name,
                                 exerciseImage = it.images,
-                                setNumber = _numberSet.value,
-                                rep = _repState.value,
-                                kg = kgState.value,
-                                isChecked = false
+                                exerciseId = it.id,
+                                listSet = _setList.value
                             )
                         )
                     }
                 }
+
+            Log.d("addSet", _listSetWorkout.value.joinToString { it.exerciseName })
         }
     }
-
     override fun onCleared() {
         super.onCleared()
         timerJob?.cancel()
@@ -106,7 +134,21 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
 
     data class LogWorkoutState(
         val timerIsPlaying: Boolean = true,
-        val logWorkoutList: List<Exercise> = emptyList()
-
+        val logExerciseList: List<Exercise> = emptyList(),
+        var exerciseIndex: Int = 0,
     )
-}
+    data class SetValueState(
+        var setNumber: Int = 1,
+        val kg: String = "0",
+        val rep: Int = 0,
+        val isChecked: Boolean = false
+    )
+
+    }
+
+
+
+
+
+
+

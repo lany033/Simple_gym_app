@@ -1,8 +1,7 @@
 package com.lifebetter.simplegymapp.model.database
-
 data class SetValue(
-    val setNumber: Int = 1,
-    val kg: Int,
+    var setNumber: Int,
+    val kg: String,
     val rep: Int,
     val isChecked: Boolean
 )
