@@ -90,7 +90,7 @@ fun LogWorkoutScreen(onFinish: () -> Unit, id: Int?) {
                             height = 30,
                         )
                     }
-                    items(setList) {
+                    items(setWorkout.listSet) {
                         SetItem(
                             id = index,
                             setNumber = it.setNumber,

@@ -49,7 +49,7 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
     private val _setState = MutableStateFlow(SetValueState())
     val setState = _setState.asStateFlow()
 
-    private val _setList = MutableStateFlow(SnapshotStateList<SetValueState>())
+    private val _setList = MutableStateFlow(mutableListOf<SetValueState>())
     val setList = _setList.asStateFlow()
 
     private var timerJob: Job? = null
@@ -67,15 +67,26 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
         }
     }
 
-    fun newSet(id: Int) {
+    fun newSet(indexSet: Int) {
 
-        _setList.value.add(_setState.value)
+        val currentList = _listSetWorkout.value
+        val currentSets = currentList[indexSet].listSet.toMutableList()
 
-        _setList.value.forEachIndexed{index, setValueState ->
-            setValueState.setNumber = index + 1
+        currentSets.add(_setState.value)
+
+        val newSets = currentSets.mapIndexed { index, setValueState ->
+            SetValueState(
+                setNumber = setValueState.setNumber + index,
+                kg = setValueState.kg,
+                rep = setValueState.rep,
+                isChecked = false
+            )
         }
 
-        Log.d("newset", _setList.value.joinToString { it.setNumber.toString() })
+        currentList[indexSet] = currentList[indexSet].copy(listSet = newSets)
+
+
+        Log.d("size $indexSet", _listSetWorkout.value[indexSet].listSet.size.toString())
 
     }
     fun addSet(index:Int, set: SetValueState) {
@@ -110,22 +121,24 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
                 Log.d("id en LWVM", "$id")
             }
 
-            exercisesRepository.findByWorkoutId(_workoutId.value)
-                .collect { exercises ->
-                    exercises.map {
-                        _listSetWorkout.value.add(
-                            SetWorkout(
-                                exerciseName = it.name,
-                                exerciseImage = it.images,
-                                exerciseId = it.id,
-                                listSet = _setList.value
-                            )
-                        )
-                    }
-                }
+            val exercisesList = exercisesRepository.findByWorkoutId(_workoutId.value)
 
-            Log.d("addSet", _listSetWorkout.value.joinToString { it.exerciseName })
+            _setList.value.add(_setState.value)
+
+            exercisesList.collect { exercises ->
+
+                _listSetWorkout.value = exercises.map {
+                    SetWorkout(
+                        exerciseName = it.name,
+                        exerciseImage = it.images,
+                        exerciseId = it.id,
+                        listSet = _setList.value
+                    )
+                }.toMutableList()
+            }
+
         }
+
     }
     override fun onCleared() {
         super.onCleared()
