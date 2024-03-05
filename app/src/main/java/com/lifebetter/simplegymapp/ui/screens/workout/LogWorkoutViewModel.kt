@@ -96,7 +96,7 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
                 if (i == indexWorkout) {
                     setWorkout.copy(listSet = setWorkout.listSet.mapIndexed { indexList, setValueState ->
                         if (indexList == index){
-                            setValueState.copy(kg = text)
+                            setValueState.copy(kg = text.toInt())
                         } else {
                             setValueState
                         }
@@ -126,8 +126,22 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
         }
     }
 
-    fun isChecked(boolean: Boolean) {
-
+    fun isChecked(boolean: Boolean, index: Int, indexWorkout: Int) {
+        _listSetWorkout.update { list ->
+            list.mapIndexed { i, setWorkout ->
+                if (i == indexWorkout) {
+                    setWorkout.copy(listSet = setWorkout.listSet.mapIndexed { indexList, setValueState ->
+                        if (indexList == index){
+                            setValueState.copy(isChecked = !boolean)
+                        } else {
+                            setValueState
+                        }
+                    })
+                } else {
+                    setWorkout
+                }
+            }.toMutableList()
+        }
     }
 
     fun getWorkoutById(id: Int?) {
@@ -166,7 +180,7 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
     )
     data class SetValueState(
         var setNumber: Int = 1,
-        val kg: String = "0",
+        val kg: Int = 0,
         val rep: Int = 0,
         val isChecked: Boolean = false
     )
