@@ -108,9 +108,21 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
         }
     }
 
-    fun onRepTextChange(text: String) {
-        _setState.update {
-            it.copy()
+    fun onRepTextChange(text: String, index: Int, indexWorkout: Int) {
+        _listSetWorkout.update { list ->
+            list.mapIndexed { i, setWorkout ->
+                if (i == indexWorkout) {
+                    setWorkout.copy(listSet = setWorkout.listSet.mapIndexed { indexList, setValueState ->
+                        if (indexList == index){
+                            setValueState.copy(rep = text.toInt())
+                        } else {
+                            setValueState
+                        }
+                    })
+                } else {
+                    setWorkout
+                }
+            }.toMutableList()
         }
     }
 

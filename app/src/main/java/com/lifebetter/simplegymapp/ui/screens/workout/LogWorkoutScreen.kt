@@ -1,5 +1,6 @@
 package com.lifebetter.simplegymapp.ui.screens.workout
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Button
@@ -21,9 +23,11 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -31,6 +35,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -101,12 +109,24 @@ fun LogWorkoutScreen(onFinish: () -> Unit, id: Int?) {
                             rep = setState.rep,
                             isChecked = false,
                             viewModel = logWorkoutViewModel,
-                            onKg = { text -> logWorkoutViewModel.onKgTextChange(text,it.setNumber - 1, index) },
-                            onRep = { },
+                            onKg = { text ->
+                                logWorkoutViewModel.onKgTextChange(
+                                    text,
+                                    it.setNumber - 1,
+                                    index
+                                )
+                            },
+                            onRep = { text ->
+                                logWorkoutViewModel.onRepTextChange(
+                                    text,
+                                    it.setNumber - 1,
+                                    index
+                                )
+                            },
                             onChecked = { }
                         )
                     }
-                    item{
+                    item {
                         AddButtonSet(
                             text = "+ Add Set",
                             id = index,
@@ -153,7 +173,7 @@ fun LogWorkoutItem(
     width: Int,
     height: Int,
 
-) {
+    ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -202,7 +222,6 @@ fun LogWorkoutItem(
                     .padding(5.dp)
             )
         }
-        Spacer(modifier = Modifier.size(5.dp))
 
     }
 }
@@ -215,44 +234,86 @@ fun SetItem(
     rep: Int,
     isChecked: Boolean,
     viewModel: LogWorkoutViewModel,
-    onKg:(String) -> Unit,
-    onRep:() -> Unit,
-    onChecked:() -> Unit
+    onKg: (String) -> Unit,
+    onRep: (String) -> Unit,
+    onChecked: () -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 12.dp, end = 12.dp, top = 3.dp, bottom = 3.dp),
+            .padding(start = 12.dp, end = 12.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         TextField(
             value = setNumber.toString(),
             onValueChange = { },
+            textStyle = TextStyle.Default.copy(
+                fontWeight = FontWeight.Bold,
+                color = Color.Gray,
+                fontSize = 18.sp,
+                textAlign = TextAlign.Center
+            ),
             modifier = Modifier
                 .weight(1f)
-                .padding(5.dp)
+                .padding(start = 5.dp, end = 5.dp)
+                .border(width = 1.dp, color = Color.Gray, shape = RoundedCornerShape(2.dp)),
+            readOnly = true,
+            colors = TextFieldDefaults.colors(
+                unfocusedContainerColor = Color.Transparent,
+                focusedContainerColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
+            )
         )
         TextField(
             value = kg,
+            textStyle = TextStyle.Default.copy(
+                fontWeight = FontWeight.Bold,
+                color = Color.Gray,
+                fontSize = 18.sp,
+                textAlign = TextAlign.Center
+            ),
             onValueChange = { onKg(it) },
             modifier = Modifier
                 .weight(1f)
-                .padding(5.dp),
-            placeholder = {
-                Text(
-                    text = "00"
-                )
-            })
+                .padding(start = 5.dp, end = 5.dp)
+                .border(width = 1.dp, color = Color.Gray, shape = RoundedCornerShape(2.dp)),
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+            singleLine = true,
+            maxLines = 1,
+            colors = TextFieldDefaults.colors(
+                unfocusedContainerColor = Color.Transparent,
+                focusedContainerColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
+            )
+        )
         TextField(
             value = rep.toString(),
-            onValueChange = { },
+            onValueChange = { onRep(it) },
             modifier = Modifier
                 .weight(1f)
-                .padding(5.dp)
+                .padding(start = 5.dp, end = 5.dp)
+                .border(width = 1.dp, color = Color.Gray, shape = RoundedCornerShape(2.dp)),
+            textStyle = TextStyle.Default.copy(
+                fontWeight = FontWeight.Bold,
+                color = Color.Gray,
+                fontSize = 18.sp,
+                textAlign = TextAlign.Center
+            ),
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+            singleLine = true,
+            maxLines = 1,
+            colors = TextFieldDefaults.colors(
+                unfocusedContainerColor = Color.Transparent,
+                focusedContainerColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
+            )
         )
         IconButton(
-            onClick = {  }, modifier = Modifier
+            onClick = { }, modifier = Modifier
                 .weight(1f)
                 .padding(5.dp)
         ) {
