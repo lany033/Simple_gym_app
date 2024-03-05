@@ -28,14 +28,14 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
     private val _workoutId = MutableStateFlow(0)
     val workoutId = _workoutId.asStateFlow()
 
-    //private val _kgState = MutableStateFlow("")
-    //val kgState = _kgState.asStateFlow()
+    private val _kgState = MutableStateFlow(mutableListOf<String>())
+    val kgState = _kgState.asStateFlow()
 
     //private val _repState = MutableStateFlow(0)
     //val repSet = _repState.asStateFlow()
 
-    private val _numberSet = MutableStateFlow(mutableListOf<Int>())
-    val numberSet = _numberSet.asStateFlow()
+    //private val _numberSet = MutableStateFlow(mutableListOf<Int>())
+    //val numberSet = _numberSet.asStateFlow()
 
     //private val _isCheckedState = MutableStateFlow(false)
     //val isCheckedState = _isCheckedState.asStateFlow()
@@ -76,7 +76,7 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
 
         val newSets = currentSets.mapIndexed { index, setValueState ->
             SetValueState(
-                setNumber = setValueState.setNumber + index,
+                setNumber = index + 1,
                 kg = setValueState.kg,
                 rep = setValueState.rep,
                 isChecked = false
@@ -85,22 +85,21 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
 
         currentList[indexSet] = currentList[indexSet].copy(listSet = newSets)
 
-
         Log.d("size $indexSet", _listSetWorkout.value[indexSet].listSet.size.toString())
 
     }
-    fun addSet(index:Int, set: SetValueState) {
-        Log.d("index", index.toString())
-        val currentList = _listSetWorkout.value
-        val currentSets = currentList[index].listSet.toMutableList()
-        currentSets.add(set)
-        currentList[index] = currentList[index].copy(listSet = currentSets)
-        _listSetWorkout.value = currentList
-    }
 
-    fun onKgTextChange(text: String) {
-        _setState.update {
-            SetValueState(kg = text)
+    fun onKgTextChange(text: String, index: Int) {
+        _listSetWorkout.update { list ->
+            list.mapIndexed { i, setWorkout ->
+                if (i == index) {
+                    setWorkout.copy(listSet = setWorkout.listSet.map {
+                        it.copy(kg = text)
+                    })
+                } else {
+                    setWorkout
+                }
+            }.toMutableList()
         }
     }
 
@@ -122,8 +121,6 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
             }
 
             val exercisesList = exercisesRepository.findByWorkoutId(_workoutId.value)
-
-            _setList.value.add(_setState.value)
 
             exercisesList.collect { exercises ->
 

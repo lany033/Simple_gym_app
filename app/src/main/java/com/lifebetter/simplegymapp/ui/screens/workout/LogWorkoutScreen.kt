@@ -35,6 +35,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lifebetter.simplegymapp.model.database.SetValue
 import com.lifebetter.simplegymapp.ui.components.CommonTextButtons
 import com.lifebetter.simplegymapp.ui.components.CommonTextTitle
@@ -53,7 +56,7 @@ fun LogWorkoutScreen(onFinish: () -> Unit, id: Int?) {
 
     val workoutId by logWorkoutViewModel.workoutId.collectAsState()
 
-    val setNumber by logWorkoutViewModel.numberSet.collectAsState()
+    //val setNumber by logWorkoutViewModel.numberSet.collectAsState()
     /*
     val kg by logWorkoutViewModel.kgState.collectAsState()
     val rep by logWorkoutViewModel.repSet.collectAsState()
@@ -94,12 +97,13 @@ fun LogWorkoutScreen(onFinish: () -> Unit, id: Int?) {
                         SetItem(
                             id = index,
                             setNumber = it.setNumber,
-                            kg = setState.kg,
+                            kg = it.kg,
                             rep = setState.rep,
                             isChecked = false,
-                            onKg = logWorkoutViewModel::onKgTextChange,
-                            onRep = logWorkoutViewModel::onRepTextChange,
-                            onChecked = logWorkoutViewModel::isChecked
+                            viewModel = logWorkoutViewModel,
+                            onKg = { text -> logWorkoutViewModel.onKgTextChange(text,it.setNumber - 1) },
+                            onRep = { },
+                            onChecked = { }
                         )
                     }
                     item{
@@ -210,9 +214,10 @@ fun SetItem(
     kg: String,
     rep: Int,
     isChecked: Boolean,
-    onKg: (String) -> Unit,
-    onRep: (String) -> Unit,
-    onChecked: (Boolean) -> Unit
+    viewModel: LogWorkoutViewModel,
+    onKg:(String) -> Unit,
+    onRep:() -> Unit,
+    onChecked:() -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -230,7 +235,7 @@ fun SetItem(
         )
         TextField(
             value = kg,
-            onValueChange = { onKg(String()) },
+            onValueChange = { onKg(it) },
             modifier = Modifier
                 .weight(1f)
                 .padding(5.dp),
@@ -241,13 +246,13 @@ fun SetItem(
             })
         TextField(
             value = rep.toString(),
-            onValueChange = { onRep(String()) },
+            onValueChange = { },
             modifier = Modifier
                 .weight(1f)
                 .padding(5.dp)
         )
         IconButton(
-            onClick = { onChecked(isChecked) }, modifier = Modifier
+            onClick = {  }, modifier = Modifier
                 .weight(1f)
                 .padding(5.dp)
         ) {
