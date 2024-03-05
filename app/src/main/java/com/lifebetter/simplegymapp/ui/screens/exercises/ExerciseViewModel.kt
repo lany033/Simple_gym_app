@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+//TODO: Arreglar los updates con copy
 @HiltViewModel
 class ExerciseViewModel @Inject constructor(
     private val exercisesRepository: ExercisesRepository

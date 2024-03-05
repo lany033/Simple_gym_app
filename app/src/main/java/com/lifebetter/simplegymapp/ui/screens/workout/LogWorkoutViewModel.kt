@@ -81,6 +81,7 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
                 rep = setValueState.rep,
                 isChecked = false
             )
+
         }
 
         currentList[indexSet] = currentList[indexSet].copy(listSet = newSets)
@@ -89,12 +90,16 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
 
     }
 
-    fun onKgTextChange(text: String, index: Int) {
+    fun onKgTextChange(text: String, index: Int, indexWorkout: Int) {
         _listSetWorkout.update { list ->
             list.mapIndexed { i, setWorkout ->
-                if (i == index) {
-                    setWorkout.copy(listSet = setWorkout.listSet.map {
-                        it.copy(kg = text)
+                if (i == indexWorkout) {
+                    setWorkout.copy(listSet = setWorkout.listSet.mapIndexed { indexList, setValueState ->
+                        if (indexList == index){
+                            setValueState.copy(kg = text)
+                        } else {
+                            setValueState
+                        }
                     })
                 } else {
                     setWorkout
@@ -105,7 +110,7 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
 
     fun onRepTextChange(text: String) {
         _setState.update {
-            SetValueState(rep = text.toInt())
+            it.copy()
         }
     }
 

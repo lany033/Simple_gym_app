@@ -101,7 +101,7 @@ fun LogWorkoutScreen(onFinish: () -> Unit, id: Int?) {
                             rep = setState.rep,
                             isChecked = false,
                             viewModel = logWorkoutViewModel,
-                            onKg = { text -> logWorkoutViewModel.onKgTextChange(text,it.setNumber - 1) },
+                            onKg = { text -> logWorkoutViewModel.onKgTextChange(text,it.setNumber - 1, index) },
                             onRep = { },
                             onChecked = { }
                         )
@@ -241,7 +241,7 @@ fun SetItem(
                 .padding(5.dp),
             placeholder = {
                 Text(
-                    text = "000"
+                    text = "00"
                 )
             })
         TextField(
