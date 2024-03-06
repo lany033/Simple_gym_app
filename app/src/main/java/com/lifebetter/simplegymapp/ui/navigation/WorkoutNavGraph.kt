@@ -7,6 +7,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
+import com.lifebetter.simplegymapp.ui.screens.SaveWorkoutSessionScreen
 import com.lifebetter.simplegymapp.ui.screens.workout.WorkoutScreen
 import com.lifebetter.simplegymapp.ui.screens.exercises.ExercisesScreen
 import com.lifebetter.simplegymapp.ui.screens.workout.LogWorkoutScreen
@@ -17,7 +18,13 @@ fun NavGraphBuilder.workoutNavGraph(navController: NavHostController) {
         composable(route = BottomBarNavItem.Workouts.route) {
             WorkoutScreen(
                 onClickNewRoutines = { navController.navigate(WorkoutScreens.NewRoutine.route) },
-                onClickStartRoutine = { navController.navigate(WorkoutScreens.StartRoutine.createRouteWithId(it)) }
+                onClickStartRoutine = {
+                    navController.navigate(
+                        WorkoutScreens.StartRoutine.createRouteWithId(
+                            it
+                        )
+                    )
+                }
             )
 
         }
@@ -32,11 +39,18 @@ fun NavGraphBuilder.workoutNavGraph(navController: NavHostController) {
         composable(route = WorkoutScreens.AddExercise.route) {
             ExercisesScreen(onScreenAddExercises = { navController.popBackStack() })
         }
-        composable(route = WorkoutScreens.StartRoutine.route,
-            arguments = listOf(navArgument("id"){type = NavType.IntType})
+        composable(
+            route = WorkoutScreens.StartRoutine.route,
+            arguments = listOf(navArgument("id") { type = NavType.IntType })
         ) { backStackEntry ->
             val id = backStackEntry.arguments?.getInt("id")
-            LogWorkoutScreen(onFinish = { navController.popBackStack() }, id = id)
+            LogWorkoutScreen(
+                onFinish = { navController.navigate(WorkoutScreens.SaveRoutine.route) },
+                id = id
+            )
+        }
+        composable(route = WorkoutScreens.SaveRoutine.route) {
+            SaveWorkoutSessionScreen()
         }
     }
 }
@@ -44,10 +58,12 @@ fun NavGraphBuilder.workoutNavGraph(navController: NavHostController) {
 sealed class WorkoutScreens(val route: String) {
     object AddExercise : WorkoutScreens("ADDEXERCISE")
     object NewRoutine : WorkoutScreens("NEWROUTINE")
-    object StartRoutine : WorkoutScreens("STARTROUTINE/{id}"){
+    object StartRoutine : WorkoutScreens("STARTROUTINE/{id}") {
         fun createRouteWithId(id: Int): String {
             Log.d("id en workout", "$id")
             return "STARTROUTINE/$id"
         }
     }
+
+    object SaveRoutine : WorkoutScreens("SAVEROUTINE")
 }
