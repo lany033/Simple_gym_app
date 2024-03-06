@@ -1,5 +1,6 @@
 package com.lifebetter.simplegymapp.ui.screens.workout
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -23,6 +25,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -49,24 +52,12 @@ import com.lifebetter.simplegymapp.ui.screens.exercises.ImageWorkout
 fun LogWorkoutScreen(onFinish: () -> Unit, id: Int?) {
 
     val logWorkoutViewModel: LogWorkoutViewModel = hiltViewModel()
-
     val logState by logWorkoutViewModel.logState.collectAsState()
-
     val timer by logWorkoutViewModel.timer.collectAsState()
-
     val isPlaying = logState.timerIsPlaying
-
     val workoutId by logWorkoutViewModel.workoutId.collectAsState()
-
-    //val setNumber by logWorkoutViewModel.numberSet.collectAsState()
-    /*
-    val kg by logWorkoutViewModel.kgState.collectAsState()
-    val rep by logWorkoutViewModel.repSet.collectAsState()
-    val isChecked by logWorkoutViewModel.isCheckedState.collectAsState()
-    */
     val workoutList by logWorkoutViewModel.listSetWorkout.collectAsState()
-    val setList by logWorkoutViewModel.setList.collectAsState()
-    val setState by logWorkoutViewModel.setState.collectAsState()
+
 
     Scaffold(topBar = { LogWorkoutBar(onFinish) }) { padding ->
         Column(modifier = Modifier.padding(padding)) {
@@ -232,7 +223,7 @@ fun SetItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 12.dp, end = 12.dp),
+            .background(color = if (isChecked){ Color(0xFFB8FC8C)}else{Color.White}),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -241,14 +232,12 @@ fun SetItem(
             onValueChange = { },
             textStyle = TextStyle.Default.copy(
                 fontWeight = FontWeight.Bold,
-                color = Color.Gray,
+                color = Color.Black,
                 fontSize = 18.sp,
                 textAlign = TextAlign.Center
             ),
             modifier = Modifier
-                .weight(1f)
-                .padding(start = 5.dp, end = 5.dp)
-                .border(width = 1.dp, color = Color.Gray, shape = RoundedCornerShape(2.dp)),
+                .weight(1f),
             readOnly = true,
             colors = TextFieldDefaults.colors(
                 unfocusedContainerColor = Color.Transparent,
@@ -266,10 +255,7 @@ fun SetItem(
                 textAlign = TextAlign.Center
             ),
             onValueChange = { onKg(it) },
-            modifier = Modifier
-                .weight(1f)
-                .padding(start = 5.dp, end = 5.dp)
-                .border(width = 1.dp, color = Color.Gray, shape = RoundedCornerShape(2.dp)),
+            modifier = Modifier.weight(1f),
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
             singleLine = true,
             maxLines = 1,
@@ -283,10 +269,7 @@ fun SetItem(
         TextField(
             value = rep.toString(),
             onValueChange = { onRep(it) },
-            modifier = Modifier
-                .weight(1f)
-                .padding(start = 5.dp, end = 5.dp)
-                .border(width = 1.dp, color = Color.Gray, shape = RoundedCornerShape(2.dp)),
+            modifier = Modifier.weight(1f),
             textStyle = TextStyle.Default.copy(
                 fontWeight = FontWeight.Bold,
                 color = Color.Gray,
@@ -304,12 +287,17 @@ fun SetItem(
             )
         )
         IconButton(
-            onClick = { onChecked(isChecked, setNumber - 1, indexWorkout) }, modifier = Modifier
-                .weight(1f)
-                .padding(5.dp)
+            onClick = { onChecked(isChecked, setNumber - 1, indexWorkout) },
+            modifier = Modifier.weight(1f).padding(10.dp).size(35.dp),
+            colors = if (isChecked) {
+                IconButtonDefaults.iconButtonColors(containerColor = Color.Green)
+            } else {
+                IconButtonDefaults.iconButtonColors(containerColor = Color.LightGray)
+            }
         ) {
-            Icon(imageVector = Icons.Filled.Check, contentDescription = "check",
-                tint = if (isChecked){ Color.Green } else { Color.Gray }
+            Icon(
+                imageVector = Icons.Filled.Check, contentDescription = "check",
+                tint = Color.White,
             )
         }
 
