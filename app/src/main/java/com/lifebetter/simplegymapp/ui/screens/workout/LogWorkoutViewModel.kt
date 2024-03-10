@@ -54,14 +54,18 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
             val exercisesList = exercisesRepository.findByWorkoutId(_workoutId.value)
 
             exercisesList.collect { exercises ->
-                _listSetWorkout.value = exercises.map {
+                _listSetWorkout.update { exercises.map {
                     SetWorkout(
                         exerciseName = it.name,
                         exerciseImage = it.images,
                         exerciseId = it.id,
-                        listSet = _logState.value.listSetValueState
-                    )
-                }.toMutableList()
+                        listSet = _logState.value.listSetValueState,
+                        listImage = null,
+                        dateTime = null,
+                        timer = 0L
+                        )
+                    }.toMutableList()
+                }
             }
         }
     }
@@ -102,6 +106,20 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
                 }
             }.toMutableList()
         }
+        onSumKg()
+    }
+
+    fun onSumKg(){
+        var sumKg = 0
+        _listSetWorkout.value.forEach{
+            it.listSet.forEach {
+                sumKg += it.kg
+            }
+        }
+
+        _logState.update {
+            it.copy(sumKg = sumKg)
+        }
     }
 
     fun onRepTextChange(text: String, index: Int, indexWorkout: Int) {
@@ -140,6 +158,26 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
         }
     }
 
+    fun closeAlertDialog(){
+        _logState.update {
+            it.copy(openAlertDialog = false)
+        }
+    }
+
+    fun openAlertDialog(){
+        _logState.update {
+            it.copy(openAlertDialog = true)
+        }
+    }
+
+
+
+    fun finishWorkout(list: List<SetWorkout>){
+        viewModelScope.launch {
+            exercisesRepository.saveNewSetWorkout(list)
+        }
+    }
+
     private val _bitmaps = MutableStateFlow<List<Bitmap>>(emptyList())
     val bitmaps = _bitmaps.asStateFlow()
 
@@ -156,15 +194,20 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
         }
     }
 
+    /*
     override fun onCleared() {
         super.onCleared()
         logState.value.timerJob?.cancel()
     }
 
+     */
+
     data class LogWorkoutState(
         val timerIsPlaying: Boolean = true,
         var timerJob: Job? = null,
-        val listSetValueState: List<SetValueState> = emptyList()
+        val listSetValueState: List<SetValueState> = emptyList(),
+        val sumKg: Int = 0,
+        val openAlertDialog: Boolean = false
     )
 
     data class SetValueState(

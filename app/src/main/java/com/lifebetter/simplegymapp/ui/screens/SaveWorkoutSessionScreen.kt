@@ -55,6 +55,7 @@ fun SaveWorkoutSessionScreen(onBack: () -> Unit, onCamera: () -> Unit) {
     val logWorkoutViewModel: LogWorkoutViewModel = hiltViewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
     val timer by logWorkoutViewModel.timer.collectAsState()
     val bitmaps by logWorkoutViewModel.bitmaps.collectAsState()
+    val logState by logWorkoutViewModel.logState.collectAsState()
 
     Scaffold(topBar = {
         MyTopBarWithBackIcon(
@@ -79,7 +80,7 @@ fun SaveWorkoutSessionScreen(onBack: () -> Unit, onCamera: () -> Unit) {
                     colors = CardDefaults.cardColors(containerColor = Color.Transparent)
                 ) {
                     Text(text = "Volume")
-                    Text(text = "1230 kg", fontSize = 20.sp)
+                    Text(text = logState.sumKg.toString(), fontSize = 20.sp)
 
                 }
                 Card(

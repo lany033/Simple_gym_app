@@ -1,5 +1,6 @@
 package com.lifebetter.simplegymapp.ui.screens.workout
 
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -26,6 +28,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -35,6 +38,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -42,6 +46,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.lifebetter.simplegymapp.domain.Exercise
+import com.lifebetter.simplegymapp.model.database.SetWorkout
 import com.lifebetter.simplegymapp.model.mappers.formatTime
 import com.lifebetter.simplegymapp.ui.components.CommonTextButtons
 import com.lifebetter.simplegymapp.ui.components.CommonTextTitle
@@ -50,24 +56,26 @@ import com.lifebetter.simplegymapp.ui.screens.exercises.ImageWorkout
 @Composable
 fun LogWorkoutScreen(onFinish: () -> Unit, id: Int?) {
 
-    val logWorkoutViewModel: LogWorkoutViewModel = hiltViewModel()
+    val logWorkoutViewModel: LogWorkoutViewModel = hiltViewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
     val logState by logWorkoutViewModel.logState.collectAsState()
     val timer by logWorkoutViewModel.timer.collectAsState()
     val isPlaying = logState.timerIsPlaying
     val workoutId by logWorkoutViewModel.workoutId.collectAsState()
     val workoutList by logWorkoutViewModel.listSetWorkout.collectAsState()
 
+
     Scaffold(topBar = { LogWorkoutBar(onFinish) }) { padding ->
+
         Column(modifier = Modifier.padding(padding)) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(80.dp)
                     .padding(12.dp)
             ) {
                 Text(text = "Duration")
                 BasicCountdownTimer(isPlaying = isPlaying, timerValue = timer)
                 Divider()
+                Text(text = "KG: ${logState.sumKg}")
             }
             LaunchedEffect(key1 = workoutId) {
                 logWorkoutViewModel.getWorkoutById(id)
@@ -221,7 +229,13 @@ fun SetItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = if (isChecked){ Color(0xFFB8FC8C)}else{Color.White}),
+            .background(
+                color = if (isChecked) {
+                    Color(0xFFB8FC8C)
+                } else {
+                    Color.White
+                }
+            ),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -286,7 +300,10 @@ fun SetItem(
         )
         IconButton(
             onClick = { onChecked(isChecked, setNumber - 1, indexWorkout) },
-            modifier = Modifier.weight(1f).padding(10.dp).size(35.dp),
+            modifier = Modifier
+                .weight(1f)
+                .padding(10.dp)
+                .size(35.dp),
             colors = if (isChecked) {
                 IconButtonDefaults.iconButtonColors(containerColor = Color.Green)
             } else {
@@ -331,4 +348,41 @@ fun AddButtonSet(
     ) {
         CommonTextButtons(text = text)
     }
+}
+
+
+@Composable
+fun FinishAlertDialog(
+    nameTitle: String,
+    listWorkout: List<SetWorkout>,
+    onDismissRequest: () -> Unit,
+    onConfirmation: (List<SetWorkout>) -> Unit,
+    dialogTitle: String,
+) {
+    AlertDialog(
+        title = {
+            Text(text = dialogTitle)
+        },
+        onDismissRequest = {
+            onDismissRequest()
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onConfirmation(listWorkout)
+                }
+            ) {
+                Text("Save")
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = {
+                    onDismissRequest()
+                }
+            ) {
+                Text("Cancel")
+            }
+        }
+    )
 }
