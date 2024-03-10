@@ -1,5 +1,6 @@
 package com.lifebetter.simplegymapp.ui.screens.workout
 
+import android.graphics.Bitmap
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -32,7 +33,6 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
 
     private val _setState = MutableStateFlow(SetValueState())
 
-
     init {
         viewModelScope.launch {
             logState.value.timerJob?.cancel()
@@ -42,7 +42,27 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
                     _timer.value++
                 }
             }
+        }
+    }
 
+    fun getWorkoutById(id: Int?) {
+        viewModelScope.launch {
+            if (id != null) {
+                _workoutId.value = id
+                Log.d("id en LWVM", "$id")
+            }
+            val exercisesList = exercisesRepository.findByWorkoutId(_workoutId.value)
+
+            exercisesList.collect { exercises ->
+                _listSetWorkout.value = exercises.map {
+                    SetWorkout(
+                        exerciseName = it.name,
+                        exerciseImage = it.images,
+                        exerciseId = it.id,
+                        listSet = _logState.value.listSetValueState
+                    )
+                }.toMutableList()
+            }
         }
     }
 
@@ -63,9 +83,7 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
         }
 
         currentList[indexSet] = currentList[indexSet].copy(listSet = newSets)
-
         Log.d("size $indexSet", _listSetWorkout.value[indexSet].listSet.size.toString())
-
     }
 
     fun onKgTextChange(text: String, index: Int, indexWorkout: Int) {
@@ -122,29 +140,20 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
         }
     }
 
-    fun getWorkoutById(id: Int?) {
-        viewModelScope.launch {
-            if (id != null) {
-                _workoutId.value = id
-                Log.d("id en LWVM", "$id")
-            }
+    private val _bitmaps = MutableStateFlow<List<Bitmap>>(emptyList())
+    val bitmaps = _bitmaps.asStateFlow()
 
-            val exercisesList = exercisesRepository.findByWorkoutId(_workoutId.value)
+    private val _permission = MutableStateFlow(false)
+    val permission = _permission.asStateFlow()
 
-            exercisesList.collect { exercises ->
+    fun onTakePhoto(bitmap: Bitmap) {
+        _bitmaps.value += bitmap
+    }
 
-                _listSetWorkout.value = exercises.map {
-                    SetWorkout(
-                        exerciseName = it.name,
-                        exerciseImage = it.images,
-                        exerciseId = it.id,
-                        listSet = _logState.value.listSetValueState
-                    )
-                }.toMutableList()
-            }
-
+    fun permisseIsGranted(){
+        _permission.update {
+           true
         }
-
     }
 
     override fun onCleared() {

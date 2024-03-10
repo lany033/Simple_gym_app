@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.lifebetter.simplegymapp"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -73,8 +73,10 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
 
+    //icons
     implementation("br.com.devsrsouza.compose.icons:feather:1.1.0")
     implementation("br.com.devsrsouza.compose.icons:font-awesome:1.1.0")
+    implementation("androidx.compose.material:material-icons-extended:1.6.3")
 
     implementation("androidx.navigation:navigation-compose:2.5.3")
 
@@ -105,6 +107,15 @@ dependencies {
 
     //chart
     implementation ("com.github.tehras:charts:0.2.4-alpha")
+
+    //camera
+    val cameraxVersion = "1.3.0-rc01"
+
+    implementation("androidx.camera:camera-core:$cameraxVersion")
+    implementation("androidx.camera:camera-camera2:$cameraxVersion")
+    implementation("androidx.camera:camera-lifecycle:$cameraxVersion")
+    implementation("androidx.camera:camera-view:$cameraxVersion")
+    implementation("androidx.camera:camera-extensions:$cameraxVersion")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)

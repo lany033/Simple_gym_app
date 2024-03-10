@@ -43,13 +43,13 @@ import compose.icons.fontawesomeicons.solid.Smile
 
 
 @Composable
-fun WorkoutScreen(onClickNewRoutines: () -> Unit, onClickStartRoutine: (Int)->Unit) {
+fun WorkoutScreen(onClickNewRoutines: () -> Unit, onClickStartRoutine: (Int) -> Unit) {
 
     val workoutViewModel: WorkoutViewModel = hiltViewModel()
 
-    val openAccordion by workoutViewModel.openAccordion.collectAsState()
+    //val openAccordion by workoutViewModel.openAccordion.collectAsState()
 
-    val workoutList by workoutViewModel.workoutListState.collectAsState()
+    val workoutListState by workoutViewModel.workoutListState.collectAsState()
 
     Scaffold(topBar = { MyTopAppBar("Workout") }) { padding ->
         Column(
@@ -80,7 +80,7 @@ fun WorkoutScreen(onClickNewRoutines: () -> Unit, onClickStartRoutine: (Int)->Un
                 )
             }
 
-            if (workoutList.workoutList.isEmpty()) {
+            if (workoutListState.workoutList.isEmpty()) {
                 Box(
                     modifier = Modifier
                         .padding(20.dp)
@@ -112,7 +112,7 @@ fun WorkoutScreen(onClickNewRoutines: () -> Unit, onClickStartRoutine: (Int)->Un
 
             } else {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    if (!openAccordion) {
+                    if (!workoutListState.openAccordion) {
                         IconButton(onClick = workoutViewModel::onOpenAccordion) {
                             Icon(
                                 imageVector = Icons.Filled.KeyboardArrowRight,
@@ -128,13 +128,16 @@ fun WorkoutScreen(onClickNewRoutines: () -> Unit, onClickStartRoutine: (Int)->Un
                         }
                     }
 
-                    Text(text = "My Routines ( ${workoutList.workoutList.size} )")
+                    Text(text = "My Routines ( ${workoutListState.workoutList.size} )")
                 }
 
-                AnimatedVisibility(visible = openAccordion) {
+                AnimatedVisibility(visible = workoutListState.openAccordion) {
                     LazyColumn(modifier = Modifier.padding(14.dp)) {
-                        items(workoutList.workoutList) {
-                            AccordionItem(workout = it, onDelete = workoutViewModel::deleteWorkout, onStartRoutine = { onClickStartRoutine(it.id)})
+                        items(workoutListState.workoutList) {
+                            AccordionItem(
+                                workout = it,
+                                onDelete = workoutViewModel::deleteWorkout,
+                                onStartRoutine = { onClickStartRoutine(it.id) })
                             Spacer(modifier = Modifier.size(5.dp))
                         }
                     }

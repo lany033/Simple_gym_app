@@ -17,18 +17,22 @@ class WorkoutViewModel @Inject constructor(
     private val _workoutListState = MutableStateFlow(WorkoutListState())
     val workoutListState = _workoutListState.asStateFlow()
 
-    private val _openAccordion = MutableStateFlow(false)
-    val openAccordion = _openAccordion.asStateFlow()
+    //private val _openAccordion = MutableStateFlow(false)
+    //val openAccordion = _openAccordion.asStateFlow()
 
     fun onOpenAccordion() {
-        _openAccordion.value = true
+        _workoutListState.update {
+            it.copy(openAccordion = true)
+        }
     }
 
-    fun offOpenAccordion(){
-        _openAccordion.value = false
+    fun offOpenAccordion() {
+        _workoutListState.update {
+            it.copy(openAccordion = false)
+        }
     }
 
-    fun deleteWorkout(workout: Workout){
+    fun deleteWorkout(workout: Workout) {
         viewModelScope.launch {
             exercisesRepository.deleteWorkout(workout)
         }
@@ -36,7 +40,8 @@ class WorkoutViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            exercisesRepository.workouts.collect{ workout:List<Workout> -> _workoutListState.update {  WorkoutListState(workoutList = workout) }
+            exercisesRepository.workouts.collect { workout: List<Workout> ->
+                _workoutListState.update { WorkoutListState(workoutList = workout) }
             }
         }
     }

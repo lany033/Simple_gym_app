@@ -7,6 +7,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
+import com.lifebetter.simplegymapp.ui.screens.workout.CameraScreen
 import com.lifebetter.simplegymapp.ui.screens.SaveWorkoutSessionScreen
 import com.lifebetter.simplegymapp.ui.screens.workout.WorkoutScreen
 import com.lifebetter.simplegymapp.ui.screens.exercises.ExercisesScreen
@@ -50,7 +51,12 @@ fun NavGraphBuilder.workoutNavGraph(navController: NavHostController) {
             )
         }
         composable(route = WorkoutScreens.SaveRoutine.route) {
-            SaveWorkoutSessionScreen()
+            SaveWorkoutSessionScreen(
+                onBack = { navController.popBackStack() },
+                onCamera = { navController.navigate(WorkoutScreens.Camera.route) })
+        }
+        composable(route = WorkoutScreens.Camera.route) {
+            CameraScreen()
         }
     }
 }
@@ -66,4 +72,5 @@ sealed class WorkoutScreens(val route: String) {
     }
 
     object SaveRoutine : WorkoutScreens("SAVEROUTINE")
+    object Camera : WorkoutScreens("CAMERA")
 }

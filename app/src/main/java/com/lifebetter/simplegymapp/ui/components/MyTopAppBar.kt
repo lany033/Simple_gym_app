@@ -22,8 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.lifebetter.simplegymapp.domain.Exercise
-import com.lifebetter.simplegymapp.model.database.Workout
 
 @Composable
 fun MyTopAppBar(title: String) {
@@ -106,7 +104,7 @@ fun MyTopBarWithOneText(title: String, subtitleTwo: String, onClickCancel: () ->
 fun MyTopBarWithBackIcon(
     title: String,
     subtitleTwo: String,
-    onClickCancel: () -> Unit,
+    onClickArrowBack: () -> Unit,
     onClickSave: () -> Unit,
 ) {
     Column() {
@@ -115,7 +113,7 @@ fun MyTopBarWithBackIcon(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { onClickCancel() }) {
+            IconButton(onClick = { onClickArrowBack() }) {
                 Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "back")
             }
             Text(text = title, fontSize = 16.sp)
