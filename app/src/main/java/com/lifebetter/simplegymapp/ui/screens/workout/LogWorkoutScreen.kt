@@ -81,7 +81,7 @@ fun LogWorkoutScreen(onFinish: () -> Unit, id: Int?) {
                 logWorkoutViewModel.getWorkoutById(id)
             }
             LazyColumn() {
-                workoutList.forEachIndexed { indexWorkout, setWorkout ->
+                logState.listWorkoutSet.forEachIndexed { indexWorkout, setWorkout ->
                     item {
                         LogWorkoutItem(
                             nameExercise = setWorkout.exerciseName,
