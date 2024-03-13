@@ -193,20 +193,6 @@ private fun takePhoto(
     )
 }
 
-private fun hasRequiredPermissions(context: Context): Boolean {
-    return CAMERAX_PERMISSIONS.all {
-        ContextCompat.checkSelfPermission(
-            context,
-            it
-        ) == PackageManager.PERMISSION_GRANTED
-    }
-}
-
-
-private val CAMERAX_PERMISSIONS = arrayOf(
-    Manifest.permission.CAMERA
-)
-
 @Composable
 fun PermissionRequestEffect(permission: String, onResult: (Boolean) -> Unit) {
     val permissionLauncher = rememberLauncherForActivityResult( ActivityResultContracts.RequestPermission()

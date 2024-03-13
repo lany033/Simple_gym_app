@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lifebetter.simplegymapp.model.ExercisesRepository
 import com.lifebetter.simplegymapp.model.database.SetWorkout
+import com.lifebetter.simplegymapp.model.database.WorkoutSession
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -61,10 +62,7 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
                             exerciseName = it.name,
                             exerciseImage = it.images,
                             exerciseId = it.id,
-                            listSet = _logState.value.listSetValueState,
-                            listImage = null,
-                            dateTime = null,
-                            timer = 0L
+                            listSet = _logState.value.listSetValueState
                         )
                     })
                 }
@@ -114,11 +112,13 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
         _logState.update {
             it.copy(listWorkoutSet = listWorkout)
         }
+
+        onSumKg()
     }
 
     fun onSumKg() {
         var sumKg = 0
-        _listSetWorkout.value.forEach {
+        _logState.value.listWorkoutSet.forEach {
             it.listSet.forEach {
                 sumKg += it.kg
             }
@@ -147,6 +147,21 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
         _logState.update {
             it.copy(listWorkoutSet = listWorkout)
         }
+
+        onSumRep()
+    }
+
+    fun onSumRep() {
+        var sumRep = 0
+        _logState.value.listWorkoutSet.forEach {
+            it.listSet.forEach {
+                sumRep += it.rep
+            }
+        }
+
+        _logState.update {
+            it.copy(sumRep = sumRep)
+        }
     }
 
     fun isChecked(boolean: Boolean, index: Int, indexWorkout: Int) {
@@ -166,7 +181,9 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
         _logState.update {
             it.copy(listWorkoutSet = listWorkout)
         }
+
     }
+
 
     fun closeAlertDialog() {
         _logState.update {
@@ -181,9 +198,9 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
     }
 
 
-    fun finishWorkout(list: List<SetWorkout>) {
+    fun finishWorkout(list: List<WorkoutSession>) {
         viewModelScope.launch {
-            exercisesRepository.saveNewSetWorkout(list)
+            exercisesRepository.saveWorkoutSession(list)
         }
     }
 
@@ -209,6 +226,7 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
         val listSetValueState: List<SetValueState> = emptyList(),
         val listWorkoutSet: List<SetWorkout> = emptyList(),
         val sumKg: Int = 0,
+        val sumRep: Int = 0,
         val openAlertDialog: Boolean = false
     )
 

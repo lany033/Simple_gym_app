@@ -75,7 +75,6 @@ fun LogWorkoutScreen(onFinish: () -> Unit, id: Int?) {
                 Text(text = "Duration")
                 BasicCountdownTimer(isPlaying = isPlaying, timerValue = timer)
                 Divider()
-                Text(text = "KG: ${logState.sumKg}")
             }
             LaunchedEffect(key1 = workoutId) {
                 logWorkoutViewModel.getWorkoutById(id)

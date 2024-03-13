@@ -5,6 +5,7 @@ import com.lifebetter.simplegymapp.domain.Exercise
 import com.lifebetter.simplegymapp.model.database.ExerciseLocalDataSource
 import com.lifebetter.simplegymapp.model.database.SetWorkout
 import com.lifebetter.simplegymapp.model.database.Workout
+import com.lifebetter.simplegymapp.model.database.WorkoutSession
 import com.lifebetter.simplegymapp.model.mappers.toLocalModel
 import com.lifebetter.simplegymapp.model.mappers.toText
 import com.lifebetter.simplegymapp.model.mappers.toTextEquipment
@@ -19,7 +20,7 @@ class ExercisesRepository @Inject constructor(
 ) {
     val workouts = exerciseLocalDataSource.workouts
 
-    suspend fun saveNewSetWorkout(list: List<SetWorkout>){
+    suspend fun saveWorkoutSession(list: List<WorkoutSession>){
         exerciseLocalDataSource.saveSetWorkout(list)
     }
 

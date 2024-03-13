@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class ExerciseLocalDataSource @Inject constructor(
     private val workoutDao: WorkoutDao,
-    private val setDao: SetDao
+    private val workoutSessionDao: WorkoutSessionDao
 ) {
     val workouts: Flow<List<Workout>> = workoutDao.getAll()
 
@@ -22,8 +22,8 @@ class ExerciseLocalDataSource @Inject constructor(
         workoutDao.insertWorkout(list)
     }
 
-    suspend fun saveSetWorkout(list: List<SetWorkout>){
-        setDao.insertWorkout(list)
+    suspend fun saveSetWorkout(list: List<WorkoutSession>){
+        workoutSessionDao.insertWorkout(list)
     }
 
 

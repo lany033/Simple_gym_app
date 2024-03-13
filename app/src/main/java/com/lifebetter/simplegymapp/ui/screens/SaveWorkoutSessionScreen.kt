@@ -89,8 +89,8 @@ fun SaveWorkoutSessionScreen(onBack: () -> Unit, onCamera: () -> Unit) {
                         .fillMaxWidth(),
                     colors = CardDefaults.cardColors(containerColor = Color.Transparent)
                 ) {
-                    Text(text = "Sets")
-                    Text(text = "6", fontSize = 20.sp)
+                    Text(text = "Reps")
+                    Text(text = logState.sumRep.toString(), fontSize = 20.sp)
                 }
             }
             Divider()
