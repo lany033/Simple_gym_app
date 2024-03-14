@@ -1,6 +1,7 @@
 package com.lifebetter.simplegymapp.ui.screens
 
 import android.graphics.Bitmap
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,6 +40,7 @@ import com.lifebetter.simplegymapp.model.database.SetWorkout
 import com.lifebetter.simplegymapp.ui.components.CommonCirclePhoto
 import com.lifebetter.simplegymapp.ui.components.CommonTextTitle
 import com.lifebetter.simplegymapp.ui.components.MyTopAppBar
+import com.lifebetter.simplegymapp.ui.screens.exercises.ImageWorkout
 import java.time.LocalDateTime
 
 @Composable
@@ -48,14 +50,18 @@ fun HomeScreen() {
     val homeState by homeViewModel.homeState.collectAsState()
 
     Scaffold(topBar = { MyTopAppBar(title = "Home") }) { padding ->
-        Column(modifier = Modifier
-            .padding(padding)
-            .padding(12.dp)) {
-
+        Column(
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxWidth()
+        ) {
             if (homeState.listWorkoutSession.isEmpty()) {
                 WelcomeHome()
             }
-            LazyColumn {
+            LazyColumn(
+                modifier = Modifier.background(Color.LightGray),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
                 items(homeState.listWorkoutSession) { workoutSession ->
                     WorkoutSessionItem(
                         nameWorkout = workoutSession.nameWorkout,
@@ -65,13 +71,14 @@ fun HomeScreen() {
                         date = workoutSession.date,
                         bitmap = workoutSession.bitmap
                     )
-                    Spacer(modifier = Modifier.size(10.dp))
+                    //Spacer(modifier = Modifier.size(25.dp))
                 }
 
             }
         }
     }
 }
+
 
 @Composable
 fun WorkoutSessionItem(
@@ -82,41 +89,68 @@ fun WorkoutSessionItem(
     date: LocalDateTime?,
     bitmap: List<Bitmap>?
 ) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+    Card(
+        modifier = Modifier
+            .fillMaxSize(),
+        colors = CardDefaults.cardColors(Color.White),
+        shape = RectangleShape
     ) {
-        Row {
-            CommonCirclePhoto(R.drawable.perfilphoto, 70)
-            Spacer(modifier = Modifier.size(12.dp))
-            Column {
-                CommonTextTitle(
-                    text = "Melanie Mantilla",
+        Column(
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier.padding(12.dp)
+        ) {
+            Row {
+                CommonCirclePhoto(R.drawable.perfilphoto, 70)
+                Spacer(modifier = Modifier.size(12.dp))
+                Column {
+                    CommonTextTitle(
+                        text = "Melanie Mantilla",
+                        modifier = Modifier
+                    )
+                    Text(text = "date.toString()")
+                }
+            }
+            CommonTextTitle(text = nameWorkout, modifier = Modifier)
+            Row {
+                Duration(modifier = Modifier.weight(1f), time)
+                Card(
                     modifier = Modifier
-                )
-                Text(text = "date.toString()")
+                        .weight(1f)
+                        .fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = Color.Transparent)
+                ) {
+                    Text(text = "Volume")
+                    Text(text = volumenTotal.toString(), fontSize = 20.sp)
+
+                }
             }
+            Divider()
+            WorkoutList(listWorkout = list)
         }
-        CommonTextTitle(text = nameWorkout, modifier = Modifier)
+
+    }
+}
+
+@Composable
+fun WorkoutList(listWorkout: List<SetWorkout>) {
+    listWorkout.forEach { setWorkout ->
         Row {
-            Duration(modifier = Modifier.weight(1f), time)
             Card(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Color.Transparent)
+                shape = CircleShape,
+                colors = CardDefaults.cardColors(containerColor = Color.White)
             ) {
-                Text(text = "Volume")
-                Text(text = volumenTotal.toString(), fontSize = 20.sp)
-
+                ImageWorkout(
+                    url = setWorkout.exerciseImage,
+                    contentDescription = setWorkout.exerciseName,
+                    width = 20,
+                    height = 20
+                )
             }
-        }
-        Divider()
-        Text(text = "Workout")
-        Row {
-
+            Spacer(modifier = Modifier.size(20.dp))
+            CommonTextTitle(text = setWorkout.exerciseName, modifier = Modifier)
         }
     }
+
 }
 
 @Composable
