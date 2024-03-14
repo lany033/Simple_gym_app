@@ -1,8 +1,6 @@
 package com.lifebetter.simplegymapp.model.database
 
-import com.lifebetter.simplegymapp.domain.Exercise
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class ExerciseLocalDataSource @Inject constructor(
@@ -13,8 +11,7 @@ class ExerciseLocalDataSource @Inject constructor(
 
     suspend fun isEmpty(): Boolean = workoutDao.workoutCount() == 0
 
-    suspend fun findById(id: Int): Flow<List<Exercise>> =
-        workoutDao.findById(id).map { it.exerciseList }
+    fun findById(id: Int): Flow<Workout> = workoutDao.findById(id)
 
     suspend fun deleteWorkout(workout: Workout) = workoutDao.deleteWorkout(workout)
 
@@ -22,8 +19,12 @@ class ExerciseLocalDataSource @Inject constructor(
         workoutDao.insertWorkout(list)
     }
 
-    suspend fun saveSetWorkout(list: List<WorkoutSession>){
-        workoutSessionDao.insertWorkout(list)
+    suspend fun saveWorkoutSession(workoutSession: WorkoutSession){
+        workoutSessionDao.insertWorkout(workoutSession)
+    }
+
+    suspend fun getWorkoutSession(): Flow<List<WorkoutSession>>{
+        return workoutSessionDao.getAll()
     }
 
 

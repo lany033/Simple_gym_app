@@ -12,7 +12,6 @@ fun BottomBarNavGraph(navController: NavHostController, modifier: Modifier) {
 
     NavHost(modifier = modifier, navController = navController, startDestination = BottomBarNavItem.Home.route) {
         composable(BottomBarNavItem.Home.route) { HomeScreen() }
-        //composable(BottomBarNavItem.Workouts.route) { WorkoutScreen() }
         workoutNavGraph(navController = navController)
         profileNavGraph(navController = navController)
     }

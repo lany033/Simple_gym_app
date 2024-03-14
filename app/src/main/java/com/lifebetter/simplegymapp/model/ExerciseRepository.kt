@@ -3,7 +3,6 @@ package com.lifebetter.simplegymapp.model
 import android.util.Log
 import com.lifebetter.simplegymapp.domain.Exercise
 import com.lifebetter.simplegymapp.model.database.ExerciseLocalDataSource
-import com.lifebetter.simplegymapp.model.database.SetWorkout
 import com.lifebetter.simplegymapp.model.database.Workout
 import com.lifebetter.simplegymapp.model.database.WorkoutSession
 import com.lifebetter.simplegymapp.model.mappers.toLocalModel
@@ -20,8 +19,12 @@ class ExercisesRepository @Inject constructor(
 ) {
     val workouts = exerciseLocalDataSource.workouts
 
-    suspend fun saveWorkoutSession(list: List<WorkoutSession>){
-        exerciseLocalDataSource.saveSetWorkout(list)
+    suspend fun saveWorkoutSession(workoutSession: WorkoutSession){
+        exerciseLocalDataSource.saveWorkoutSession(workoutSession)
+    }
+
+    suspend fun getAllWorkoutSessions(): Flow<List<WorkoutSession>>{
+        return exerciseLocalDataSource.getWorkoutSession()
     }
 
     suspend fun saveNewWorkout(list: List<Workout>) {
@@ -32,7 +35,7 @@ class ExercisesRepository @Inject constructor(
         exerciseLocalDataSource.deleteWorkout(workout)
     }
 
-    suspend fun findByWorkoutId(id: Int): Flow<List<Exercise>>{
+    suspend fun findByWorkoutId(id: Int): Flow<Workout>{
         return exerciseLocalDataSource.findById(id)
     }
 

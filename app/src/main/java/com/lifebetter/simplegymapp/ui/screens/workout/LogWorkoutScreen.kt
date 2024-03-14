@@ -61,8 +61,6 @@ fun LogWorkoutScreen(onFinish: () -> Unit, id: Int?) {
     val timer by logWorkoutViewModel.timer.collectAsState()
     val isPlaying = logState.timerIsPlaying
     val workoutId by logWorkoutViewModel.workoutId.collectAsState()
-    val workoutList by logWorkoutViewModel.listSetWorkout.collectAsState()
-
 
     Scaffold(topBar = { LogWorkoutBar(onFinish) }) { padding ->
 

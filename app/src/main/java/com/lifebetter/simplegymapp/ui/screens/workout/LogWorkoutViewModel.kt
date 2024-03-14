@@ -15,6 +15,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -57,14 +59,14 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
 
             exercisesList.collect { exercises ->
                 _logState.update {
-                    it.copy(listWorkoutSet = exercises.map {
+                    it.copy(listWorkoutSet = exercises.exerciseList.map {
                         SetWorkout(
                             exerciseName = it.name,
                             exerciseImage = it.images,
                             exerciseId = it.id,
                             listSet = _logState.value.listSetValueState
                         )
-                    })
+                    }, nameWorkout = exercises.nameWorkout)
                 }
             }
         }
@@ -198,9 +200,18 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
     }
 
 
-    fun finishWorkout(list: List<WorkoutSession>) {
+    fun saveWorkoutSession() {
+        val newWorkout = WorkoutSession(
+            setWorkout = _logState.value.listWorkoutSet,
+            sumKg = _logState.value.sumKg,
+            sumRep = _logState.value.sumRep,
+            bitmap = _bitmaps.value,
+            date = _dayTime.value,
+            timer = _timer.value,
+            nameWorkout = _logState.value.nameWorkout
+        )
         viewModelScope.launch {
-            exercisesRepository.saveWorkoutSession(list)
+            exercisesRepository.saveWorkoutSession(newWorkout)
         }
     }
 
@@ -209,6 +220,9 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
 
     private val _permission = MutableStateFlow(false)
     val permission = _permission.asStateFlow()
+
+    private val _dayTime = MutableStateFlow(LocalDateTime.now())
+    val dayTime = _dayTime.asStateFlow()
 
     fun onTakePhoto(bitmap: Bitmap) {
         _bitmaps.value += bitmap
@@ -221,6 +235,7 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
     }
 
     data class LogWorkoutState(
+        val nameWorkout: String = "",
         val timerIsPlaying: Boolean = true,
         var timerJob: Job? = null,
         val listSetValueState: List<SetValueState> = emptyList(),

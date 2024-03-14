@@ -1,10 +1,12 @@
 package com.lifebetter.simplegymapp.model.database
 
+import android.graphics.Bitmap
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.lifebetter.simplegymapp.domain.Exercise
 import com.lifebetter.simplegymapp.ui.screens.workout.LogWorkoutViewModel.SetValueState
+import java.time.LocalDateTime
 
 class Converters {
     @TypeConverter
@@ -24,6 +26,36 @@ class Converters {
     @TypeConverter
     fun toSetList(json: String): List<SetValueState>{
         val type = object : TypeToken<List<SetValueState>>() {}.type
+        return  Gson().fromJson(json,type)
+    }
+
+    @TypeConverter
+    fun fromSetWorkout(setWorkout: List<SetWorkout>): String{
+        return Gson().toJson(setWorkout)
+    }
+    @TypeConverter
+    fun toSetWorkout(json: String): List<SetWorkout>{
+        val type = object : TypeToken<List<SetWorkout>>() {}.type
+        return  Gson().fromJson(json,type)
+    }
+
+    @TypeConverter
+    fun fromBitmap(bitmap: List<Bitmap>): String{
+        return Gson().toJson(bitmap)
+    }
+    @TypeConverter
+    fun toBitmap(json: String): List<Bitmap>{
+        val type = object : TypeToken<List<Bitmap>>() {}.type
+        return  Gson().fromJson(json,type)
+    }
+
+    @TypeConverter
+    fun fromLocalDate(localDateTime: LocalDateTime): String{
+        return Gson().toJson(localDateTime)
+    }
+    @TypeConverter
+    fun toLocalDate(json: String): LocalDateTime{
+        val type = object : TypeToken<LocalDateTime>() {}.type
         return  Gson().fromJson(json,type)
     }
 }

@@ -43,6 +43,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.lifebetter.simplegymapp.model.mappers.formatTime
 import com.lifebetter.simplegymapp.ui.components.CommonTextTitle
 import com.lifebetter.simplegymapp.ui.components.MyTopBarWithBackIcon
+import com.lifebetter.simplegymapp.ui.screens.workout.FinishAlertDialog
 import com.lifebetter.simplegymapp.ui.screens.workout.LogWorkoutViewModel
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
@@ -51,26 +52,33 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Composable
-fun SaveWorkoutSessionScreen(onBack: () -> Unit, onCamera: () -> Unit) {
-    val logWorkoutViewModel: LogWorkoutViewModel = hiltViewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
+fun SaveWorkoutSessionScreen(onBack: () -> Unit, onCamera: () -> Unit, onHome: () -> Unit) {
+    val logWorkoutViewModel: LogWorkoutViewModel =
+        hiltViewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
     val timer by logWorkoutViewModel.timer.collectAsState()
     val bitmaps by logWorkoutViewModel.bitmaps.collectAsState()
     val logState by logWorkoutViewModel.logState.collectAsState()
+    val dayTime by logWorkoutViewModel.dayTime.collectAsState()
 
     Scaffold(topBar = {
         MyTopBarWithBackIcon(
             title = "Save Workout",
             subtitleTwo = "Save",
             onClickArrowBack = { onBack() },
-            onClickSave = {})
+            onClickSave = {
+                logWorkoutViewModel.saveWorkoutSession()
+                onHome()
+            })
     }) { paddingValues ->
-
         Column(
             modifier = Modifier
                 .padding(paddingValues)
                 .padding(12.dp), verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            CommonTextTitle(text = "Test", modifier = Modifier)
+            CommonTextTitle(
+                text = logState
+                    .nameWorkout, modifier = Modifier
+            )
             Row {
                 Duration(modifier = Modifier.weight(1f), timer)
                 Card(
@@ -94,7 +102,13 @@ fun SaveWorkoutSessionScreen(onBack: () -> Unit, onCamera: () -> Unit) {
                 }
             }
             Divider()
-            DateTime()
+            DateTime(
+                dayTime.dayOfMonth.toString(),
+                dayTime.month.toString(),
+                dayTime.year.toString(),
+                dayTime.hour.toString(),
+                dayTime.minute.toString()
+            )
             Divider()
 
             Row(
@@ -171,26 +185,26 @@ fun SaveWorkoutSessionScreen(onBack: () -> Unit, onCamera: () -> Unit) {
 }
 
 @Composable
-fun DateTime() {
-    val day = LocalDate.now().dayOfMonth.toString() +" "+LocalDate.now().month.toString() +" "+LocalDate.now().year.toString()
-    val time = LocalDateTime.now().hour.toString() +":"+LocalDateTime.now().minute.toString()
+fun DateTime(day: String, month: String, year: String, time: String, minute: String) {
     Card(
         modifier = Modifier.fillMaxWidth(), shape = RectangleShape,
         colors = CardDefaults.cardColors(containerColor = Color.Transparent)
     ) {
         Text(text = "When")
-        Text(text = "$day, $time", fontSize = 20.sp, color = Color(0XFF40A1F7))
+        Text(text = "$day $month $year, $time:$minute", fontSize = 20.sp, color = Color(0XFF40A1F7))
     }
 }
 
 @Composable
-fun Duration(modifier: Modifier, timerValue: Long) {
+fun Duration(modifier: Modifier, timerValue: Long?) {
     Card(
         modifier = modifier
             .fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent)
     ) {
         Text(text = "Duration")
-        Text(text = timerValue.formatTime(), fontSize = 20.sp, color = Color(0XFF40A1F7))
+        if (timerValue != null) {
+            Text(text = timerValue.formatTime(), fontSize = 20.sp, color = Color(0XFF40A1F7))
+        }
     }
 }

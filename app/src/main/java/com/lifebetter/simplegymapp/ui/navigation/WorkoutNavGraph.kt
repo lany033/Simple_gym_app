@@ -21,9 +21,7 @@ fun NavGraphBuilder.workoutNavGraph(navController: NavHostController) {
                 onClickNewRoutines = { navController.navigate(WorkoutScreens.NewRoutine.route) },
                 onClickStartRoutine = {
                     navController.navigate(
-                        WorkoutScreens.StartRoutine.createRouteWithId(
-                            it
-                        )
+                        WorkoutScreens.StartRoutine.createRouteWithId(it)
                     )
                 }
             )
@@ -53,7 +51,8 @@ fun NavGraphBuilder.workoutNavGraph(navController: NavHostController) {
         composable(route = WorkoutScreens.SaveRoutine.route) {
             SaveWorkoutSessionScreen(
                 onBack = { navController.popBackStack() },
-                onCamera = { navController.navigate(WorkoutScreens.Camera.route) })
+                onCamera = { navController.navigate(WorkoutScreens.Camera.route) },
+                onHome = { navController.navigate(BottomBarNavItem.Home.route)})
         }
         composable(route = WorkoutScreens.Camera.route) {
             CameraScreen()
