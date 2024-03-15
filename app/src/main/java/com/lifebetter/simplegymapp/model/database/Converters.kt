@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken
 import com.lifebetter.simplegymapp.domain.Exercise
 import com.lifebetter.simplegymapp.ui.screens.workout.LogWorkoutViewModel.SetValueState
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class Converters {
     @TypeConverter
@@ -50,12 +51,12 @@ class Converters {
     }
 
     @TypeConverter
-    fun fromLocalDate(localDateTime: LocalDateTime): String{
-        return Gson().toJson(localDateTime)
+    fun fromTimestamp(value: String): LocalDateTime {
+        return LocalDateTime.parse(value, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
     }
+
     @TypeConverter
-    fun toLocalDate(json: String): LocalDateTime{
-        val type = object : TypeToken<LocalDateTime>() {}.type
-        return  Gson().fromJson(json,type)
+    fun dateToTimestamp(date: LocalDateTime): String {
+        return date.toString()
     }
 }

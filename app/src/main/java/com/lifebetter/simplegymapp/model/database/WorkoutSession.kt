@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @Entity
 data class WorkoutSession(
@@ -14,6 +15,9 @@ data class WorkoutSession(
     val sumKg: Int,
     val sumRep: Int,
     val bitmap: List<Bitmap>?,
-    val date: LocalDateTime?,
+    val date: LocalDateTime = LocalDateTime.now(),
     val timer: Long?
-)
+){
+    val createdDateFormatted : String
+        get() =date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+}

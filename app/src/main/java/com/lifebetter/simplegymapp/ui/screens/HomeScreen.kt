@@ -1,6 +1,7 @@
 package com.lifebetter.simplegymapp.ui.screens
 
 import android.graphics.Bitmap
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -31,6 +31,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -63,12 +65,12 @@ fun HomeScreen() {
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(homeState.listWorkoutSession) { workoutSession ->
-                    WorkoutSessionItem(
+                    WorkoutSessionCard(
                         nameWorkout = workoutSession.nameWorkout,
                         time = workoutSession.timer,
-                        volumenTotal = workoutSession.sumKg,
+                        volumeTotal = workoutSession.sumKg,
                         list = workoutSession.setWorkout,
-                        date = workoutSession.date,
+                        date = workoutSession.createdDateFormatted,
                         bitmap = workoutSession.bitmap
                     )
                     //Spacer(modifier = Modifier.size(25.dp))
@@ -81,12 +83,12 @@ fun HomeScreen() {
 
 
 @Composable
-fun WorkoutSessionItem(
+fun WorkoutSessionCard(
     nameWorkout: String,
     time: Long?,
-    volumenTotal: Int,
+    volumeTotal: Int,
     list: List<SetWorkout>,
-    date: LocalDateTime?,
+    date: String,
     bitmap: List<Bitmap>?
 ) {
     Card(
@@ -107,7 +109,7 @@ fun WorkoutSessionItem(
                         text = "Melanie Mantilla",
                         modifier = Modifier
                     )
-                    Text(text = "date.toString()")
+                    Text(text = date)
                 }
             }
             CommonTextTitle(text = nameWorkout, modifier = Modifier)
@@ -120,7 +122,7 @@ fun WorkoutSessionItem(
                     colors = CardDefaults.cardColors(containerColor = Color.Transparent)
                 ) {
                     Text(text = "Volume")
-                    Text(text = volumenTotal.toString(), fontSize = 20.sp)
+                    Text(text = volumeTotal.toString(), fontSize = 20.sp)
 
                 }
             }
@@ -132,26 +134,61 @@ fun WorkoutSessionItem(
 }
 
 @Composable
-fun WorkoutList(listWorkout: List<SetWorkout>) {
+fun WorkoutList(
+    listWorkout: List<SetWorkout>,
+) {
     listWorkout.forEach { setWorkout ->
-        Row {
-            Card(
-                shape = CircleShape,
-                colors = CardDefaults.cardColors(containerColor = Color.White)
-            ) {
-                ImageWorkout(
-                    url = setWorkout.exerciseImage,
-                    contentDescription = setWorkout.exerciseName,
-                    width = 20,
-                    height = 20
-                )
-            }
-            Spacer(modifier = Modifier.size(20.dp))
-            CommonTextTitle(text = setWorkout.exerciseName, modifier = Modifier)
+        WorkoutExerciseList(
+            url = setWorkout.exerciseImage,
+            description = setWorkout.exerciseName,
+            nameExercise = setWorkout.exerciseName
+        )
+    }
+}
+
+@Composable
+fun ImageWorkout(
+    listImageBitmap: List<Bitmap>?,
+    description: String
+) {
+
+    listImageBitmap?.forEach { image ->
+        Box(
+            modifier = Modifier
+                .size(130.dp)
+                .background(Color.Transparent),
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                bitmap = image.asImageBitmap(),
+                contentDescription = description,
+                contentScale = ContentScale.Crop
+            )
         }
     }
+    Text(text = "null")
 
 }
+
+@Composable
+fun WorkoutExerciseList(url: String, description: String, nameExercise: String) {
+    Row {
+        Card(
+            shape = CircleShape,
+            colors = CardDefaults.cardColors(containerColor = Color.White)
+        ) {
+            ImageWorkout(
+                url = url,
+                contentDescription = description,
+                width = 20,
+                height = 20
+            )
+        }
+        Spacer(modifier = Modifier.size(20.dp))
+        CommonTextTitle(text = nameExercise, modifier = Modifier)
+    }
+}
+
 
 @Composable
 fun WelcomeHome() {

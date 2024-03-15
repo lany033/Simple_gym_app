@@ -48,6 +48,7 @@ import com.lifebetter.simplegymapp.ui.screens.workout.LogWorkoutViewModel
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.Image
+import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -165,11 +166,7 @@ fun SaveWorkoutSessionScreen(onBack: () -> Unit, onCamera: () -> Unit, onHome: (
                         }
                     }
                 }
-
-
             }
-
-
             Divider()
             Card(
                 modifier = Modifier.fillMaxWidth(), shape = RectangleShape,

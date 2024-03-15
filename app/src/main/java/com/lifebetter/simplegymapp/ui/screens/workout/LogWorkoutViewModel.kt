@@ -206,7 +206,6 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
             sumKg = _logState.value.sumKg,
             sumRep = _logState.value.sumRep,
             bitmap = _bitmaps.value,
-            date = _dayTime.value,
             timer = _timer.value,
             nameWorkout = _logState.value.nameWorkout
         )
