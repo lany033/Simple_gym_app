@@ -156,6 +156,31 @@ fun CameraPreview(
     )
 }
 
+fun resizeBitmap(source: Bitmap, maxLength: Int): Bitmap {
+    try {
+        if (source.height >= source.width) {
+            if (source.height <= maxLength) { // if image height already smaller than the required height
+                return source
+            }
+
+            val aspectRatio = source.width.toDouble() / source.height.toDouble()
+            val targetWidth = (maxLength * aspectRatio).toInt()
+            return Bitmap.createScaledBitmap(source, targetWidth, maxLength, false)
+        } else {
+            if (source.width <= maxLength) { // if image width already smaller than the required width
+                return source
+            }
+
+            val aspectRatio = source.height.toDouble() / source.width.toDouble()
+            val targetHeight = (maxLength * aspectRatio).toInt()
+
+            return Bitmap.createScaledBitmap(source, maxLength, targetHeight, false)
+        }
+    } catch (e: Exception) {
+        return source
+    }
+}
+
 private fun takePhoto(
     controller: LifecycleCameraController,
     context: Context,
@@ -171,39 +196,11 @@ private fun takePhoto(
                     postRotate(image.imageInfo.rotationDegrees.toFloat())
                 }
 
-
-                fun newImageHeight(height: Int): Int {
-                    return when {
-                        height > 3600 -> height / 3
-                        height > 2400 -> (height / 2.5).toInt()
-                        height > 1600 -> height / 2
-                        else -> height
-                    }
-                }
-
-                fun newImageWidth(widht: Int): Int {
-                    return when {
-                        widht > 3600 -> widht / 3
-                        widht > 2400 -> (widht / 2.5).toInt()
-                        widht > 1600 -> widht / 2
-                        else -> widht
-                    }
-                }
-
-                val rotatedBitmap = Bitmap.createBitmap(
-                    image.toBitmap(),
-                    0,
-                    0,
-                    newImageWidth(image.width),
-                    newImageHeight(image.height),
-                    matrix,
-                    true
-                )
+                val rotatedBitmap = resizeBitmap(image.toBitmap(), 720)
 
                 rotatedBitmap.compress(Bitmap.CompressFormat.WEBP, 90, ByteArrayOutputStream())
 
-                Log.d("image width", newImageWidth(image.width).toString())
-                Log.d("image height", newImageHeight(image.height).toString())
+                Log.d("width", rotatedBitmap.height.toString())
 
                 onPhotoTaken(rotatedBitmap)
             }
