@@ -50,7 +50,7 @@ import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.Dumbbell
 
 @Composable
-fun NewRoutineScreen(onClickAddExercises: () -> Unit, onCancel:()->Unit) {
+fun NewRoutineScreen(onClickAddExercises: () -> Unit, onCancel:()->Unit, onBack: () -> Unit) {
     val exerciseViewModel: ExerciseViewModel =
         hiltViewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
     val selectedExercises by exerciseViewModel.selectedExercises.collectAsState()
@@ -70,7 +70,9 @@ fun NewRoutineScreen(onClickAddExercises: () -> Unit, onCancel:()->Unit) {
                 nameTitle = titleText,
                 listWorkout = selectedExercises,
                 onDismissRequest = exerciseViewModel::closeAlertDialog ,
-                onConfirmation = exerciseViewModel::onSaveRoutine ,
+                onConfirmation = {
+                    exerciseViewModel.onSaveRoutine()
+                    onBack() } ,
                 dialogTitle = "¿Guardar Rutina?",
             )
         }
@@ -197,7 +199,7 @@ fun SaveAlertDialog(
     nameTitle: String,
     listWorkout: List<Exercise>,
     onDismissRequest: () -> Unit,
-    onConfirmation: (String, List<Exercise>) -> Unit,
+    onConfirmation: () -> Unit,
     dialogTitle: String,
 ) {
     AlertDialog(
@@ -210,7 +212,7 @@ fun SaveAlertDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    onConfirmation(nameTitle,listWorkout)
+                    onConfirmation()
                 }
             ) {
                 Text("Save")

@@ -13,10 +13,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
-import java.time.LocalDate
-import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,9 +28,6 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
 
     private val _timer = MutableStateFlow(0L)
     val timer = _timer.asStateFlow()
-
-    private val _listSetWorkout = MutableStateFlow(mutableListOf<SetWorkout>())
-    val listSetWorkout = _listSetWorkout.asStateFlow()
 
     private val _setState = MutableStateFlow(SetValueState())
 
@@ -186,20 +180,6 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
 
     }
 
-
-    fun closeAlertDialog() {
-        _logState.update {
-            it.copy(openAlertDialog = false)
-        }
-    }
-
-    fun openAlertDialog() {
-        _logState.update {
-            it.copy(openAlertDialog = true)
-        }
-    }
-
-
     fun saveWorkoutSession() {
         val newWorkout = WorkoutSession(
             setWorkout = _logState.value.listWorkoutSet,
@@ -220,14 +200,11 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
     private val _permission = MutableStateFlow(false)
     val permission = _permission.asStateFlow()
 
-    private val _dayTime = MutableStateFlow(LocalDateTime.now())
-    val dayTime = _dayTime.asStateFlow()
-
     fun onTakePhoto(bitmap: Bitmap) {
         _bitmaps.value += bitmap
     }
 
-    fun permisseIsGranted() {
+    fun permissionIsGranted() {
         _permission.update {
             true
         }

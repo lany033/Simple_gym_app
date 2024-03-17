@@ -32,7 +32,8 @@ fun NavGraphBuilder.workoutNavGraph(navController: NavHostController) {
                 onCancel = { navController.popBackStack() },
                 onClickAddExercises = {
                     navController.navigate(WorkoutScreens.AddExercise.route)
-                }
+                },
+                onBack = {navController.popBackStack()}
             )
         }
         composable(route = WorkoutScreens.AddExercise.route) {

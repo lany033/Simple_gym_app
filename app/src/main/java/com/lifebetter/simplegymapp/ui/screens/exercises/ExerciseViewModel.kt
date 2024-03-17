@@ -143,13 +143,14 @@ class ExerciseViewModel @Inject constructor(
         }
     }
 
-    fun onSaveRoutine(title: String, list: List<Exercise>){
+    fun onSaveRoutine(){
         viewModelScope.launch {
-            _workout.value.add(Workout(nameWorkout = title, exerciseList = list))
+            _workout.value.add(Workout(nameWorkout = _nameWorkout.value, exerciseList = _selectedExercises.value))
             exercisesRepository.saveNewWorkout(_workout.value)
             _workout.value.clear()
             _selectedExercises.value.clear()
             _nameWorkout.value = ""
+            _openAlertDialog.value = false
         }
     }
 

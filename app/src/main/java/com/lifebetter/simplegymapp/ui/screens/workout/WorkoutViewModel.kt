@@ -17,9 +17,6 @@ class WorkoutViewModel @Inject constructor(
     private val _workoutListState = MutableStateFlow(WorkoutListState())
     val workoutListState = _workoutListState.asStateFlow()
 
-    //private val _openAccordion = MutableStateFlow(false)
-    //val openAccordion = _openAccordion.asStateFlow()
-
     fun onOpenAccordion() {
         _workoutListState.update {
             it.copy(openAccordion = true)
@@ -47,8 +44,7 @@ class WorkoutViewModel @Inject constructor(
     }
 
     data class WorkoutListState(
-        val isloading: Boolean = false,
-        val openAccordion: Boolean = false,
+        val openAccordion: Boolean = true,
         val workoutList: List<Workout> = emptyList(),
     )
 }

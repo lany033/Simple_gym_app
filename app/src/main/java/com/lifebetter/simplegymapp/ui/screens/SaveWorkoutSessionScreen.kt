@@ -51,6 +51,7 @@ import compose.icons.fontawesomeicons.solid.Image
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun SaveWorkoutSessionScreen(onBack: () -> Unit, onCamera: () -> Unit, onHome: () -> Unit) {
@@ -59,7 +60,6 @@ fun SaveWorkoutSessionScreen(onBack: () -> Unit, onCamera: () -> Unit, onHome: (
     val timer by logWorkoutViewModel.timer.collectAsState()
     val bitmaps by logWorkoutViewModel.bitmaps.collectAsState()
     val logState by logWorkoutViewModel.logState.collectAsState()
-    val dayTime by logWorkoutViewModel.dayTime.collectAsState()
 
     Scaffold(topBar = {
         MyTopBarWithBackIcon(
@@ -103,13 +103,7 @@ fun SaveWorkoutSessionScreen(onBack: () -> Unit, onCamera: () -> Unit, onHome: (
                 }
             }
             Divider()
-            DateTime(
-                dayTime.dayOfMonth.toString(),
-                dayTime.month.toString(),
-                dayTime.year.toString(),
-                dayTime.hour.toString(),
-                dayTime.minute.toString()
-            )
+            DateTime()
             Divider()
 
             Row(
@@ -162,7 +156,6 @@ fun SaveWorkoutSessionScreen(onBack: () -> Unit, onCamera: () -> Unit, onHome: (
                             }
 
                             Spacer(modifier = Modifier.size(10.dp))
-
                         }
                     }
                 }
@@ -182,13 +175,17 @@ fun SaveWorkoutSessionScreen(onBack: () -> Unit, onCamera: () -> Unit, onHome: (
 }
 
 @Composable
-fun DateTime(day: String, month: String, year: String, time: String, minute: String) {
+fun DateTime() {
     Card(
         modifier = Modifier.fillMaxWidth(), shape = RectangleShape,
         colors = CardDefaults.cardColors(containerColor = Color.Transparent)
     ) {
         Text(text = "When")
-        Text(text = "$day $month $year, $time:$minute", fontSize = 20.sp, color = Color(0XFF40A1F7))
+        Text(
+            text = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+            fontSize = 20.sp,
+            color = Color(0XFF40A1F7)
+        )
     }
 }
 

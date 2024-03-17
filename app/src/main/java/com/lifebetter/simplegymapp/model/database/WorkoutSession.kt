@@ -20,4 +20,5 @@ data class WorkoutSession(
 ){
     val createdDateFormatted : String
         get() =date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+
 }

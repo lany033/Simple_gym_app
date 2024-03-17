@@ -1,6 +1,9 @@
 package com.lifebetter.simplegymapp.ui.screens
 
 import android.graphics.Bitmap
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -14,8 +17,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PageSize
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessibilityNew
 import androidx.compose.material3.Card
@@ -29,25 +37,35 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.lifebetter.simplegymapp.R
 import com.lifebetter.simplegymapp.model.database.SetWorkout
+import com.lifebetter.simplegymapp.model.database.WorkoutSession
 import com.lifebetter.simplegymapp.ui.components.CommonCirclePhoto
 import com.lifebetter.simplegymapp.ui.components.CommonTextTitle
 import com.lifebetter.simplegymapp.ui.components.MyTopAppBar
 import com.lifebetter.simplegymapp.ui.screens.exercises.ImageWorkout
-import java.time.LocalDateTime
+import okhttp3.internal.format
+import java.io.OutputStream
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen() {
-
     val homeViewModel: HomeViewModel = hiltViewModel()
     val homeState by homeViewModel.homeState.collectAsState()
 
@@ -57,39 +75,51 @@ fun HomeScreen() {
                 .padding(padding)
                 .fillMaxWidth()
         ) {
-            if (homeState.listWorkoutSession.isEmpty()) {
+            if (homeState.listWorkoutSession.isEmpty()){
                 WelcomeHome()
             }
-            LazyColumn(
-                modifier = Modifier.background(Color.LightGray),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(homeState.listWorkoutSession) { workoutSession ->
-                    WorkoutSessionCard(
-                        nameWorkout = workoutSession.nameWorkout,
-                        time = workoutSession.timer,
-                        volumeTotal = workoutSession.sumKg,
-                        list = workoutSession.setWorkout,
-                        date = workoutSession.createdDateFormatted,
-                        bitmap = workoutSession.bitmap
-                    )
-                    //Spacer(modifier = Modifier.size(25.dp))
+            LazyColumn {
+                homeState.listWorkoutSession.forEach {workoutSession ->
+                    item {
+                        WorkoutSessionCard(
+                            nameWorkout = workoutSession.nameWorkout,
+                            time = workoutSession.timer,
+                            volumeTotal = workoutSession.sumKg,
+                            date = workoutSession.createdDateFormatted,
+                        )
+                    }
+                    item {
+                        workoutSession.bitmap?.let { HorizontalPagerWithIndicators(images = it) }
+                    }
                 }
-
             }
         }
     }
 }
 
 
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun HorizontalPagerWithIndicators(images: List<Bitmap>) {
+    val pagerState = rememberPagerState(
+        pageCount = { images.size },
+    )
+    Box(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        HorizontalPager(state = pagerState, pageSize = PageSize.Fill) {
+            ImageHomeWorkout(imageBitmap = images[it], description = "")
+        }
+
+    }
+}
+
 @Composable
 fun WorkoutSessionCard(
     nameWorkout: String,
     time: Long?,
     volumeTotal: Int,
-    list: List<SetWorkout>,
     date: String,
-    bitmap: List<Bitmap>?
 ) {
     Card(
         modifier = Modifier
@@ -127,47 +157,38 @@ fun WorkoutSessionCard(
                 }
             }
             Divider()
-            WorkoutList(listWorkout = list)
         }
-
     }
 }
 
 @Composable
 fun WorkoutList(
-    listWorkout: List<SetWorkout>,
+    setWorkout: SetWorkout,
 ) {
-    listWorkout.forEach { setWorkout ->
-        WorkoutExerciseList(
-            url = setWorkout.exerciseImage,
-            description = setWorkout.exerciseName,
-            nameExercise = setWorkout.exerciseName
-        )
-    }
+    WorkoutExerciseList(
+        url = setWorkout.exerciseImage,
+        description = setWorkout.exerciseName,
+        nameExercise = setWorkout.exerciseName
+    )
 }
 
 @Composable
-fun ImageWorkout(
-    listImageBitmap: List<Bitmap>?,
+fun ImageHomeWorkout(
+    imageBitmap: Bitmap,
     description: String
 ) {
-
-    listImageBitmap?.forEach { image ->
-        Box(
-            modifier = Modifier
-                .size(130.dp)
-                .background(Color.Transparent),
-            contentAlignment = Alignment.Center
-        ) {
-            Image(
-                bitmap = image.asImageBitmap(),
-                contentDescription = description,
-                contentScale = ContentScale.Crop
-            )
-        }
+    val painter: Painter = rememberAsyncImagePainter(
+        model = ImageRequest.Builder(LocalContext.current)
+            .data(imageBitmap)
+            .size(coil.size.Size.ORIGINAL) // Set the target size to load the image at.
+            .build()
+    )
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Image(painter = painter, contentDescription = description)
     }
-    Text(text = "null")
-
 }
 
 @Composable

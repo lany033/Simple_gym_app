@@ -1,9 +1,7 @@
 package com.lifebetter.simplegymapp.ui.screens.workout
 
-import android.Manifest
 import android.Manifest.permission.CAMERA
 import android.content.Context
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.util.Log
@@ -46,12 +44,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import java.io.ByteArrayOutputStream
 
 
 @Composable
 fun CameraScreen() {
 
-    val logWorkoutViewModel: LogWorkoutViewModel = hiltViewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
+    val logWorkoutViewModel: LogWorkoutViewModel =
+        hiltViewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
     val permission by logWorkoutViewModel.permission.collectAsState()
 
     val scope = rememberCoroutineScope()
@@ -64,11 +64,11 @@ fun CameraScreen() {
         }
     }
 
-    PermissionRequestEffect(permission = CAMERA){
-        logWorkoutViewModel.permisseIsGranted()
+    PermissionRequestEffect(permission = CAMERA) {
+        logWorkoutViewModel.permissionIsGranted()
     }
 
-    if (permission){
+    if (permission) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -130,16 +130,14 @@ fun CameraScreen() {
                         tint = Color.Magenta
                     )
                 }
-
-
             }
 
         }
-    }else{
+    } else {
         Text(text = "Sin acceso")
     }
-        
-    }
+
+}
 
 @Composable
 fun CameraPreview(
@@ -172,15 +170,40 @@ private fun takePhoto(
                 val matrix = Matrix().apply {
                     postRotate(image.imageInfo.rotationDegrees.toFloat())
                 }
+
+
+                fun newImageHeight(height: Int): Int {
+                    return when {
+                        height > 3600 -> height / 3
+                        height > 2400 -> (height / 2.5).toInt()
+                        height > 1600 -> height / 2
+                        else -> height
+                    }
+                }
+
+                fun newImageWidth(widht: Int): Int {
+                    return when {
+                        widht > 3600 -> widht / 3
+                        widht > 2400 -> (widht / 2.5).toInt()
+                        widht > 1600 -> widht / 2
+                        else -> widht
+                    }
+                }
+
                 val rotatedBitmap = Bitmap.createBitmap(
                     image.toBitmap(),
                     0,
                     0,
-                    image.width,
-                    image.height,
+                    newImageWidth(image.width),
+                    newImageHeight(image.height),
                     matrix,
                     true
                 )
+
+                rotatedBitmap.compress(Bitmap.CompressFormat.WEBP, 90, ByteArrayOutputStream())
+
+                Log.d("image width", newImageWidth(image.width).toString())
+                Log.d("image height", newImageHeight(image.height).toString())
 
                 onPhotoTaken(rotatedBitmap)
             }
@@ -195,10 +218,11 @@ private fun takePhoto(
 
 @Composable
 fun PermissionRequestEffect(permission: String, onResult: (Boolean) -> Unit) {
-    val permissionLauncher = rememberLauncherForActivityResult( ActivityResultContracts.RequestPermission()
-    ){onResult(it)}
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { onResult(it) }
 
-    LaunchedEffect(key1 = Unit){
+    LaunchedEffect(key1 = Unit) {
         permissionLauncher.launch(permission)
     }
 }
