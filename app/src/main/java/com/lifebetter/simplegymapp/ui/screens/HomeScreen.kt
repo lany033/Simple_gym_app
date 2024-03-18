@@ -1,11 +1,13 @@
 package com.lifebetter.simplegymapp.ui.screens
 
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,23 +32,29 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -60,6 +68,7 @@ import com.lifebetter.simplegymapp.ui.components.CommonCirclePhoto
 import com.lifebetter.simplegymapp.ui.components.CommonTextTitle
 import com.lifebetter.simplegymapp.ui.components.MyTopAppBar
 import com.lifebetter.simplegymapp.ui.screens.exercises.ImageWorkout
+import kotlinx.coroutines.launch
 import okhttp3.internal.format
 import java.io.OutputStream
 
@@ -75,11 +84,11 @@ fun HomeScreen() {
                 .padding(padding)
                 .fillMaxWidth()
         ) {
-            if (homeState.listWorkoutSession.isEmpty()){
+            if (homeState.listWorkoutSession.isEmpty()) {
                 WelcomeHome()
             }
             LazyColumn {
-                homeState.listWorkoutSession.forEach {workoutSession ->
+                homeState.listWorkoutSession.forEach { workoutSession ->
                     item {
                         WorkoutSessionCard(
                             nameWorkout = workoutSession.nameWorkout,
@@ -89,8 +98,9 @@ fun HomeScreen() {
                         )
                     }
                     item {
-                        workoutSession.bitmap?.let { HorizontalPagerWithIndicators(images = it) }
+                        workoutSession.uri?.let { HorizontalPagerWithIndicators(uris = it) }
                     }
+
                 }
             }
         }
@@ -100,19 +110,43 @@ fun HomeScreen() {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HorizontalPagerWithIndicators(images: List<Bitmap>) {
+fun HorizontalPagerWithIndicators(uris: List<String>) {
+    val coroutineScope = rememberCoroutineScope()
     val pagerState = rememberPagerState(
-        pageCount = { images.size },
+        pageCount = { uris.size },
     )
-    Box(
-        modifier = Modifier.fillMaxWidth()
+    Column(
+        modifier = Modifier.fillMaxSize()
     ) {
-        HorizontalPager(state = pagerState, pageSize = PageSize.Fill) {
-            ImageHomeWorkout(imageBitmap = images[it], description = "")
+        HorizontalPager(
+            state = pagerState,
+            pageSize = PageSize.Fill
+        ) {
+            ImageHomeWorkout(uri = uris[it], description = "")
         }
+
+        Row(
+            Modifier
+                .height(50.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            repeat(uris.size) { iteration ->
+                val color =
+                    if (pagerState.currentPage == iteration) Color.DarkGray else Color.LightGray
+                Box(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .background(color, CircleShape)
+                        .size(10.dp)
+                )
+            }
+        }
+
 
     }
 }
+
 
 @Composable
 fun WorkoutSessionCard(
@@ -156,7 +190,6 @@ fun WorkoutSessionCard(
 
                 }
             }
-            Divider()
         }
     }
 }
@@ -174,20 +207,20 @@ fun WorkoutList(
 
 @Composable
 fun ImageHomeWorkout(
-    imageBitmap: Bitmap,
+    uri: String,
     description: String
 ) {
     val painter: Painter = rememberAsyncImagePainter(
         model = ImageRequest.Builder(LocalContext.current)
-            .data(imageBitmap)
+            .data(uri)
             .size(coil.size.Size.ORIGINAL) // Set the target size to load the image at.
             .build()
     )
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxWidth().height(340.dp),
         contentAlignment = Alignment.Center
     ) {
-        Image(painter = painter, contentDescription = description)
+        Image(painter = painter, contentDescription = description, contentScale = ContentScale.Crop)
     }
 }
 

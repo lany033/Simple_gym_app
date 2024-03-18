@@ -4,6 +4,8 @@ import android.Manifest.permission.CAMERA
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Matrix
+import android.net.Uri
+import android.os.Environment
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -45,6 +47,12 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import java.io.ByteArrayOutputStream
+import java.io.File
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.concurrent.Executor
 
 
 @Composable
@@ -54,7 +62,7 @@ fun CameraScreen() {
         hiltViewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
     val permission by logWorkoutViewModel.permission.collectAsState()
 
-    val scope = rememberCoroutineScope()
+
     val context = LocalContext.current
     val controller = remember {
         LifecycleCameraController(context).apply {
@@ -119,7 +127,7 @@ fun CameraScreen() {
                     onClick = {
                         takePhoto(
                             controller = controller,
-                            context = context,
+                            executor = ContextCompat.getMainExecutor(context),
                             onPhotoTaken = logWorkoutViewModel::onTakePhoto
                         )
                     }
@@ -156,60 +164,37 @@ fun CameraPreview(
     )
 }
 
-fun resizeBitmap(source: Bitmap, maxLength: Int): Bitmap {
-    try {
-        if (source.height >= source.width) {
-            if (source.height <= maxLength) { // if image height already smaller than the required height
-                return source
-            }
-
-            val aspectRatio = source.width.toDouble() / source.height.toDouble()
-            val targetWidth = (maxLength * aspectRatio).toInt()
-            return Bitmap.createScaledBitmap(source, targetWidth, maxLength, false)
-        } else {
-            if (source.width <= maxLength) { // if image width already smaller than the required width
-                return source
-            }
-
-            val aspectRatio = source.height.toDouble() / source.width.toDouble()
-            val targetHeight = (maxLength * aspectRatio).toInt()
-
-            return Bitmap.createScaledBitmap(source, maxLength, targetHeight, false)
-        }
-    } catch (e: Exception) {
-        return source
-    }
-}
-
 private fun takePhoto(
     controller: LifecycleCameraController,
-    context: Context,
-    onPhotoTaken: (Bitmap) -> Unit
+    onPhotoTaken: (String) -> Unit,
+    executor: Executor
 ) {
+    val file = createImageFile()
+    val outputDirectory = ImageCapture.OutputFileOptions.Builder(file).build()
     controller.takePicture(
-        ContextCompat.getMainExecutor(context),
-        object : ImageCapture.OnImageCapturedCallback() {
-            override fun onCaptureSuccess(image: ImageProxy) {
-                super.onCaptureSuccess(image)
-
-                val matrix = Matrix().apply {
-                    postRotate(image.imageInfo.rotationDegrees.toFloat())
+        outputDirectory,
+        executor,
+        object : ImageCapture.OnImageSavedCallback{
+            override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+                outputFileResults.savedUri?.let {
+                    onPhotoTaken(it.toString())
                 }
-
-                val rotatedBitmap = resizeBitmap(image.toBitmap(), 720)
-
-                rotatedBitmap.compress(Bitmap.CompressFormat.WEBP, 90, ByteArrayOutputStream())
-
-                Log.d("width", rotatedBitmap.height.toString())
-
-                onPhotoTaken(rotatedBitmap)
             }
 
             override fun onError(exception: ImageCaptureException) {
-                super.onError(exception)
-                Log.e("Camera", "Couldn't take photo: ", exception)
+                println("error o.o")
             }
+
         }
+    )
+}
+
+fun createImageFile(): File {
+    // Create an image file name
+    val timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH:mm:ss"))
+    return File.createTempFile(
+        "JPEG_${timeStamp}_", //prefix
+        ".jpg" //suffix
     )
 }
 

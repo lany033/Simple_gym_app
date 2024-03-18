@@ -1,6 +1,7 @@
 package com.lifebetter.simplegymapp.model.database
 
 import android.graphics.Bitmap
+import android.net.Uri
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.time.LocalDateTime
@@ -14,7 +15,7 @@ data class WorkoutSession(
     val nameWorkout: String,
     val sumKg: Int,
     val sumRep: Int,
-    val bitmap: List<Bitmap>?,
+    val uri: List<String>?,
     val date: LocalDateTime = LocalDateTime.now(),
     val timer: Long?
 ){

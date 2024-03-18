@@ -4,12 +4,12 @@ import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -33,23 +33,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
+import coil.size.Size
 import com.lifebetter.simplegymapp.model.mappers.formatTime
 import com.lifebetter.simplegymapp.ui.components.CommonTextTitle
 import com.lifebetter.simplegymapp.ui.components.MyTopBarWithBackIcon
-import com.lifebetter.simplegymapp.ui.screens.workout.FinishAlertDialog
 import com.lifebetter.simplegymapp.ui.screens.workout.LogWorkoutViewModel
-import compose.icons.FontAwesomeIcons
-import compose.icons.fontawesomeicons.Solid
-import compose.icons.fontawesomeicons.solid.Image
-import java.time.Instant
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -58,7 +55,7 @@ fun SaveWorkoutSessionScreen(onBack: () -> Unit, onCamera: () -> Unit, onHome: (
     val logWorkoutViewModel: LogWorkoutViewModel =
         hiltViewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
     val timer by logWorkoutViewModel.timer.collectAsState()
-    val bitmaps by logWorkoutViewModel.bitmaps.collectAsState()
+    val uris by logWorkoutViewModel.uri.collectAsState()
     val logState by logWorkoutViewModel.logState.collectAsState()
 
     Scaffold(topBar = {
@@ -127,7 +124,7 @@ fun SaveWorkoutSessionScreen(onBack: () -> Unit, onCamera: () -> Unit, onHome: (
                         )
                     }
                 }
-                if (bitmaps.isEmpty()) {
+                if (uris.isEmpty()) {
                     Box(
                         modifier = Modifier
                             .size(130.dp)
@@ -138,21 +135,28 @@ fun SaveWorkoutSessionScreen(onBack: () -> Unit, onCamera: () -> Unit, onHome: (
                     }
                 } else {
                     LazyRow() {
-                        items(bitmaps) { bitmap ->
+                        items(uris) { uri ->
                             Box(
                                 modifier = Modifier
                                     .size(130.dp)
                                     .background(Color.Transparent),
                                 contentAlignment = Alignment.Center
                             ) {
+                                val painter: Painter = rememberAsyncImagePainter(
+                                    model = ImageRequest.Builder(LocalContext.current)
+                                        .data(uri.toUri())
+                                        .size(Size.ORIGINAL) // Set the target size to load the image at.
+                                        .build()
+                                )
                                 Image(
-                                    bitmap = bitmap.asImageBitmap(),
+                                    painter = painter,
                                     contentDescription = null,
                                     modifier = Modifier.clip(
                                         RoundedCornerShape(10.dp)
                                     ),
                                     contentScale = ContentScale.Crop
                                 )
+
                             }
 
                             Spacer(modifier = Modifier.size(10.dp))

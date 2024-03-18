@@ -1,6 +1,7 @@
 package com.lifebetter.simplegymapp.ui.screens.workout
 
 import android.graphics.Bitmap
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -185,7 +186,7 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
             setWorkout = _logState.value.listWorkoutSet,
             sumKg = _logState.value.sumKg,
             sumRep = _logState.value.sumRep,
-            bitmap = _bitmaps.value,
+            uri = _uri.value,
             timer = _timer.value,
             nameWorkout = _logState.value.nameWorkout
         )
@@ -194,14 +195,14 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
         }
     }
 
-    private val _bitmaps = MutableStateFlow<List<Bitmap>>(emptyList())
-    val bitmaps = _bitmaps.asStateFlow()
+    private val _uri = MutableStateFlow<List<String>>(emptyList())
+    val uri = _uri.asStateFlow()
 
     private val _permission = MutableStateFlow(false)
     val permission = _permission.asStateFlow()
 
-    fun onTakePhoto(bitmap: Bitmap) {
-        _bitmaps.value += bitmap
+    fun onTakePhoto(uri: String) {
+        _uri.value += uri
     }
 
     fun permissionIsGranted() {

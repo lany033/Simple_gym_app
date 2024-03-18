@@ -1,6 +1,7 @@
 package com.lifebetter.simplegymapp.model.database
 
 import android.graphics.Bitmap
+import android.net.Uri
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -41,12 +42,13 @@ class Converters {
     }
 
     @TypeConverter
-    fun fromBitmap(bitmap: List<Bitmap>): String{
-        return Gson().toJson(bitmap)
+    fun fromUri(uri: List<String>): String{
+        return Gson().toJson(uri)
     }
+
     @TypeConverter
-    fun toBitmap(json: String): List<Bitmap>{
-        val type = object : TypeToken<List<Bitmap>>() {}.type
+    fun toUri(json: String): List<String>{
+        val type = object : TypeToken<List<String>>() {}.type
         return  Gson().fromJson(json,type)
     }
 
@@ -54,6 +56,8 @@ class Converters {
     fun fromTimestamp(value: String): LocalDateTime {
         return LocalDateTime.parse(value, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
     }
+
+
 
     @TypeConverter
     fun dateToTimestamp(date: LocalDateTime): String {
