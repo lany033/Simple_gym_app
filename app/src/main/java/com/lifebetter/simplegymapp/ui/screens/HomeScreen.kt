@@ -1,16 +1,12 @@
 package com.lifebetter.simplegymapp.ui.screens
 
-import android.graphics.Bitmap
-import android.net.Uri
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,60 +15,41 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessibilityNew
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.lifebetter.simplegymapp.R
 import com.lifebetter.simplegymapp.model.database.SetWorkout
-import com.lifebetter.simplegymapp.model.database.WorkoutSession
 import com.lifebetter.simplegymapp.ui.components.CommonCirclePhoto
 import com.lifebetter.simplegymapp.ui.components.CommonTextTitle
 import com.lifebetter.simplegymapp.ui.components.MyTopAppBar
 import com.lifebetter.simplegymapp.ui.screens.exercises.ImageWorkout
-import kotlinx.coroutines.launch
-import okhttp3.internal.format
-import java.io.OutputStream
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen() {
     val homeViewModel: HomeViewModel = hiltViewModel()
@@ -87,7 +64,7 @@ fun HomeScreen() {
             if (homeState.listWorkoutSession.isEmpty()) {
                 WelcomeHome()
             }
-            LazyColumn {
+            LazyColumn() {
                 homeState.listWorkoutSession.forEach { workoutSession ->
                     item {
                         WorkoutSessionCard(
@@ -98,7 +75,10 @@ fun HomeScreen() {
                         )
                     }
                     item {
-                        workoutSession.uri?.let { HorizontalPagerWithIndicators(uris = it) }
+                        HorizontalPagerWithIndicators(
+                            uris = workoutSession.uri,
+                            setWorkout = workoutSession.setWorkout
+                        )
                     }
 
                 }
@@ -110,28 +90,38 @@ fun HomeScreen() {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HorizontalPagerWithIndicators(uris: List<String>) {
-    val coroutineScope = rememberCoroutineScope()
-    val pagerState = rememberPagerState(
-        pageCount = { uris.size },
-    )
+fun HorizontalPagerWithIndicators(uris: List<String>?, setWorkout: List<SetWorkout>) {
+
+    val pagerCount = if (uris.isNullOrEmpty()) {
+        1
+    } else {
+        uris.size
+    }
+
+    val pagerState = rememberPagerState(pageCount = { pagerCount })
+
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize().padding(bottom = 15.dp)
     ) {
         HorizontalPager(
             state = pagerState,
-            pageSize = PageSize.Fill
+            pageSize = PageSize.Fill,
+            modifier = Modifier.height(350.dp).background(Color.White)
         ) {
-            ImageHomeWorkout(uri = uris[it], description = "")
+            if (uris.isNullOrEmpty()) {
+                WorkoutList(setWorkout = setWorkout)
+            } else {
+                ImageHomeWorkout(uri = uris[it], description = "")
+            }
         }
 
         Row(
             Modifier
-                .height(50.dp)
-                .fillMaxWidth(),
+                .height(30.dp)
+                .fillMaxWidth().background(Color.White),
             horizontalArrangement = Arrangement.Center
         ) {
-            repeat(uris.size) { iteration ->
+            repeat(pagerCount) { iteration ->
                 val color =
                     if (pagerState.currentPage == iteration) Color.DarkGray else Color.LightGray
                 Box(
@@ -142,8 +132,6 @@ fun HorizontalPagerWithIndicators(uris: List<String>) {
                 )
             }
         }
-
-
     }
 }
 
@@ -166,7 +154,7 @@ fun WorkoutSessionCard(
             modifier = Modifier.padding(12.dp)
         ) {
             Row {
-                CommonCirclePhoto(R.drawable.perfilphoto, 70)
+                CommonCirclePhoto(R.drawable.perfilphoto, 65)
                 Spacer(modifier = Modifier.size(12.dp))
                 Column {
                     CommonTextTitle(
@@ -196,13 +184,17 @@ fun WorkoutSessionCard(
 
 @Composable
 fun WorkoutList(
-    setWorkout: SetWorkout,
+    setWorkout: List<SetWorkout>,
 ) {
-    WorkoutExerciseList(
-        url = setWorkout.exerciseImage,
-        description = setWorkout.exerciseName,
-        nameExercise = setWorkout.exerciseName
-    )
+    LazyColumn {
+        items(setWorkout) { setWorkout ->
+            WorkoutExerciseList(
+                url = setWorkout.exerciseImage,
+                description = setWorkout.exerciseName,
+                nameExercise = setWorkout.exerciseName
+            )
+        }
+    }
 }
 
 @Composable
@@ -217,7 +209,9 @@ fun ImageHomeWorkout(
             .build()
     )
     Box(
-        modifier = Modifier.fillMaxWidth().height(340.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(320.dp).background(Color.White),
         contentAlignment = Alignment.Center
     ) {
         Image(painter = painter, contentDescription = description, contentScale = ContentScale.Crop)

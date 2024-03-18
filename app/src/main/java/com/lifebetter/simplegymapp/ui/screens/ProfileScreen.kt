@@ -19,11 +19,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.tehras.charts.bar.BarChart
 import com.github.tehras.charts.bar.BarChartData
 import com.github.tehras.charts.bar.renderer.label.SimpleValueDrawer
@@ -43,6 +46,10 @@ import compose.icons.fontawesomeicons.solid.Ruler
 
 @Composable
 fun ProfileScreen(onClickExercises: () -> Unit, onClickMeasures: () -> Unit) {
+
+    val profileViewModel: ProfileViewModel = hiltViewModel()
+    val profileState by profileViewModel.profileState.collectAsState()
+
     Scaffold(topBar = { MyTopWithIconsBar(title = "lany033") }) { padding ->
         Column(
             modifier = Modifier
@@ -50,7 +57,7 @@ fun ProfileScreen(onClickExercises: () -> Unit, onClickMeasures: () -> Unit) {
                 .fillMaxSize()
                 .padding(14.dp), verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
-            Header()
+            Header(profileState.workoutCount)
             Chart()
             Dashboard(onClickExercises = onClickExercises, onClickMeasures = onClickMeasures)
         }
@@ -58,7 +65,7 @@ fun ProfileScreen(onClickExercises: () -> Unit, onClickMeasures: () -> Unit) {
 }
 
 @Composable
-fun Header() {
+fun Header(workoutCount: Int) {
     Row {
         CommonCirclePhoto(R.drawable.perfilphoto, 70)
         Spacer(modifier = Modifier.size(12.dp))
@@ -70,7 +77,7 @@ fun Header() {
             Box {
                 Column {
                     CommonLittleText(text = "Workouts")
-                    Text(text = "63")
+                    Text(text = workoutCount.toString())
                 }
             }
         }
