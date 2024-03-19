@@ -20,12 +20,14 @@ class ExerciseLocalDataSource @Inject constructor(
     }
 
     suspend fun saveWorkoutSession(workoutSession: WorkoutSession){
-        workoutSessionDao.insertWorkout(workoutSession)
+        workoutSessionDao.insertWorkoutSession(workoutSession)
     }
 
-    suspend fun getWorkoutSession(): Flow<List<WorkoutSession>>{
+    fun getWorkoutSession(): Flow<List<WorkoutSession>>{
         return workoutSessionDao.getAll()
     }
+
+    suspend fun deleteWorkoutSession(workoutSession: WorkoutSession) = workoutSessionDao.deleteWorkoutSession(workoutSession)
 
 
 }

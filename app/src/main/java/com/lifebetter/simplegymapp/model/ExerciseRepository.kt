@@ -23,7 +23,11 @@ class ExercisesRepository @Inject constructor(
         exerciseLocalDataSource.saveWorkoutSession(workoutSession)
     }
 
-    suspend fun getAllWorkoutSessions(): Flow<List<WorkoutSession>>{
+    suspend fun deleteWorkoutSession(workoutSession: WorkoutSession){
+        exerciseLocalDataSource.deleteWorkoutSession(workoutSession)
+    }
+
+    fun getAllWorkoutSessions(): Flow<List<WorkoutSession>>{
         return exerciseLocalDataSource.getWorkoutSession()
     }
 

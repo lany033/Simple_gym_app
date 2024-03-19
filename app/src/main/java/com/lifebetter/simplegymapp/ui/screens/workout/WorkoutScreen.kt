@@ -47,8 +47,6 @@ fun WorkoutScreen(onClickNewRoutines: () -> Unit, onClickStartRoutine: (Int) -> 
 
     val workoutViewModel: WorkoutViewModel = hiltViewModel()
 
-    //val openAccordion by workoutViewModel.openAccordion.collectAsState()
-
     val workoutListState by workoutViewModel.workoutListState.collectAsState()
 
     Scaffold(topBar = { MyTopAppBar("Workout") }) { padding ->

@@ -194,15 +194,14 @@ fun DateTime() {
 }
 
 @Composable
-fun Duration(modifier: Modifier, timerValue: Long?) {
+fun Duration(modifier: Modifier, timerValue: Long) {
     Card(
         modifier = modifier
             .fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent)
     ) {
         Text(text = "Duration")
-        if (timerValue != null) {
-            Text(text = timerValue.formatTime(), fontSize = 20.sp, color = Color(0XFF40A1F7))
-        }
+        Text(text = timerValue.formatTime(), fontSize = 20.sp, color = Color(0XFF40A1F7))
+
     }
 }

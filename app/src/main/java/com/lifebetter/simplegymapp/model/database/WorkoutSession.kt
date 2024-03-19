@@ -17,7 +17,7 @@ data class WorkoutSession(
     val sumRep: Int,
     val uri: List<String>?,
     val date: LocalDateTime = LocalDateTime.now(),
-    val timer: Long?
+    val timer: Long
 ){
     val createdDateFormatted : String
         get() =date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))

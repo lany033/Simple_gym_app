@@ -19,8 +19,8 @@ interface WorkoutSessionDao {
     fun findById(id: Int): Flow<WorkoutSession>
 
     @Delete
-    suspend fun deleteWorkout(workoutSession: WorkoutSession)
+    suspend fun deleteWorkoutSession(workoutSession: WorkoutSession)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertWorkout(workoutSession: WorkoutSession)
+    suspend fun insertWorkoutSession(workoutSession: WorkoutSession)
 }

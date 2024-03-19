@@ -20,18 +20,30 @@ class ProfileViewModel @Inject constructor(private val exercisesRepository: Exer
     val profileState = _profileState.asStateFlow()
 
     init {
+
         viewModelScope.launch {
-            exercisesRepository.getAllWorkoutSessions().collect { workoutSession ->
+            exercisesRepository.getAllWorkoutSessions().collect { workoutSessionList ->
                 _profileState.update {
-                    it.copy(listWorkoutSession = workoutSession, workoutCount = workoutSession.size)
+                    it.copy(
+                        listWorkoutSession = workoutSessionList,
+                        workoutCount = workoutSessionList.size,
+                    )
                 }
+
             }
+        }
+    }
+
+    fun deleteWorkout(workoutSession: WorkoutSession){
+        viewModelScope.launch {
+            exercisesRepository.deleteWorkoutSession(workoutSession)
         }
     }
 
     data class ProfileState(
         val user: String = "",
         val listWorkoutSession: List<WorkoutSession> = emptyList(),
-        val workoutCount: Int = 0
+        val workoutCount: Int = 0,
+
     )
 }

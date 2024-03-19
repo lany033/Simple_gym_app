@@ -1,5 +1,6 @@
 package com.lifebetter.simplegymapp.ui.screens
 
+import android.graphics.drawable.Icon
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -22,9 +23,12 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessibilityNew
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.ImageSearch
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -45,6 +50,7 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.lifebetter.simplegymapp.R
 import com.lifebetter.simplegymapp.model.database.SetWorkout
+import com.lifebetter.simplegymapp.model.database.WorkoutSession
 import com.lifebetter.simplegymapp.ui.components.CommonCirclePhoto
 import com.lifebetter.simplegymapp.ui.components.CommonTextTitle
 import com.lifebetter.simplegymapp.ui.components.MyTopAppBar
@@ -68,10 +74,13 @@ fun HomeScreen() {
                 homeState.listWorkoutSession.forEach { workoutSession ->
                     item {
                         WorkoutSessionCard(
+                            workoutSession = workoutSession,
                             nameWorkout = workoutSession.nameWorkout,
                             time = workoutSession.timer,
                             volumeTotal = workoutSession.sumKg,
                             date = workoutSession.createdDateFormatted,
+                            icon = null,
+                            onDelete = {}
                         )
                     }
                     item {
@@ -101,12 +110,16 @@ fun HorizontalPagerWithIndicators(uris: List<String>?, setWorkout: List<SetWorko
     val pagerState = rememberPagerState(pageCount = { pagerCount })
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(bottom = 15.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = 15.dp)
     ) {
         HorizontalPager(
             state = pagerState,
             pageSize = PageSize.Fill,
-            modifier = Modifier.height(350.dp).background(Color.White)
+            modifier = Modifier
+                .height(350.dp)
+                .background(Color.White)
         ) {
             if (uris.isNullOrEmpty()) {
                 WorkoutList(setWorkout = setWorkout)
@@ -118,7 +131,8 @@ fun HorizontalPagerWithIndicators(uris: List<String>?, setWorkout: List<SetWorko
         Row(
             Modifier
                 .height(30.dp)
-                .fillMaxWidth().background(Color.White),
+                .fillMaxWidth()
+                .background(Color.White),
             horizontalArrangement = Arrangement.Center
         ) {
             repeat(pagerCount) { iteration ->
@@ -139,9 +153,12 @@ fun HorizontalPagerWithIndicators(uris: List<String>?, setWorkout: List<SetWorko
 @Composable
 fun WorkoutSessionCard(
     nameWorkout: String,
-    time: Long?,
+    workoutSession: WorkoutSession,
+    time: Long,
     volumeTotal: Int,
     date: String,
+    icon: ImageVector?,
+    onDelete: (WorkoutSession) -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -153,15 +170,32 @@ fun WorkoutSessionCard(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier.padding(12.dp)
         ) {
-            Row {
-                CommonCirclePhoto(R.drawable.perfilphoto, 65)
-                Spacer(modifier = Modifier.size(12.dp))
-                Column {
-                    CommonTextTitle(
-                        text = "Melanie Mantilla",
-                        modifier = Modifier
-                    )
-                    Text(text = date)
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Row(
+                    modifier = Modifier.align(Alignment.CenterStart),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    CommonCirclePhoto(R.drawable.perfilphoto, 65)
+                    Spacer(modifier = Modifier.size(12.dp))
+                    Column {
+                        CommonTextTitle(
+                            text = "Melanie Mantilla",
+                            modifier = Modifier
+                        )
+                        Text(text = date)
+                    }
+                }
+
+                if (icon != null) {
+                    IconButton(
+                        modifier = Modifier.align(Alignment.TopEnd),
+                        onClick = { onDelete(workoutSession) }) {
+                        Icon(
+                            imageVector = icon,
+                            contentDescription = null
+                        )
+                    }
+
                 }
             }
             CommonTextTitle(text = nameWorkout, modifier = Modifier)
@@ -186,7 +220,7 @@ fun WorkoutSessionCard(
 fun WorkoutList(
     setWorkout: List<SetWorkout>,
 ) {
-    LazyColumn {
+    LazyColumn(Modifier.padding(12.dp)) {
         items(setWorkout) { setWorkout ->
             WorkoutExerciseList(
                 url = setWorkout.exerciseImage,
@@ -211,7 +245,8 @@ fun ImageHomeWorkout(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(320.dp).background(Color.White),
+            .height(320.dp)
+            .background(Color.White),
         contentAlignment = Alignment.Center
     ) {
         Image(painter = painter, contentDescription = description, contentScale = ContentScale.Crop)
@@ -220,7 +255,7 @@ fun ImageHomeWorkout(
 
 @Composable
 fun WorkoutExerciseList(url: String, description: String, nameExercise: String) {
-    Row {
+    Row(modifier = Modifier.background(Color.White)) {
         Card(
             shape = CircleShape,
             colors = CardDefaults.cardColors(containerColor = Color.White)

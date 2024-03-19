@@ -11,10 +11,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -31,6 +37,7 @@ import com.github.tehras.charts.bar.BarChart
 import com.github.tehras.charts.bar.BarChartData
 import com.github.tehras.charts.bar.renderer.label.SimpleValueDrawer
 import com.lifebetter.simplegymapp.R
+import com.lifebetter.simplegymapp.model.mappers.formatTime
 import com.lifebetter.simplegymapp.model.statistics.Statistics
 import com.lifebetter.simplegymapp.ui.components.CommonCirclePhoto
 import com.lifebetter.simplegymapp.ui.components.CommonLittleText
@@ -58,8 +65,32 @@ fun ProfileScreen(onClickExercises: () -> Unit, onClickMeasures: () -> Unit) {
                 .padding(14.dp), verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
             Header(profileState.workoutCount)
-            Chart()
             Dashboard(onClickExercises = onClickExercises, onClickMeasures = onClickMeasures)
+            LazyColumn() {
+                profileState.listWorkoutSession.forEach { workoutSession ->
+                    item {
+                        WorkoutSessionCard(
+                            workoutSession = workoutSession,
+                            nameWorkout = workoutSession.nameWorkout,
+                            time = workoutSession.timer,
+                            volumeTotal = workoutSession.sumKg,
+                            date = workoutSession.createdDateFormatted,
+                            icon = Icons.Filled.Delete,
+                            onDelete = profileViewModel::deleteWorkout
+                        )
+                    }
+                    items(workoutSession.setWorkout){ setWorkout ->
+                        WorkoutExerciseList(
+                            url = setWorkout.exerciseImage,
+                            description = setWorkout.exerciseName,
+                            nameExercise = setWorkout.exerciseName
+                        )
+                    }
+                    item {
+                        Divider(modifier = Modifier.padding(top = 10.dp, bottom = 10.dp))
+                    }
+                }
+            }
         }
     }
 }
@@ -81,45 +112,6 @@ fun Header(workoutCount: Int) {
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Chart() {
-    Card(modifier = Modifier
-        .fillMaxWidth()
-        .padding(vertical = 10.dp), colors = CardDefaults.cardColors(containerColor = Color.Transparent)) {
-
-        val data: List<Statistics> = listOf(
-            Statistics("lunes", 2f),
-            Statistics("Martes", 1f),
-            Statistics("Miercoles", 3f),
-            Statistics("Jueves", 2f),
-            Statistics("Viernes", 4f)
-        )
-
-        var barras = ArrayList<BarChartData.Bar>()
-
-        data.mapIndexed { index, statistics ->
-            barras.add(
-                BarChartData.Bar(
-                    label = statistics.dia,
-                    value = statistics.hours,
-                    color = Color.Blue
-                )
-            )
-        }
-        Text(text = "2 horas esta semana")
-        BarChart(
-            barChartData = BarChartData(bars = barras),
-            modifier = Modifier
-                .padding(vertical = 15.dp)
-                .height(200.dp)
-                .fillMaxWidth(),
-            labelDrawer = SimpleValueDrawer(
-                drawLocation = SimpleValueDrawer.DrawLocation.XAxis
-            )
-        )
     }
 }
 
@@ -177,13 +169,5 @@ fun CommonButtonProfileDashboard(
     }
 }
 
-@Composable
-fun CommonButtonProfileBody(text: String) {
-    Button(
-        onClick = { /*TODO*/ },
-        contentPadding = PaddingValues(start = 13.dp, end = 13.dp, top = 0.dp, bottom = 0.dp)
-    ) {
-        Text(text = text, fontSize = 16.sp)
-    }
-}
+
 
