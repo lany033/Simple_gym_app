@@ -45,6 +45,7 @@ fun NavGraphBuilder.workoutNavGraph(navController: NavHostController) {
         ) { backStackEntry ->
             val id = backStackEntry.arguments?.getInt("id")
             LogWorkoutScreen(
+                onBack = { navController.popBackStack()},
                 onFinish = { navController.navigate(WorkoutScreens.SaveRoutine.route) },
                 id = id
             )

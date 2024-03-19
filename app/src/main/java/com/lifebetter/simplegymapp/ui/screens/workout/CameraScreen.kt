@@ -60,7 +60,7 @@ fun CameraScreen() {
 
     val logWorkoutViewModel: LogWorkoutViewModel =
         hiltViewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
-    val permission by logWorkoutViewModel.permission.collectAsState()
+    val permission by logWorkoutViewModel.logState.collectAsState()
 
 
     val context = LocalContext.current
@@ -76,7 +76,7 @@ fun CameraScreen() {
         logWorkoutViewModel.permissionIsGranted()
     }
 
-    if (permission) {
+    if (permission.permission) {
         Box(
             modifier = Modifier
                 .fillMaxSize()

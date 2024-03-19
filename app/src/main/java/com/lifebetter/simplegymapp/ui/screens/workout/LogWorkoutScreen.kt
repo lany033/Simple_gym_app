@@ -1,6 +1,10 @@
 package com.lifebetter.simplegymapp.ui.screens.workout
 
+import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.OnBackPressedDispatcher
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,13 +36,20 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -52,14 +63,15 @@ import com.lifebetter.simplegymapp.model.mappers.formatTime
 import com.lifebetter.simplegymapp.ui.components.CommonTextButtons
 import com.lifebetter.simplegymapp.ui.components.CommonTextTitle
 import com.lifebetter.simplegymapp.ui.screens.exercises.ImageWorkout
+import kotlinx.coroutines.launch
 
 @Composable
-fun LogWorkoutScreen(onFinish: () -> Unit, id: Int?) {
+fun LogWorkoutScreen(onBack:() -> Unit, onFinish:() -> Unit, id: Int?) {
 
-    val logWorkoutViewModel: LogWorkoutViewModel = hiltViewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
+    val logWorkoutViewModel: LogWorkoutViewModel =
+        hiltViewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
     val logState by logWorkoutViewModel.logState.collectAsState()
     val timer by logWorkoutViewModel.timer.collectAsState()
-    val isPlaying = logState.timerIsPlaying
     val workoutId by logWorkoutViewModel.workoutId.collectAsState()
 
     Scaffold(topBar = { LogWorkoutBar(onFinish) }) { padding ->
@@ -71,7 +83,7 @@ fun LogWorkoutScreen(onFinish: () -> Unit, id: Int?) {
                     .padding(12.dp)
             ) {
                 Text(text = "Duration")
-                BasicCountdownTimer(isPlaying = isPlaying, timerValue = timer)
+                BasicCountdownTimer(isPlaying = logState.timerIsPlaying, timerValue = timer)
                 Divider()
             }
             LaunchedEffect(key1 = workoutId) {
@@ -124,9 +136,27 @@ fun LogWorkoutScreen(onFinish: () -> Unit, id: Int?) {
                 }
             }
         }
+        BackHandler(enabled = true) {
+
+            logWorkoutViewModel.openAlertDialog()
+
+        }
+
+        if (logState.openAlertDialog){
+            FinishAlertDialog(
+                onDismissRequest = logWorkoutViewModel::closeAlertDialog,
+                onConfirmation = {
+                    logWorkoutViewModel.onResetWorkout()
+                    onBack() },
+                dialogTitle = "Do you want discard this workout?"
+            )
+        }
 
     }
+
 }
+
+
 
 @Composable
 fun LogWorkoutBar(onFinish: () -> Unit) {
@@ -350,10 +380,8 @@ fun AddButtonSet(
 
 @Composable
 fun FinishAlertDialog(
-    nameTitle: String,
-    listWorkout: List<SetWorkout>,
     onDismissRequest: () -> Unit,
-    onConfirmation: (List<SetWorkout>) -> Unit,
+    onConfirmation: () -> Unit,
     dialogTitle: String,
 ) {
     AlertDialog(
@@ -366,10 +394,10 @@ fun FinishAlertDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    onConfirmation(listWorkout)
+                    onConfirmation()
                 }
             ) {
-                Text("Save")
+                Text("Yes")
             }
         },
         dismissButton = {
@@ -383,3 +411,4 @@ fun FinishAlertDialog(
         }
     )
 }
+

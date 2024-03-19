@@ -67,8 +67,6 @@ fun NewRoutineScreen(onClickAddExercises: () -> Unit, onCancel:()->Unit, onBack:
     }) { padding ->
         if (openAlertDialog){
             SaveAlertDialog(
-                nameTitle = titleText,
-                listWorkout = selectedExercises,
                 onDismissRequest = exerciseViewModel::closeAlertDialog ,
                 onConfirmation = {
                     exerciseViewModel.onSaveRoutine()
@@ -196,8 +194,6 @@ fun CommonButtonItems2(text: String, onClick: () -> Unit) {
 
 @Composable
 fun SaveAlertDialog(
-    nameTitle: String,
-    listWorkout: List<Exercise>,
     onDismissRequest: () -> Unit,
     onConfirmation: () -> Unit,
     dialogTitle: String,

@@ -30,10 +30,14 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
     private val _timer = MutableStateFlow(0L)
     val timer = _timer.asStateFlow()
 
+    private val _uri = MutableStateFlow<List<String>>(emptyList())
+    val uri = _uri.asStateFlow()
+
     private val _setState = MutableStateFlow(SetValueState())
 
     init {
         viewModelScope.launch {
+            _logState.value = LogWorkoutState(timerIsPlaying = true)
             logState.value.timerJob?.cancel()
             logState.value.timerJob = viewModelScope.launch {
                 while (true) {
@@ -105,11 +109,9 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
                 setWorkout
             }
         }
-
         _logState.update {
             it.copy(listWorkoutSet = listWorkout)
         }
-
         onSumKg()
     }
 
@@ -195,20 +197,35 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
         }
     }
 
-    private val _uri = MutableStateFlow<List<String>>(emptyList())
-    val uri = _uri.asStateFlow()
-
-    private val _permission = MutableStateFlow(false)
-    val permission = _permission.asStateFlow()
-
     fun onTakePhoto(uri: String) {
         _uri.value += uri
     }
 
     fun permissionIsGranted() {
-        _permission.update {
-            true
+        _logState.update {
+            it.copy(permission = true)
         }
+    }
+
+    fun openAlertDialog() {
+        _logState.update {
+            it.copy(openAlertDialog = true)
+        }
+    }
+
+    fun closeAlertDialog() {
+        _logState.update {
+            it.copy(openAlertDialog = false)
+        }
+    }
+
+    fun onResetWorkout() {
+        _timer.value = 0L
+        _logState.value = LogWorkoutState(
+            openAlertDialog = false,
+            sumKg = 0,
+            sumRep = 0,
+            timerIsPlaying = false)
     }
 
     data class LogWorkoutState(
@@ -219,7 +236,9 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
         val listWorkoutSet: List<SetWorkout> = emptyList(),
         val sumKg: Int = 0,
         val sumRep: Int = 0,
-        val openAlertDialog: Boolean = false
+        val openAlertDialog: Boolean = false,
+        val permission: Boolean = false,
+        val isBack: Boolean = true,
     )
 
     data class SetValueState(
