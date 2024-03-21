@@ -31,6 +31,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -55,6 +56,8 @@ import com.lifebetter.simplegymapp.ui.components.CommonCirclePhoto
 import com.lifebetter.simplegymapp.ui.components.CommonTextTitle
 import com.lifebetter.simplegymapp.ui.components.MyTopAppBar
 import com.lifebetter.simplegymapp.ui.screens.exercises.ImageWorkout
+import com.lifebetter.simplegymapp.ui.theme.Green40
+import com.lifebetter.simplegymapp.ui.theme.Green80
 
 @Composable
 fun HomeScreen() {
@@ -109,17 +112,16 @@ fun HorizontalPagerWithIndicators(uris: List<String>?, setWorkout: List<SetWorko
 
     val pagerState = rememberPagerState(pageCount = { pagerCount })
 
-    Column(
+    Card(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(bottom = 15.dp)
+            .padding(bottom = 15.dp),
+        shape = RectangleShape
     ) {
         HorizontalPager(
             state = pagerState,
             pageSize = PageSize.Fill,
             modifier = Modifier
                 .height(350.dp)
-                .background(Color.White)
         ) {
             if (uris.isNullOrEmpty()) {
                 WorkoutList(setWorkout = setWorkout)
@@ -132,12 +134,12 @@ fun HorizontalPagerWithIndicators(uris: List<String>?, setWorkout: List<SetWorko
             Modifier
                 .height(30.dp)
                 .fillMaxWidth()
-                .background(Color.White),
+                .background(Color.Transparent),
             horizontalArrangement = Arrangement.Center
         ) {
             repeat(pagerCount) { iteration ->
                 val color =
-                    if (pagerState.currentPage == iteration) Color.DarkGray else Color.LightGray
+                    if (pagerState.currentPage == iteration) Green40 else Green80
                 Box(
                     modifier = Modifier
                         .padding(8.dp)
@@ -163,7 +165,7 @@ fun WorkoutSessionCard(
     Card(
         modifier = Modifier
             .fillMaxSize(),
-        colors = CardDefaults.cardColors(Color.White),
+        colors = CardDefaults.cardColors(),
         shape = RectangleShape
     ) {
         Column(
@@ -239,7 +241,7 @@ fun ImageHomeWorkout(
     val painter: Painter = rememberAsyncImagePainter(
         model = ImageRequest.Builder(LocalContext.current)
             .data(uri)
-            .size(coil.size.Size.ORIGINAL) // Set the target size to load the image at.
+            .size(coil.size.Size.ORIGINAL)
             .build()
     )
     Box(
@@ -255,23 +257,23 @@ fun ImageHomeWorkout(
 
 @Composable
 fun WorkoutExerciseList(url: String, description: String, nameExercise: String) {
-    Row(modifier = Modifier.background(Color.White)) {
-        Card(
-            shape = CircleShape,
-            colors = CardDefaults.cardColors(containerColor = Color.White)
-        ) {
-            ImageWorkout(
-                url = url,
-                contentDescription = description,
-                width = 20,
-                height = 20
-            )
+    Card(modifier = Modifier.fillMaxWidth(), shape = RectangleShape) {
+        Row(modifier = Modifier.padding(10.dp)) {
+            Card(
+                shape = CircleShape
+            ) {
+                ImageWorkout(
+                    url = url,
+                    contentDescription = description,
+                    width = 20,
+                    height = 20
+                )
+            }
+            Spacer(modifier = Modifier.size(20.dp))
+            CommonTextTitle(text = nameExercise, modifier = Modifier)
         }
-        Spacer(modifier = Modifier.size(20.dp))
-        CommonTextTitle(text = nameExercise, modifier = Modifier)
     }
 }
-
 
 @Composable
 fun WelcomeHome() {

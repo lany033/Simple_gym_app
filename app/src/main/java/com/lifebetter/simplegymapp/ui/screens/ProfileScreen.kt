@@ -1,5 +1,6 @@
 package com.lifebetter.simplegymapp.ui.screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -22,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -31,6 +34,7 @@ import com.lifebetter.simplegymapp.ui.components.CommonLittleText
 import com.lifebetter.simplegymapp.ui.components.CommonTextButtons
 import com.lifebetter.simplegymapp.ui.components.CommonTextTitle
 import com.lifebetter.simplegymapp.ui.components.MyTopWithIconsBar
+import com.lifebetter.simplegymapp.ui.theme.Green40
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.Calendar
@@ -73,8 +77,8 @@ fun ProfileScreen(onClickExercises: () -> Unit, onClickMeasures: () -> Unit) {
                             nameExercise = setWorkout.exerciseName
                         )
                     }
-                    item {
-                        Divider(modifier = Modifier.padding(top = 10.dp, bottom = 10.dp))
+                    item { 
+                        Spacer(modifier = Modifier.size(10.dp))
                     }
                 }
             }
@@ -145,12 +149,15 @@ fun CommonButtonProfileDashboard(
 ) {
     Button(
         onClick = { onclick() },
-        shape = RoundedCornerShape(4.dp), modifier = modifier
+        shape = RoundedCornerShape(4.dp), modifier = modifier,
+        border = BorderStroke(2.dp, Color.LightGray),
+        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
     ) {
         Icon(
             imageVector = imageVector,
             contentDescription = "icon",
-            modifier = Modifier.size(24.dp)
+            modifier = Modifier.size(24.dp),
+            tint = Green40
         )
         CommonTextButtons(text = textButton)
     }

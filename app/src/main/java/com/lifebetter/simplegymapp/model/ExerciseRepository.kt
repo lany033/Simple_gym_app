@@ -39,7 +39,7 @@ class ExercisesRepository @Inject constructor(
         exerciseLocalDataSource.deleteWorkout(workout)
     }
 
-    suspend fun findByWorkoutId(id: Int): Flow<Workout>{
+    fun findByWorkoutId(id: Int): Flow<Workout>{
         return exerciseLocalDataSource.findById(id)
     }
 
@@ -51,87 +51,6 @@ class ExercisesRepository @Inject constructor(
         Log.d("findById", id.toString())
         return requestExercises().single { it.id == id }
     }
-
-    suspend fun getExercisesFilterByBarbell(): List<Exercise> {
-        return requestExercises().filter { it.equipment.toTextEquipment().contains("Barbell") }
-    }
-
-    suspend fun getExercisesFilterBySZBar(): List<Exercise> {
-        return requestExercises().filter { it.equipment.toTextEquipment().contains("SZ-Bar") }
-    }
-
-    suspend fun getExercisesFilterByDumbbell(): List<Exercise> {
-        return requestExercises().filter { it.equipment.toTextEquipment().contains("Dumbbell") }
-    }
-
-    suspend fun getExercisesFilterByGymMat(): List<Exercise> {
-        return requestExercises().filter { it.equipment.toTextEquipment().contains("Gym mat") }
-    }
-
-    suspend fun getExercisesFilterBySwissBall(): List<Exercise> {
-        return requestExercises().filter { it.equipment.toTextEquipment().contains("Swiss Ball") }
-    }
-
-    suspend fun getExercisesFilterByPullupBar(): List<Exercise> {
-        return requestExercises().filter { it.equipment.toTextEquipment().contains("Pull-up bar") }
-    }
-
-    suspend fun getExercisesFilterByNone(): List<Exercise> {
-        return requestExercises().filter {
-            it.equipment.toTextEquipment().contains("none (bodyweight exercise)")
-        }
-    }
-
-    suspend fun getExercisesFilterByBench(): List<Exercise> {
-        return requestExercises().filter { it.equipment.toTextEquipment().contains("Bench") }
-    }
-
-    suspend fun getExercisesFilterByInclineBench(): List<Exercise> {
-        return requestExercises().filter {
-            it.equipment.toTextEquipment().contains("Incline bench")
-        }
-    }
-
-    suspend fun getExercisesFilterByKettlebell(): List<Exercise> {
-        return requestExercises().filter { it.equipment.toTextEquipment().contains("Kettlebell") }
-    }
-
-    suspend fun getExercisesFilterByBiceps(): List<Exercise> {
-        return requestExercises().filter { it.muscles.toText().contains("Biceps brachii") }
-    }
-
-    suspend fun getExercisesFilterByDeltoids(): List<Exercise> {
-        return requestExercises().filter { it.muscles.toText().contains("Anterior deltoid") }
-    }
-
-    suspend fun getExercisesFilterByChest(): List<Exercise> {
-        return requestExercises().filter { it.muscles.toText().contains("Pectoralis major") }
-    }
-
-    suspend fun getExercisesFilterByTriceps(): List<Exercise> {
-        return requestExercises().filter { it.muscles.toText().contains("Triceps brachii") }
-    }
-
-    suspend fun getExercisesFilterByAbd(): List<Exercise> {
-        return requestExercises().filter { it.muscles.toText().contains("Rectus abdominis") }
-    }
-
-    suspend fun getExercisesFilterByGast(): List<Exercise> {
-        return requestExercises().filter { it.muscles.toText().contains("Gastrocnemius") }
-    }
-
-    suspend fun getExercisesFilterByGluteus(): List<Exercise> {
-        return requestExercises().filter { it.muscles.toText().contains("Gluteus maximus") }
-    }
-
-    suspend fun getExercisesFilterByQuad(): List<Exercise> {
-        return requestExercises().filter { it.muscles.toText().contains("Quadriceps femoris") }
-    }
-
-    suspend fun getExercisesFilterByFemor(): List<Exercise> {
-        return requestExercises().filter { it.muscles.toText().contains("Biceps femoris") }
-    }
-
 
 }
 

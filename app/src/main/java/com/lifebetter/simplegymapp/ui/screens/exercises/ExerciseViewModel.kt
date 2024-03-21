@@ -33,8 +33,6 @@ class ExerciseViewModel @Inject constructor(
     private val _searchText = MutableStateFlow("")
     val searchText = _searchText.asStateFlow()
 
-    private val _equipmentId = MutableStateFlow(11)
-    private val _muscleId = MutableStateFlow(11)
 
     private val _selectedExercises = MutableStateFlow(SnapshotStateList<Exercise>())
     val selectedExercises = _selectedExercises.asStateFlow()
@@ -43,59 +41,15 @@ class ExerciseViewModel @Inject constructor(
     val showAddButton = _showAddButton.asStateFlow()
 
     private val _exerciseListState = MutableStateFlow(ExerciseListState())
-    val exerciseListState = combine(
-        searchText,
-        _equipmentId,
-        _muscleId,
-        _exerciseListState
-    ) { text, equipmentId, muscleId, exercises ->
-        if (equipmentId == 11 && muscleId == 11 && text.isBlank()) {
+    val exerciseListState = searchText.combine(_exerciseListState) { text, exercises  ->
+        if (text.isBlank()) {
             ExerciseListState(exerciseList = exercises.exerciseList)
-        } else if (equipmentId != 11){
-            if (text.isBlank()){
-                when(equipmentId){
-                    1 -> ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByBarbell())
-                    2 -> ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterBySZBar())
-                    3 -> ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByDumbbell())
-                    4 -> ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByGymMat())
-                    5 -> ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterBySwissBall())
-                    6 -> ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByPullupBar())
-                    7 -> ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByNone())
-                    8 -> ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByBench())
-                    9 -> ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByInclineBench())
-                    10 -> ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByKettlebell())
-                    else -> ExerciseListState(exerciseList = exercises.exerciseList)
-                }
-            } else {
-                ExerciseListState(exerciseList = exercises.exerciseList.filter { exercise ->
-                    exercise.name.uppercase().contains(text.trim().uppercase())
-                })
-            }
-        } else if(muscleId != 11){
-            if (text.isBlank()){
-                when(muscleId){
-                    1 -> ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByDeltoids())
-                    2 -> ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByBiceps())
-                    3 -> ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByFemor())
-                    4 -> ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByGast())
-                    5 -> ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByGluteus())
-                    7 -> ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByChest())
-                    8 -> ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByQuad())
-                    9 -> ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByAbd())
-                    10 -> ExerciseListState(exerciseList = exercisesRepository.getExercisesFilterByTriceps())
-                    else -> ExerciseListState(exerciseList = exercises.exerciseList)
-                }
-            } else {
-                ExerciseListState(exerciseList = exercises.exerciseList.filter { exercise ->
-                    exercise.name.uppercase().contains(text.trim().uppercase())
-                })
-            }
-        } else {
+        }
+        else {
             ExerciseListState(exerciseList = exercises.exerciseList.filter { exercise ->
                 exercise.name.uppercase().contains(text.trim().uppercase())
             })
         }
-
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
@@ -106,16 +60,8 @@ class ExerciseViewModel @Inject constructor(
         _searchText.value = text
     }
 
-    fun onNameText(text: String){
+    fun onNameText(text: String) {
         _nameWorkout.value = text
-    }
-
-    fun onFilterByEquipment(id: Int) {
-        _equipmentId.value = id
-    }
-
-    fun onFilterByMuscle(id: Int) {
-        _muscleId.value = id
     }
 
     fun onShowButtonAddExercise(id: Int) {
@@ -137,15 +83,20 @@ class ExerciseViewModel @Inject constructor(
         }
     }
 
-    fun deleteElement(exercise: Exercise){
+    fun deleteElement(exercise: Exercise) {
         viewModelScope.launch {
-             _selectedExercises.value.remove(exercise)
+            _selectedExercises.value.remove(exercise)
         }
     }
 
-    fun onSaveRoutine(){
+    fun onSaveRoutine() {
         viewModelScope.launch {
-            _workout.value.add(Workout(nameWorkout = _nameWorkout.value, exerciseList = _selectedExercises.value))
+            _workout.value.add(
+                Workout(
+                    nameWorkout = _nameWorkout.value,
+                    exerciseList = _selectedExercises.value
+                )
+            )
             exercisesRepository.saveNewWorkout(_workout.value)
             _workout.value.clear()
             _selectedExercises.value.clear()
@@ -154,11 +105,11 @@ class ExerciseViewModel @Inject constructor(
         }
     }
 
-    fun openAlertDialog(){
+    fun openAlertDialog() {
         _openAlertDialog.value = true
     }
 
-    fun closeAlertDialog(){
+    fun closeAlertDialog() {
         _openAlertDialog.value = false
     }
 

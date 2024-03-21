@@ -37,7 +37,6 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
 
     init {
         viewModelScope.launch {
-            _logState.value = LogWorkoutState(timerIsPlaying = true)
             logState.value.timerJob?.cancel()
             logState.value.timerJob = viewModelScope.launch {
                 while (true) {
@@ -49,6 +48,7 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
     }
 
     fun getWorkoutById(id: Int?) {
+        _logState.value = _logState.value.copy(timerIsPlaying = true)
         viewModelScope.launch {
             if (id != null) {
                 _workoutId.value = id
@@ -76,6 +76,7 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
         val currentList = _logState.value.listWorkoutSet
         val currentSets = currentList[indexSet].listSet
 
+
         val newSets = currentSets.plus(_setState.value).mapIndexed { index, setValueState ->
             SetValueState(
                 setNumber = index + 1,
@@ -88,9 +89,7 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
         val updatedList = currentList.toMutableList()
         updatedList[indexSet] = updatedList[indexSet].copy(listSet = newSets)
 
-        _logState.update {
-            it.copy(listWorkoutSet = updatedList)
-        }
+        _logState.value = _logState.value.copy(listWorkoutSet = updatedList)
 
         Log.d("size W $indexSet", _logState.value.listWorkoutSet[indexSet].listSet.size.toString())
     }
@@ -104,7 +103,7 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
                     } else {
                         setValueState
                     }
-                })
+                }.toMutableList())
             } else {
                 setWorkout
             }
@@ -137,7 +136,7 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
                     } else {
                         setValueState
                     }
-                })
+                }.toMutableList())
             } else {
                 setWorkout
             }
@@ -172,7 +171,7 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
                     } else {
                         setValueState
                     }
-                })
+                }.toMutableList())
             } else {
                 setWorkout
             }
@@ -221,18 +220,18 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
 
     fun onResetWorkout() {
         _timer.value = 0L
-        _logState.value = LogWorkoutState(
-            openAlertDialog = false,
+        _logState.value = _logState.value.copy(openAlertDialog = false,
             sumKg = 0,
             sumRep = 0,
             timerIsPlaying = false)
+
     }
 
     data class LogWorkoutState(
         val nameWorkout: String = "",
         val timerIsPlaying: Boolean = true,
         var timerJob: Job? = null,
-        val listSetValueState: List<SetValueState> = emptyList(),
+        val listSetValueState: MutableList<SetValueState> = mutableListOf(),
         val listWorkoutSet: List<SetWorkout> = emptyList(),
         val sumKg: Int = 0,
         val sumRep: Int = 0,
