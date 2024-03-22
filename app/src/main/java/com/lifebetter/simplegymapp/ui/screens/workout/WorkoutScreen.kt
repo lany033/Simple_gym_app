@@ -126,7 +126,7 @@ fun WorkoutScreen(onClickNewRoutines: () -> Unit, onClickStartRoutine: (Int) -> 
                         }
                     }
 
-                    Text(text = "My Routines ( ${workoutListState.workoutList.size} )")
+                    Text(text = "My Routines (${workoutListState.workoutList.size})")
                 }
 
                 AnimatedVisibility(visible = workoutListState.openAccordion) {

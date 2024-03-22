@@ -25,6 +25,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessibilityNew
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.ImageSearch
+import androidx.compose.material.icons.filled.SportsGymnastics
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -124,7 +125,9 @@ fun HorizontalPagerWithIndicators(uris: List<String>?, setWorkout: List<SetWorko
                 .height(350.dp)
         ) {
             if (uris.isNullOrEmpty()) {
-                WorkoutList(setWorkout = setWorkout)
+                Box(contentAlignment = Alignment.TopStart) {
+                    WorkoutList(setWorkout = setWorkout)
+                }
             } else {
                 ImageHomeWorkout(uri = uris[it], description = "")
             }
@@ -165,12 +168,11 @@ fun WorkoutSessionCard(
     Card(
         modifier = Modifier
             .fillMaxSize(),
-        colors = CardDefaults.cardColors(),
         shape = RectangleShape
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier.padding(12.dp)
+            modifier = Modifier.padding(16.dp)
         ) {
             Box(modifier = Modifier.fillMaxWidth()) {
                 Row(
@@ -178,7 +180,7 @@ fun WorkoutSessionCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     CommonCirclePhoto(R.drawable.perfilphoto, 65)
-                    Spacer(modifier = Modifier.size(12.dp))
+                    Spacer(modifier = Modifier.size(14.dp))
                     Column {
                         CommonTextTitle(
                             text = "Melanie Mantilla",
@@ -193,6 +195,7 @@ fun WorkoutSessionCard(
                         modifier = Modifier.align(Alignment.TopEnd),
                         onClick = { onDelete(workoutSession) }) {
                         Icon(
+                            tint = Green40,
                             imageVector = icon,
                             contentDescription = null
                         )
@@ -206,12 +209,10 @@ fun WorkoutSessionCard(
                 Card(
                     modifier = Modifier
                         .weight(1f)
-                        .fillMaxWidth(),
-                    colors = CardDefaults.cardColors(containerColor = Color.Transparent)
+                        .fillMaxWidth()
                 ) {
                     Text(text = "Volume")
                     Text(text = volumeTotal.toString(), fontSize = 20.sp)
-
                 }
             }
         }
@@ -220,9 +221,9 @@ fun WorkoutSessionCard(
 
 @Composable
 fun WorkoutList(
-    setWorkout: List<SetWorkout>,
+    setWorkout: List<SetWorkout>
 ) {
-    LazyColumn(Modifier.padding(12.dp)) {
+    LazyColumn() {
         items(setWorkout) { setWorkout ->
             WorkoutExerciseList(
                 url = setWorkout.exerciseImage,
@@ -258,15 +259,16 @@ fun ImageHomeWorkout(
 @Composable
 fun WorkoutExerciseList(url: String, description: String, nameExercise: String) {
     Card(modifier = Modifier.fillMaxWidth(), shape = RectangleShape) {
-        Row(modifier = Modifier.padding(10.dp)) {
+        Row(modifier = Modifier.padding(14.dp)) {
             Card(
-                shape = CircleShape
+                shape = CircleShape,
+                colors = CardDefaults.cardColors(containerColor = Color.White)
             ) {
                 ImageWorkout(
                     url = url,
                     contentDescription = description,
-                    width = 20,
-                    height = 20
+                    width = 25,
+                    height = 25
                 )
             }
             Spacer(modifier = Modifier.size(20.dp))
@@ -289,7 +291,7 @@ fun WelcomeHome() {
         )
         Icon(
             modifier = Modifier.size(70.dp),
-            imageVector = Icons.Filled.AccessibilityNew,
+            imageVector = Icons.Filled.SportsGymnastics,
             contentDescription = "newRoutine"
         )
         Spacer(modifier = Modifier.size(60.dp))

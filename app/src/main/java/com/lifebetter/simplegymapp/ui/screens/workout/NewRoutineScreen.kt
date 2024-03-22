@@ -19,6 +19,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -45,12 +47,13 @@ import com.lifebetter.simplegymapp.ui.components.CommonTextButtons
 import com.lifebetter.simplegymapp.ui.components.MyTopBarWithTwoText
 import com.lifebetter.simplegymapp.ui.screens.exercises.ImageWorkout
 import com.lifebetter.simplegymapp.ui.screens.exercises.ExerciseViewModel
+import com.lifebetter.simplegymapp.ui.theme.Green40
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.Dumbbell
 
 @Composable
-fun NewRoutineScreen(onClickAddExercises: () -> Unit, onCancel:()->Unit, onBack: () -> Unit) {
+fun NewRoutineScreen(onClickAddExercises: () -> Unit, onCancel: () -> Unit, onBack: () -> Unit) {
     val exerciseViewModel: ExerciseViewModel =
         hiltViewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
     val selectedExercises by exerciseViewModel.selectedExercises.collectAsState()
@@ -62,16 +65,18 @@ fun NewRoutineScreen(onClickAddExercises: () -> Unit, onCancel:()->Unit, onBack:
             "Cancel",
             "Build Routine",
             "Save",
-            {onCancel()},
-            exerciseViewModel::openAlertDialog)
+            { onCancel() },
+            exerciseViewModel::openAlertDialog
+        )
     }) { padding ->
-        if (openAlertDialog){
+        if (openAlertDialog) {
             SaveAlertDialog(
-                onDismissRequest = exerciseViewModel::closeAlertDialog ,
+                onDismissRequest = exerciseViewModel::closeAlertDialog,
                 onConfirmation = {
                     exerciseViewModel.onSaveRoutine()
-                    onBack() } ,
-                dialogTitle = "¿Guardar Rutina?",
+                    onBack()
+                },
+                dialogTitle = "Save Routine?",
             )
         }
         Column(
@@ -115,7 +120,7 @@ fun NewRoutineScreen(onClickAddExercises: () -> Unit, onCancel:()->Unit, onBack:
                             modifier = Modifier.size(26.dp)
                         )
                         Text(
-                            text = "Empieza agregando un ejercicio a tu rutina",
+                            text = "Start adding a new routine",
                             color = Color.LightGray
                         )
                     } else {
@@ -131,7 +136,7 @@ fun NewRoutineScreen(onClickAddExercises: () -> Unit, onCancel:()->Unit, onBack:
                             }
                         }
                     }
-                    CommonButtonItems2(text = "+ Agregar Ejercicio", onClick = {
+                    CommonButtonItems2(text = "+ Add Exercise", onClick = {
                         exerciseViewModel::offShowButtonExercise.invoke()
                         onClickAddExercises()
                     })
@@ -184,9 +189,12 @@ fun WorkoutItem(
 
 @Composable
 fun CommonButtonItems2(text: String, onClick: () -> Unit) {
-    Button(onClick = {
-        onClick()
-    }, shape = RoundedCornerShape(4.dp), modifier = Modifier.fillMaxWidth()) {
+    Button(
+        onClick = { onClick() },
+        shape = RoundedCornerShape(4.dp),
+        modifier = Modifier.fillMaxWidth(),
+        colors = ButtonDefaults.buttonColors(contentColor = Color.White)
+    ) {
         CommonTextButtons(text = text)
     }
 }

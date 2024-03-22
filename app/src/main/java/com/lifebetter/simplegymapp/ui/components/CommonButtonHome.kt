@@ -21,7 +21,7 @@ fun CommonButtonHome(text: String, modifier: Modifier, imageVector: ImageVector,
         onClick = { onclick() },
         shape = RoundedCornerShape(4.dp),
         modifier = modifier,
-        border = BorderStroke(2.dp, Color.LightGray),
+        border = BorderStroke(1.5.dp, Color.LightGray),
         colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
     ) {
         Icon(imageVector = imageVector, contentDescription = "new", tint = Green40)

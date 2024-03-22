@@ -66,18 +66,16 @@ fun ExercisesScreen(onScreenAddExercises: () -> Unit) {
     val selectedExercise by exerciseViewModel.selectedExercises.collectAsState()
 
     Scaffold(topBar = { MyTopWithIconsBar(title = "Exercises") }) { paddingValues ->
-        Column(
+        Card(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(14.dp),
-            verticalArrangement = Arrangement.spacedBy(15.dp)
         ) {
             TextField(
                 value = searchText,
                 onValueChange = exerciseViewModel::onSearchTextChange,
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth().padding(14.dp),
                 placeholder = { Text(text = "Search") },
                 leadingIcon = {
                     Icon(
@@ -97,9 +95,9 @@ fun ExercisesScreen(onScreenAddExercises: () -> Unit) {
                 shape = RoundedCornerShape(4.dp)
             )
 
-            Text(text = "Popular exercises")
+            Text(text = "Popular exercises", modifier = Modifier.padding(14.dp))
 
-            Box(modifier = Modifier.fillMaxSize()) {
+            Box(modifier = Modifier.fillMaxSize().padding(14.dp)) {
                 LazyColumn {
                     items(exerciseList.exerciseList) {
                         ExerciseItem(

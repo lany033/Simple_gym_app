@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.lifebetter.simplegymapp.ui.theme.Green40
 
 @Composable
 fun MyTopAppBar(title: String) {
@@ -50,7 +51,7 @@ fun MyTopWithIconsBar(title: String) {
             Text(text = title, fontSize = 16.sp)
             Spacer(modifier = Modifier.size(2.dp))
             IconButton(onClick = { /*TODO*/ }) {
-                Icon(imageVector = Icons.Filled.Settings, contentDescription = "settings")
+                Icon(imageVector = Icons.Filled.Settings, contentDescription = "settings", tint = Green40)
             }
         }
         Divider(color = Color.LightGray, thickness = 0.5.dp)

@@ -7,3 +7,13 @@ import androidx.compose.runtime.Composable
 fun MeasuresScreen() {
     Text(text = "Measures Screen")
 }
+
+@Composable
+fun StatisticsScreen() {
+    Text(text = "Statistics Screen")
+}
+
+@Composable
+fun CalendarScreen() {
+    Text(text = "Calendar Screen")
+}
