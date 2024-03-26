@@ -5,7 +5,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lifebetter.simplegymapp.domain.Exercise
-import com.lifebetter.simplegymapp.model.ExercisesRepository
+import com.lifebetter.simplegymapp.data.ExercisesRepository
 import com.lifebetter.simplegymapp.model.database.Workout
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,9 +14,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import com.lifebetter.simplegymapp.domain.Error
+import com.lifebetter.simplegymapp.model.mappers.toExerciseDomain
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
-//TODO: Arreglar los updates con copy
+//TODO: Arreglar los copy con update
 @HiltViewModel
 class ExerciseViewModel @Inject constructor(
     private val exercisesRepository: ExercisesRepository
@@ -32,7 +36,6 @@ class ExerciseViewModel @Inject constructor(
 
     private val _searchText = MutableStateFlow("")
     val searchText = _searchText.asStateFlow()
-
 
     private val _selectedExercises = MutableStateFlow(SnapshotStateList<Exercise>())
     val selectedExercises = _selectedExercises.asStateFlow()
@@ -66,12 +69,14 @@ class ExerciseViewModel @Inject constructor(
 
     fun onShowButtonAddExercise(id: Int) {
         viewModelScope.launch {
-            _showAddButton.value = ExerciseListState(
-                showButtonAddExercise = true,
-                isSelected = true,
-                exerciseId = id,
-                exerciseSelected = exercisesRepository.findByExerciseId(id)
-            )
+            exercisesRepository.findByExerciseId(id).collect{ exercise ->
+                _showAddButton.value = ExerciseListState(
+                    showButtonAddExercise = true,
+                    isSelected = true,
+                    exerciseId = id,
+                    exerciseSelected = exercise.toExerciseDomain()
+                )
+            }
         }
     }
 
@@ -114,22 +119,28 @@ class ExerciseViewModel @Inject constructor(
     }
 
     init {
-        Log.e("SearchViewModel - hashcode - ", "SearchViewModel - hashcode -" + this.hashCode())
+
         viewModelScope.launch {
-            _exerciseListState.value = ExerciseListState(
-                exerciseList = exercisesRepository.requestExercises()
-            )
+
+            exercisesRepository.requestExercises()
+
+            exercisesRepository.exercises.collect{exercises ->
+                _exerciseListState.update { it.copy(exerciseList = exercises.map { it.toExerciseDomain() }) }
+            }
         }
+        Log.e("SearchViewModel - hashcode - ", "SearchViewModel - hashcode -" + this.hashCode())
+
     }
 
     data class ExerciseListState(
         val showButtonAddExercise: Boolean = false,
+        val isLoading: Boolean = false,
         val isSelected: Boolean = false,
         val exerciseId: Int = 0,
         val exerciseSelected: Exercise? = null,
         val isSearching: Boolean = false,
         val exerciseList: List<Exercise> = mutableListOf(),
-        val exercisesSelectedList: List<Exercise> = mutableListOf(),
+        val error: Error? = null
     )
 }
 

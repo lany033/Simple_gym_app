@@ -1,11 +1,9 @@
 package com.lifebetter.simplegymapp.ui.screens.workout
 
-import android.graphics.Bitmap
-import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.lifebetter.simplegymapp.model.ExercisesRepository
+import com.lifebetter.simplegymapp.data.ExercisesRepository
 import com.lifebetter.simplegymapp.model.database.SetWorkout
 import com.lifebetter.simplegymapp.model.database.WorkoutSession
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +16,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: ExercisesRepository) :
+class LogWorkoutViewModel @Inject constructor(
+    private val exercisesRepository: ExercisesRepository) :
     ViewModel() {
 
     private val _logState = MutableStateFlow(LogWorkoutState())
@@ -36,6 +35,7 @@ class LogWorkoutViewModel @Inject constructor(private val exercisesRepository: E
     private val _setState = MutableStateFlow(SetValueState())
 
     init {
+        Log.e("LogWVM - hashcode - ", "LogWVM - hashcode -" + this.hashCode())
         viewModelScope.launch {
             logState.value.timerJob?.cancel()
             logState.value.timerJob = viewModelScope.launch {

@@ -1,13 +1,11 @@
 package com.lifebetter.simplegymapp.ui.screens
 
-import android.graphics.drawable.Icon
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,9 +20,6 @@ import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccessibilityNew
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.ImageSearch
 import androidx.compose.material.icons.filled.SportsGymnastics
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -32,7 +27,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -55,8 +49,8 @@ import com.lifebetter.simplegymapp.model.database.SetWorkout
 import com.lifebetter.simplegymapp.model.database.WorkoutSession
 import com.lifebetter.simplegymapp.ui.components.CommonCirclePhoto
 import com.lifebetter.simplegymapp.ui.components.CommonTextTitle
+import com.lifebetter.simplegymapp.ui.components.ImageWorkout
 import com.lifebetter.simplegymapp.ui.components.MyTopAppBar
-import com.lifebetter.simplegymapp.ui.screens.exercises.ImageWorkout
 import com.lifebetter.simplegymapp.ui.theme.Green40
 import com.lifebetter.simplegymapp.ui.theme.Green80
 

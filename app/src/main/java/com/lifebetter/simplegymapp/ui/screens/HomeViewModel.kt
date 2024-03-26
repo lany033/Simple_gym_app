@@ -1,10 +1,8 @@
 package com.lifebetter.simplegymapp.ui.screens
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.lifebetter.simplegymapp.model.ExercisesRepository
-import com.lifebetter.simplegymapp.model.database.SetWorkout
+import com.lifebetter.simplegymapp.data.ExercisesRepository
 import com.lifebetter.simplegymapp.model.database.WorkoutSession
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,15 +24,19 @@ class HomeViewModel @Inject constructor(private val exercisesRepository: Exercis
 
     private fun getWorkoutSessions() {
         viewModelScope.launch {
+            _homeState.value = _homeState.value.copy(isLoading = true)
             exercisesRepository.getAllWorkoutSessions().collect { workoutSessionList ->
                 _homeState.update {
                     it.copy(listWorkoutSession = workoutSessionList)
                 }
             }
+            _homeState.value = _homeState.value.copy(isLoading = false)
+
         }
     }
 
     data class HomeState(
-        val listWorkoutSession: List<WorkoutSession> = emptyList()
+        val listWorkoutSession: List<WorkoutSession> = emptyList(),
+        val isLoading: Boolean = false
     )
 }

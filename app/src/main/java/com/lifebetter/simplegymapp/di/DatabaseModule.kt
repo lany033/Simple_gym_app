@@ -27,4 +27,8 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideWorkoutSessionDao(db: ExerciseDatabase) = db.workoutSessionDao()
+
+    @Provides
+    @Singleton
+    fun provideExerciseDao(db: ExerciseDatabase) = db.exerciseDao()
 }

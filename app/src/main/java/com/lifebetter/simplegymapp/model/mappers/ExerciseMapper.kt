@@ -1,7 +1,8 @@
 package com.lifebetter.simplegymapp.model.mappers
 
 import android.provider.MediaStore
-import com.lifebetter.simplegymapp.domain.Exercise
+import com.lifebetter.simplegymapp.model.database.Exercise
+import com.lifebetter.simplegymapp.domain.Exercise as ExerciseDomain
 import com.lifebetter.simplegymapp.model.remotedata.ExerciseDto
 import com.lifebetter.simplegymapp.model.remotedata.items.Equipment
 import com.lifebetter.simplegymapp.model.remotedata.items.Image
@@ -37,7 +38,6 @@ fun Long.formatTime(): String {
 }
 
 fun ExerciseDto.toLocalModel(): Exercise = Exercise(
-
     name = name,
     description = description,
     images = images.toImage(),
@@ -46,6 +46,16 @@ fun ExerciseDto.toLocalModel(): Exercise = Exercise(
     id = id,
     equipment = equipment
 
+)
+
+fun Exercise.toExerciseDomain(): ExerciseDomain = ExerciseDomain(
+    name = name,
+    description = description,
+    images = images,
+    muscles = muscles,
+    language = language,
+    id = id,
+    equipment = equipment
 )
 
 val icono = "https://static.thenounproject.com/png/3347062-200.png"

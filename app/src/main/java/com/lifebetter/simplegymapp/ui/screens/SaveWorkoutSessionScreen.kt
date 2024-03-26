@@ -1,6 +1,5 @@
 package com.lifebetter.simplegymapp.ui.screens
 
-import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -9,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -51,12 +49,20 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun SaveWorkoutSessionScreen(onBack: () -> Unit, onCamera: () -> Unit, onHome: () -> Unit) {
+fun SaveWorkoutSessionScreen(
+    onBack: () -> Unit,
+    onCamera: () -> Unit,
+    onHome: () -> Unit,
+    lwvm: LogWorkoutViewModel = hiltViewModel()
+) {
+    /*
     val logWorkoutViewModel: LogWorkoutViewModel =
         hiltViewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
-    val timer by logWorkoutViewModel.timer.collectAsState()
-    val uris by logWorkoutViewModel.uri.collectAsState()
-    val logState by logWorkoutViewModel.logState.collectAsState()
+
+     */
+    val timer by lwvm.timer.collectAsState()
+    val uris by lwvm.uri.collectAsState()
+    val logState by lwvm.logState.collectAsState()
 
     Scaffold(topBar = {
         MyTopBarWithBackIcon(
@@ -64,7 +70,7 @@ fun SaveWorkoutSessionScreen(onBack: () -> Unit, onCamera: () -> Unit, onHome: (
             subtitleTwo = "Save",
             onClickArrowBack = { onBack() },
             onClickSave = {
-                logWorkoutViewModel.saveWorkoutSession()
+                lwvm.saveWorkoutSession()
                 onHome()
             })
     }) { paddingValues ->
