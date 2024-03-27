@@ -40,6 +40,7 @@ import com.lifebetter.simplegymapp.model.mappers.toText
 import com.lifebetter.simplegymapp.ui.components.CommonDivider
 import com.lifebetter.simplegymapp.ui.components.CommonMediumText
 import com.lifebetter.simplegymapp.ui.components.CommonTextTitle
+import com.lifebetter.simplegymapp.ui.components.ErrorText
 import com.lifebetter.simplegymapp.ui.components.ImageWorkout
 import com.lifebetter.simplegymapp.ui.components.Loading
 import com.lifebetter.simplegymapp.ui.components.MyTopWithIconsBar
@@ -89,13 +90,13 @@ fun ExercisesScreen(onScreenAddExercises: () -> Unit) {
 
             Text(text = "Popular exercises", modifier = Modifier.padding(14.dp))
 
+            exerciseListState.error?.let {
+                ErrorText(error = it, modifier = Modifier)
+            }
+
             Box(modifier = Modifier
                 .fillMaxSize()
                 .padding(14.dp)) {
-
-                if (exerciseListState.isLoading){
-                    Loading()
-                }
 
                 LazyColumn {
                     items(exerciseListState.exerciseList) {
@@ -173,6 +174,5 @@ fun ExerciseItem(
             }
         }
     }
-    Log.d("image", imageUrl)
 }
 

@@ -1,5 +1,7 @@
 package com.lifebetter.simplegymapp.data.datasource
 
+import com.lifebetter.simplegymapp.domain.Error
+import com.lifebetter.simplegymapp.domain.tryCall
 import com.lifebetter.simplegymapp.model.database.Exercise
 import com.lifebetter.simplegymapp.model.database.ExerciseDao
 import com.lifebetter.simplegymapp.model.database.Workout
@@ -20,9 +22,9 @@ class ExerciseLocalDataSource @Inject constructor(
 
     suspend fun isExerciseListEmpty(): Boolean = exerciseDao.exerciseCount() == 0
 
-    suspend fun saveExercise(list: List<Exercise>) {
+    suspend fun saveExercise(list: List<Exercise>): Error? = tryCall {
         exerciseDao.insertExercise(list)
-    }
+    }.fold(ifLeft = {it}, ifRight = {null})
 
     fun findExerciseById(id: Int): Flow<Exercise> = exerciseDao.findByIdExercise(id)
 

@@ -7,6 +7,8 @@ import com.lifebetter.simplegymapp.model.database.Workout
 import com.lifebetter.simplegymapp.model.database.WorkoutSession
 import com.lifebetter.simplegymapp.model.mappers.toLocalModel
 import com.lifebetter.simplegymapp.data.datasource.ExercisesRemoteDataSource
+import com.lifebetter.simplegymapp.domain.Error
+import com.lifebetter.simplegymapp.domain.tryCall
 import com.lifebetter.simplegymapp.model.database.Exercise
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
@@ -20,17 +22,17 @@ class ExercisesRepository @Inject constructor(
 ) {
     val workouts = exerciseLocalDataSource.workouts
 
-    val exercises =  exerciseLocalDataSource.exercises
+    val exercises = exerciseLocalDataSource.exercises
 
-    suspend fun saveWorkoutSession(workoutSession: WorkoutSession){
+    suspend fun saveWorkoutSession(workoutSession: WorkoutSession) {
         exerciseLocalDataSource.saveWorkoutSession(workoutSession)
     }
 
-    suspend fun deleteWorkoutSession(workoutSession: WorkoutSession){
+    suspend fun deleteWorkoutSession(workoutSession: WorkoutSession) {
         exerciseLocalDataSource.deleteWorkoutSession(workoutSession)
     }
 
-    fun getAllWorkoutSessions(): Flow<List<WorkoutSession>>{
+    fun getAllWorkoutSessions(): Flow<List<WorkoutSession>> {
         return exerciseLocalDataSource.getWorkoutSession()
     }
 
@@ -38,33 +40,26 @@ class ExercisesRepository @Inject constructor(
         exerciseLocalDataSource.saveWorkout(list)
     }
 
-    suspend fun deleteWorkout(workout: Workout){
+    suspend fun deleteWorkout(workout: Workout) {
         exerciseLocalDataSource.deleteWorkout(workout)
     }
 
-    fun findByWorkoutId(id: Int): Flow<Workout>{
+    fun findByWorkoutId(id: Int): Flow<Workout> {
         return exerciseLocalDataSource.findById(id)
     }
 
-    suspend fun requestExercises(){
-        if (exerciseLocalDataSource.isExerciseListEmpty()){
-            val exercisesList = exercisesRemoteDataSource.getExercises().results.map { it.toLocalModel() }
-            exerciseLocalDataSource.saveExercise(exercisesList)
+    suspend fun requestExercises(): Error? {
+        if (exerciseLocalDataSource.isExerciseListEmpty()) {
+            val exercisesList =
+                exercisesRemoteDataSource.getExercises()
+            exercisesList.fold(ifLeft = { return it }) {
+                exerciseLocalDataSource.saveExercise(
+                    it.results.map { it.toLocalModel() }
+                )
+            }
         }
+        return null
     }
-
-
-
-
-
-/*
-    val exercisesList = exercisesRemoteDataSource.getExercises()
-    exercisesList.fold(ifLeft = { return it }){
-        RemoteConnection.service().getExercise()
-    }
-    return null
-
- */
 
 
     fun findByExerciseId(id: Int): Flow<Exercise> {
@@ -72,9 +67,6 @@ class ExercisesRepository @Inject constructor(
         return exerciseLocalDataSource.findExerciseById(id)
 
     }
-
-
-
 
 
 }

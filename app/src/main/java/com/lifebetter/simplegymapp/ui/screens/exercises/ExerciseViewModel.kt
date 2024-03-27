@@ -15,7 +15,9 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import com.lifebetter.simplegymapp.domain.Error
+import com.lifebetter.simplegymapp.domain.toError
 import com.lifebetter.simplegymapp.model.mappers.toExerciseDomain
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
@@ -124,11 +126,16 @@ class ExerciseViewModel @Inject constructor(
 
             exercisesRepository.requestExercises()
 
-            exercisesRepository.exercises.collect{exercises ->
-                _exerciseListState.update { it.copy(exerciseList = exercises.map { it.toExerciseDomain() }) }
+            exercisesRepository.exercises
+                .catch { cause ->
+                    _exerciseListState.update { it.copy(error = cause.toError()) }
+                    Log.d("error", cause.toError().toString())
+                }
+                .collect{exercises -> _exerciseListState.update { it.copy(exerciseList = exercises.map { it.toExerciseDomain() }) }
             }
         }
         Log.e("SearchViewModel - hashcode - ", "SearchViewModel - hashcode -" + this.hashCode())
+        //Log.d("error", _exerciseListState.value.error.toString())
 
     }
 

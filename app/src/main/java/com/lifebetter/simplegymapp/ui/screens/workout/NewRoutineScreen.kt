@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.lifebetter.simplegymapp.ui.components.CommonTextButtons
+import com.lifebetter.simplegymapp.ui.components.ErrorText
 import com.lifebetter.simplegymapp.ui.components.ImageWorkout
 import com.lifebetter.simplegymapp.ui.components.MyTopBarWithTwoText
 import com.lifebetter.simplegymapp.ui.screens.exercises.ExerciseViewModel
@@ -53,6 +54,7 @@ import compose.icons.fontawesomeicons.solid.Dumbbell
 fun NewRoutineScreen(onClickAddExercises: () -> Unit, onCancel: () -> Unit, onBack: () -> Unit) {
     val exerciseViewModel: ExerciseViewModel =
         hiltViewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
+    val exerciseState by exerciseViewModel.exerciseListState.collectAsState()
     val selectedExercises by exerciseViewModel.selectedExercises.collectAsState()
     val titleText by exerciseViewModel.nameWorkout.collectAsState()
     val openAlertDialog by exerciseViewModel.openAlertDialog.collectAsState()
@@ -66,6 +68,11 @@ fun NewRoutineScreen(onClickAddExercises: () -> Unit, onCancel: () -> Unit, onBa
             exerciseViewModel::openAlertDialog
         )
     }) { padding ->
+
+        exerciseState.error?.let {
+            ErrorText(error = it, modifier = Modifier)
+        }
+
         if (openAlertDialog) {
             SaveAlertDialog(
                 onDismissRequest = exerciseViewModel::closeAlertDialog,

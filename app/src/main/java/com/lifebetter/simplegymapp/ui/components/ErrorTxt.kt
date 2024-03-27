@@ -32,4 +32,5 @@ private fun Error.toUiString() = when (this) {
     Error.Connectivity -> stringResource(R.string.connectivity_error)
     is Error.Server -> stringResource(R.string.server_error) + code
     is Error.Unknown -> stringResource(R.string.unknown_error) + message
+    is Error.NumberException -> stringResource(R.string.number_exception)
 }

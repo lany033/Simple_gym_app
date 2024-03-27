@@ -57,16 +57,21 @@ class LogWorkoutViewModel @Inject constructor(
             val exercisesList = exercisesRepository.findByWorkoutId(_workoutId.value)
 
             exercisesList.collect { exercises ->
-                _logState.update {
-                    it.copy(listWorkoutSet = exercises.exerciseList.map {
-                        SetWorkout(
-                            exerciseName = it.name,
-                            exerciseImage = it.images,
-                            exerciseId = it.id,
-                            listSet = _logState.value.listSetValueState
-                        )
-                    }, nameWorkout = exercises.nameWorkout)
+                try {
+                    _logState.update {
+                        it.copy(listWorkoutSet = exercises.exerciseList.map {
+                            SetWorkout(
+                                exerciseName = it.name,
+                                exerciseImage = it.images,
+                                exerciseId = it.id,
+                                listSet = _logState.value.listSetValueState
+                            )
+                        }, nameWorkout = exercises.nameWorkout)
+                    }
+                } catch (e: Exception){
+                    println(e)
                 }
+
             }
         }
     }
@@ -75,7 +80,6 @@ class LogWorkoutViewModel @Inject constructor(
 
         val currentList = _logState.value.listWorkoutSet
         val currentSets = currentList[indexSet].listSet
-
 
         val newSets = currentSets.plus(_setState.value).mapIndexed { index, setValueState ->
             SetValueState(
@@ -98,9 +102,14 @@ class LogWorkoutViewModel @Inject constructor(
         val listWorkout = _logState.value.listWorkoutSet.mapIndexed { i, setWorkout ->
             if (i == indexWorkout) {
                 setWorkout.copy(listSet = setWorkout.listSet.mapIndexed { indexList, setValueState ->
-                    if (indexList == index) {
-                        setValueState.copy(kg = text.toInt())
-                    } else {
+                    try {
+                        if (indexList == index) {
+                            setValueState.copy(kg = text.toInt())
+                        } else {
+                            setValueState
+                        }
+                    } catch (e: Exception) {
+                        println(e)
                         setValueState
                     }
                 }.toMutableList())
@@ -131,11 +140,17 @@ class LogWorkoutViewModel @Inject constructor(
         val listWorkout = _logState.value.listWorkoutSet.mapIndexed { i, setWorkout ->
             if (i == indexWorkout) {
                 setWorkout.copy(listSet = setWorkout.listSet.mapIndexed { indexList, setValueState ->
-                    if (indexList == index) {
-                        setValueState.copy(rep = text.toInt())
-                    } else {
+                    try {
+                        if (indexList == index) {
+                            setValueState.copy(rep = text.toInt())
+                        } else {
+                            setValueState
+                        }
+                    } catch (e: Exception){
+                        println(e)
                         setValueState
                     }
+
                 }.toMutableList())
             } else {
                 setWorkout
