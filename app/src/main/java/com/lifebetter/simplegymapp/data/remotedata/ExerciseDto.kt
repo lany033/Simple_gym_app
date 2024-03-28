@@ -1,9 +1,9 @@
-package com.lifebetter.simplegymapp.model.remotedata
+package com.lifebetter.simplegymapp.data.remotedata
 
-import com.lifebetter.simplegymapp.model.remotedata.items.Equipment
-import com.lifebetter.simplegymapp.model.remotedata.items.Image
-import com.lifebetter.simplegymapp.model.remotedata.items.Language
-import com.lifebetter.simplegymapp.model.remotedata.items.Muscle
+import com.lifebetter.simplegymapp.data.remotedata.items.Equipment
+import com.lifebetter.simplegymapp.data.remotedata.items.Image
+import com.lifebetter.simplegymapp.data.remotedata.items.Language
+import com.lifebetter.simplegymapp.data.remotedata.items.Muscle
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

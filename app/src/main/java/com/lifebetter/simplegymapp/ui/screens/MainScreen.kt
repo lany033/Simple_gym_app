@@ -17,11 +17,6 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.lifebetter.simplegymapp.data.ExercisesRepository
-import com.lifebetter.simplegymapp.data.datasource.ExerciseLocalDataSource
-import com.lifebetter.simplegymapp.data.datasource.ExercisesRemoteDataSource
-import com.lifebetter.simplegymapp.model.database.WorkoutDao
-import com.lifebetter.simplegymapp.model.database.WorkoutSessionDao
 import com.lifebetter.simplegymapp.ui.navigation.BottomBarNavGraph
 import com.lifebetter.simplegymapp.ui.navigation.BottomBarNavItem
 import com.lifebetter.simplegymapp.ui.screens.workout.LogWorkoutViewModel

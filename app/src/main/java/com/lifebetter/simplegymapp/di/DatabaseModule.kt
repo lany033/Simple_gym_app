@@ -2,7 +2,7 @@ package com.lifebetter.simplegymapp.di
 
 import android.app.Application
 import androidx.room.Room
-import com.lifebetter.simplegymapp.model.database.ExerciseDatabase
+import com.lifebetter.simplegymapp.framework.database.ExerciseDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

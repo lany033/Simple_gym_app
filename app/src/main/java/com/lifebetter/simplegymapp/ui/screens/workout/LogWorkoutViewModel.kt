@@ -7,7 +7,7 @@ import com.lifebetter.simplegymapp.data.ExercisesRepository
 import com.lifebetter.simplegymapp.domain.toSetValueDomain
 import com.lifebetter.simplegymapp.domain.SetWorkout
 import com.lifebetter.simplegymapp.domain.toWorkoutSessionDomain
-import com.lifebetter.simplegymapp.model.database.WorkoutSession
+import com.lifebetter.simplegymapp.framework.database.WorkoutSession
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay

@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import com.lifebetter.simplegymapp.model.database.Workout as WorkoutDatabase
+import com.lifebetter.simplegymapp.framework.database.Workout as WorkoutDatabase
 
 //TODO: Arreglar los copy con update
 @HiltViewModel

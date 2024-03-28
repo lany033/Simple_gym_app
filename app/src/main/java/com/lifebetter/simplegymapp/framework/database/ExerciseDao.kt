@@ -1,4 +1,4 @@
-package com.lifebetter.simplegymapp.model.database
+package com.lifebetter.simplegymapp.framework.database
 
 import androidx.room.Dao
 import androidx.room.Insert

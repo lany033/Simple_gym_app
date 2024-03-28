@@ -1,4 +1,4 @@
-package com.lifebetter.simplegymapp.model.database
+package com.lifebetter.simplegymapp.framework.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
@@ -9,7 +9,7 @@ import androidx.room.TypeConverters
 abstract class ExerciseDatabase: RoomDatabase() {
     abstract fun workoutDao(): WorkoutDao
 
-    abstract fun workoutSessionDao():  WorkoutSessionDao
+    abstract fun workoutSessionDao(): WorkoutSessionDao
 
     abstract fun exerciseDao(): ExerciseDao
 

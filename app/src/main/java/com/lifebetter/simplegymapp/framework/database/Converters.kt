@@ -1,13 +1,13 @@
-package com.lifebetter.simplegymapp.model.database
+package com.lifebetter.simplegymapp.framework.database
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.lifebetter.simplegymapp.domain.Exercise
 import com.lifebetter.simplegymapp.domain.SetWorkout
-import com.lifebetter.simplegymapp.model.remotedata.items.Equipment
-import com.lifebetter.simplegymapp.model.remotedata.items.Language
-import com.lifebetter.simplegymapp.model.remotedata.items.Muscle
+import com.lifebetter.simplegymapp.data.remotedata.items.Equipment
+import com.lifebetter.simplegymapp.data.remotedata.items.Language
+import com.lifebetter.simplegymapp.data.remotedata.items.Muscle
 import com.lifebetter.simplegymapp.ui.screens.workout.LogWorkoutViewModel.SetValueState
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -49,7 +49,7 @@ class Converters {
         return Gson().toJson(language)
     }
     @TypeConverter
-    fun toLanguage(json: String): Language{
+    fun toLanguage(json: String): Language {
         val type = object : TypeToken<Language>() {}.type
         return  Gson().fromJson(json,type)
     }

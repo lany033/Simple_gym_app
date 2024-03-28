@@ -1,4 +1,4 @@
-package com.lifebetter.simplegymapp.model.remotedata
+package com.lifebetter.simplegymapp.data.remotedata
 
 import dagger.Module
 import dagger.Provides

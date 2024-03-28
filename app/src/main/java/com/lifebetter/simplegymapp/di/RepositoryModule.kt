@@ -2,11 +2,11 @@ package com.lifebetter.simplegymapp.di
 
 
 import com.lifebetter.simplegymapp.data.ExercisesRepository
-import com.lifebetter.simplegymapp.data.datasource.ExerciseLocalDataSource
-import com.lifebetter.simplegymapp.model.database.WorkoutDao
-import com.lifebetter.simplegymapp.model.database.WorkoutSessionDao
-import com.lifebetter.simplegymapp.data.datasource.ExercisesRemoteDataSource
-import com.lifebetter.simplegymapp.model.database.ExerciseDao
+import com.lifebetter.simplegymapp.framework.datasource.ExerciseRoomDataSource
+import com.lifebetter.simplegymapp.framework.database.WorkoutDao
+import com.lifebetter.simplegymapp.framework.database.WorkoutSessionDao
+import com.lifebetter.simplegymapp.framework.datasource.ExercisesServerDataSource
+import com.lifebetter.simplegymapp.framework.database.ExerciseDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,13 +20,13 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideMainRepository(workoutDao: WorkoutDao, workoutSessionDao: WorkoutSessionDao, exerciseDao: ExerciseDao): ExercisesRepository {
-        return ExercisesRepository(ExercisesRemoteDataSource(), ExerciseLocalDataSource(workoutDao, workoutSessionDao, exerciseDao))
+        return ExercisesRepository(ExercisesServerDataSource(), ExerciseRoomDataSource(workoutDao, workoutSessionDao, exerciseDao))
     }
 
     @Provides
     @Singleton
-    fun provideExerciseRemoteDataSource(): ExercisesRemoteDataSource {
-        return ExercisesRemoteDataSource()
+    fun provideExerciseRemoteDataSource(): ExercisesServerDataSource {
+        return ExercisesServerDataSource()
     }
 
 }

@@ -1,10 +1,10 @@
-package com.lifebetter.simplegymapp.model.database
+package com.lifebetter.simplegymapp.framework.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.lifebetter.simplegymapp.model.remotedata.items.Equipment
-import com.lifebetter.simplegymapp.model.remotedata.items.Language
-import com.lifebetter.simplegymapp.model.remotedata.items.Muscle
+import com.lifebetter.simplegymapp.data.remotedata.items.Equipment
+import com.lifebetter.simplegymapp.data.remotedata.items.Language
+import com.lifebetter.simplegymapp.data.remotedata.items.Muscle
 
 @Entity
 data class Exercise (

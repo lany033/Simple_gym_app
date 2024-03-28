@@ -1,4 +1,4 @@
-package com.lifebetter.simplegymapp.model.remotedata.items
+package com.lifebetter.simplegymapp.data.remotedata.items
 
 data class Image(
     val author_history: List<String>,
