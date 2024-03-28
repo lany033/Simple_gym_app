@@ -1,9 +1,11 @@
 package com.lifebetter.simplegymapp.ui.screens
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lifebetter.simplegymapp.data.ExercisesRepository
-import com.lifebetter.simplegymapp.model.database.WorkoutSession
+import com.lifebetter.simplegymapp.domain.WorkoutSession as WorkoutSessionDomain
+import com.lifebetter.simplegymapp.domain.toWorkoutSessionDomain
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,7 +26,7 @@ class ProfileViewModel @Inject constructor(private val exercisesRepository: Exer
             exercisesRepository.getAllWorkoutSessions().collect { workoutSessionList ->
                 _profileState.update {
                     it.copy(
-                        listWorkoutSession = workoutSessionList,
+                        listWorkoutSession = workoutSessionList.map { it.toWorkoutSessionDomain() },
                         workoutCount = workoutSessionList.size,
                     )
                 }
@@ -33,15 +35,16 @@ class ProfileViewModel @Inject constructor(private val exercisesRepository: Exer
         }
     }
 
-    fun deleteWorkout(workoutSession: WorkoutSession){
+    fun deleteWorkout(workoutSession: WorkoutSessionDomain){
         viewModelScope.launch {
             exercisesRepository.deleteWorkoutSession(workoutSession)
         }
+        Log.d("deleteWorkout", _profileState.value.listWorkoutSession.size.toString())
     }
 
     data class ProfileState(
         val user: String = "",
-        val listWorkoutSession: List<WorkoutSession> = emptyList(),
+        val listWorkoutSession: List<WorkoutSessionDomain> = emptyList(),
         val workoutCount: Int = 0,
 
     )

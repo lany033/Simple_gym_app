@@ -28,8 +28,7 @@ class ExerciseLocalDataSource @Inject constructor(
 
     fun findExerciseById(id: Int): Flow<Exercise> = exerciseDao.findByIdExercise(id)
 
-
-    fun findById(id: Int): Flow<Workout> = workoutDao.findById(id)
+    fun findByWorkoutId(id: Int): Flow<Workout> = workoutDao.findById(id)
 
     suspend fun deleteWorkout(workout: Workout) = workoutDao.deleteWorkout(workout)
 

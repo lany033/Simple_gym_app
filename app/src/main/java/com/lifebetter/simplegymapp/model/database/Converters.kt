@@ -4,6 +4,7 @@ import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.lifebetter.simplegymapp.domain.Exercise
+import com.lifebetter.simplegymapp.domain.SetWorkout
 import com.lifebetter.simplegymapp.model.remotedata.items.Equipment
 import com.lifebetter.simplegymapp.model.remotedata.items.Language
 import com.lifebetter.simplegymapp.model.remotedata.items.Muscle

@@ -22,7 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.lifebetter.simplegymapp.domain.Exercise
-import com.lifebetter.simplegymapp.model.database.Workout
+import com.lifebetter.simplegymapp.domain.Workout
 import com.lifebetter.simplegymapp.ui.theme.Green40
 
 

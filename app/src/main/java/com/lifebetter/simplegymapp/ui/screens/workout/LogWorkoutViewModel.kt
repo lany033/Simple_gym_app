@@ -4,7 +4,9 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lifebetter.simplegymapp.data.ExercisesRepository
-import com.lifebetter.simplegymapp.model.database.SetWorkout
+import com.lifebetter.simplegymapp.domain.toSetValueDomain
+import com.lifebetter.simplegymapp.domain.SetWorkout
+import com.lifebetter.simplegymapp.domain.toWorkoutSessionDomain
 import com.lifebetter.simplegymapp.model.database.WorkoutSession
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -64,7 +66,7 @@ class LogWorkoutViewModel @Inject constructor(
                                 exerciseName = it.name,
                                 exerciseImage = it.images,
                                 exerciseId = it.id,
-                                listSet = _logState.value.listSetValueState
+                                listSet = _logState.value.listSetValueState.map { it.toSetValueDomain() }
                             )
                         }, nameWorkout = exercises.nameWorkout)
                     }
@@ -81,7 +83,7 @@ class LogWorkoutViewModel @Inject constructor(
         val currentList = _logState.value.listWorkoutSet
         val currentSets = currentList[indexSet].listSet
 
-        val newSets = currentSets.plus(_setState.value).mapIndexed { index, setValueState ->
+        val newSets = currentSets.plus(_setState.value.toSetValueDomain()).mapIndexed { index, setValueState ->
             SetValueState(
                 setNumber = index + 1,
                 kg = setValueState.kg,
@@ -91,7 +93,7 @@ class LogWorkoutViewModel @Inject constructor(
         }
 
         val updatedList = currentList.toMutableList()
-        updatedList[indexSet] = updatedList[indexSet].copy(listSet = newSets)
+        updatedList[indexSet] = updatedList[indexSet].copy(listSet = newSets.map { it.toSetValueDomain() })
 
         _logState.value = _logState.value.copy(listWorkoutSet = updatedList)
 
@@ -207,7 +209,7 @@ class LogWorkoutViewModel @Inject constructor(
             nameWorkout = _logState.value.nameWorkout
         )
         viewModelScope.launch {
-            exercisesRepository.saveWorkoutSession(newWorkout)
+            exercisesRepository.saveWorkoutSession(newWorkout.toWorkoutSessionDomain())
         }
     }
 

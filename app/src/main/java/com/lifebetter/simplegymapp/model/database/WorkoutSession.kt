@@ -1,9 +1,8 @@
 package com.lifebetter.simplegymapp.model.database
 
-import android.graphics.Bitmap
-import android.net.Uri
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.lifebetter.simplegymapp.domain.SetWorkout
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 

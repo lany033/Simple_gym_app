@@ -41,7 +41,6 @@ import compose.icons.feathericons.Search
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.Smile
 
-
 @Composable
 fun WorkoutScreen(onClickNewRoutines: () -> Unit, onClickStartRoutine: (Int) -> Unit) {
 

@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lifebetter.simplegymapp.domain.Exercise
 import com.lifebetter.simplegymapp.data.ExercisesRepository
-import com.lifebetter.simplegymapp.model.database.Workout
+import com.lifebetter.simplegymapp.model.database.Workout as WorkoutDatabase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -18,7 +18,10 @@ import com.lifebetter.simplegymapp.domain.Error
 import com.lifebetter.simplegymapp.domain.toError
 import com.lifebetter.simplegymapp.model.mappers.toExerciseDomain
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
+
+import com.lifebetter.simplegymapp.domain.Workout
+import com.lifebetter.simplegymapp.domain.fromWorkoutDomain
+import com.lifebetter.simplegymapp.domain.toWorkoutDomain
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
@@ -74,7 +77,6 @@ class ExerciseViewModel @Inject constructor(
             exercisesRepository.findByExerciseId(id).collect{ exercise ->
                 _showAddButton.value = ExerciseListState(
                     showButtonAddExercise = true,
-                    isSelected = true,
                     exerciseId = id,
                     exerciseSelected = exercise.toExerciseDomain()
                 )
@@ -99,10 +101,10 @@ class ExerciseViewModel @Inject constructor(
     fun onSaveRoutine() {
         viewModelScope.launch {
             _workout.value.add(
-                Workout(
+                WorkoutDatabase(
                     nameWorkout = _nameWorkout.value,
                     exerciseList = _selectedExercises.value
-                )
+                ).toWorkoutDomain()
             )
             exercisesRepository.saveNewWorkout(_workout.value)
             _workout.value.clear()
@@ -141,8 +143,6 @@ class ExerciseViewModel @Inject constructor(
 
     data class ExerciseListState(
         val showButtonAddExercise: Boolean = false,
-        val isLoading: Boolean = false,
-        val isSelected: Boolean = false,
         val exerciseId: Int = 0,
         val exerciseSelected: Exercise? = null,
         val isSearching: Boolean = false,

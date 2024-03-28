@@ -3,7 +3,9 @@ package com.lifebetter.simplegymapp.ui.screens.workout
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lifebetter.simplegymapp.data.ExercisesRepository
+import com.lifebetter.simplegymapp.domain.toWorkoutDomain
 import com.lifebetter.simplegymapp.model.database.Workout
+import com.lifebetter.simplegymapp.domain.Workout as WorkoutDomain
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -29,7 +31,7 @@ class WorkoutViewModel @Inject constructor(
         }
     }
 
-    fun deleteWorkout(workout: Workout) {
+    fun deleteWorkout(workout: WorkoutDomain) {
         viewModelScope.launch {
             exercisesRepository.deleteWorkout(workout)
         }
@@ -38,13 +40,13 @@ class WorkoutViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             exercisesRepository.workouts.collect { workout: List<Workout> ->
-                _workoutListState.update { WorkoutListState(workoutList = workout) }
+                _workoutListState.update { WorkoutListState(workoutList = workout.map { it.toWorkoutDomain() }) }
             }
         }
     }
 
     data class WorkoutListState(
         val openAccordion: Boolean = true,
-        val workoutList: List<Workout> = emptyList(),
+        val workoutList: List<WorkoutDomain> = emptyList(),
     )
 }

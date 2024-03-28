@@ -45,8 +45,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.lifebetter.simplegymapp.R
-import com.lifebetter.simplegymapp.model.database.SetWorkout
-import com.lifebetter.simplegymapp.model.database.WorkoutSession
+import com.lifebetter.simplegymapp.domain.SetWorkout
+import com.lifebetter.simplegymapp.domain.WorkoutSession
 import com.lifebetter.simplegymapp.ui.components.CommonCirclePhoto
 import com.lifebetter.simplegymapp.ui.components.CommonTextTitle
 import com.lifebetter.simplegymapp.ui.components.ImageWorkout

@@ -32,6 +32,6 @@ class WorkoutRepository @Inject constructor(
     }
 
     fun findByWorkoutId(id: Int): Flow<Workout> {
-        return exerciseLocalDataSource.findById(id)
+        return exerciseLocalDataSource.findByWorkoutId(id)
     }
 }
