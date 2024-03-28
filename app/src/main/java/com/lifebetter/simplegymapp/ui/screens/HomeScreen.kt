@@ -173,7 +173,7 @@ fun WorkoutSessionCard(
                     modifier = Modifier.align(Alignment.CenterStart),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    CommonCirclePhoto(R.drawable.perfilphoto, 65)
+                    CommonCirclePhoto(R.drawable.all, 65)
                     Spacer(modifier = Modifier.size(14.dp))
                     Column {
                         CommonTextTitle(

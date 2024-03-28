@@ -97,7 +97,7 @@ fun ProfileScreen(
 fun Header(workoutCount: Int) {
     Card(shape = RectangleShape, modifier = Modifier.fillMaxWidth()) {
         Row(modifier = Modifier.padding(14.dp)) {
-            CommonCirclePhoto(R.drawable.perfilphoto, 80)
+            CommonCirclePhoto(R.drawable.all, 80)
             Spacer(modifier = Modifier.size(14.dp))
             Column {
                 CommonTextTitle(

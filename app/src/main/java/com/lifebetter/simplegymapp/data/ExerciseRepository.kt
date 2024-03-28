@@ -1,14 +1,10 @@
 package com.lifebetter.simplegymapp.data
 
 import com.lifebetter.simplegymapp.data.datasource.ExerciseLocalDataSource
-import com.lifebetter.simplegymapp.model.database.Workout
-import com.lifebetter.simplegymapp.model.database.WorkoutSession
-import com.lifebetter.simplegymapp.model.mappers.toLocalModel
 import com.lifebetter.simplegymapp.data.datasource.ExercisesRemoteDataSource
 import com.lifebetter.simplegymapp.domain.Error
-import com.lifebetter.simplegymapp.domain.fromWorkoutDomain
-import com.lifebetter.simplegymapp.domain.fromWorkoutSessionDomain
-import com.lifebetter.simplegymapp.model.database.Exercise
+import com.lifebetter.simplegymapp.domain.Exercise
+import com.lifebetter.simplegymapp.domain.toDomain
 import com.lifebetter.simplegymapp.domain.Workout as WorkoutDomain
 import com.lifebetter.simplegymapp.domain.WorkoutSession as WorkoutSessionDomain
 import kotlinx.coroutines.flow.Flow
@@ -25,26 +21,26 @@ class ExercisesRepository @Inject constructor(
     val exercises = exerciseLocalDataSource.exercises
 
     suspend fun saveWorkoutSession(workoutSession: WorkoutSessionDomain) {
-        exerciseLocalDataSource.saveWorkoutSession(workoutSession.fromWorkoutSessionDomain())
+        exerciseLocalDataSource.saveWorkoutSession(workoutSession)
     }
 
     suspend fun deleteWorkoutSession(workoutSession: WorkoutSessionDomain) {
-        exerciseLocalDataSource.deleteWorkoutSession(workoutSession.fromWorkoutSessionDomain())
+        exerciseLocalDataSource.deleteWorkoutSession(workoutSession)
     }
 
-    fun getAllWorkoutSessions(): Flow<List<WorkoutSession>> {
+    fun getAllWorkoutSessions(): Flow<List<WorkoutSessionDomain>> {
         return exerciseLocalDataSource.getWorkoutSession()
     }
 
     suspend fun saveNewWorkout(list: List<WorkoutDomain>) {
-        exerciseLocalDataSource.saveWorkout(list.map { it.fromWorkoutDomain() })
+        exerciseLocalDataSource.saveWorkout(list)
     }
 
     suspend fun deleteWorkout(workout: WorkoutDomain) {
-        exerciseLocalDataSource.deleteWorkout(workout.fromWorkoutDomain())
+        exerciseLocalDataSource.deleteWorkout(workout)
     }
 
-    fun findByWorkoutId(id: Int): Flow<Workout> {
+    fun findByWorkoutId(id: Int): Flow<WorkoutDomain> {
         return exerciseLocalDataSource.findByWorkoutId(id)
     }
 
@@ -54,7 +50,7 @@ class ExercisesRepository @Inject constructor(
                 exercisesRemoteDataSource.getExercises()
             exercisesList.fold(ifLeft = { return it }) {
                 exerciseLocalDataSource.saveExercise(
-                    it.results.map { it.toLocalModel() }
+                    it.results.map { it.toDomain() }
                 )
             }
         }

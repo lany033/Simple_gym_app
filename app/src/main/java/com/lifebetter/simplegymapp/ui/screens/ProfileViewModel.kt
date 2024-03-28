@@ -26,7 +26,7 @@ class ProfileViewModel @Inject constructor(private val exercisesRepository: Exer
             exercisesRepository.getAllWorkoutSessions().collect { workoutSessionList ->
                 _profileState.update {
                     it.copy(
-                        listWorkoutSession = workoutSessionList.map { it.toWorkoutSessionDomain() },
+                        listWorkoutSession = workoutSessionList,
                         workoutCount = workoutSessionList.size,
                     )
                 }

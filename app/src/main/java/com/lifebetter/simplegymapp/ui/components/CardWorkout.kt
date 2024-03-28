@@ -36,7 +36,7 @@ fun CardWorkout(workoutName: String) {
         ) {
             Box(Modifier.fillMaxWidth()) {
                 Row(modifier = Modifier.align(Alignment.TopStart), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-                    CommonCirclePhoto(painter = R.drawable.perfilphoto, size = 50)
+                    CommonCirclePhoto(painter = R.drawable.all, size = 50)
                     Column {
                         CommonMediumText(text = "lany033")
                         CommonLittleText(text = "Today (fecha)")

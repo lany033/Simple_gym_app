@@ -28,7 +28,7 @@ class HomeViewModel @Inject constructor(private val exercisesRepository: Exercis
             _homeState.value = _homeState.value.copy(isLoading = true)
             exercisesRepository.getAllWorkoutSessions().collect { workoutSessionList ->
                 _homeState.update {
-                    it.copy(listWorkoutSession = workoutSessionList.map { it.toWorkoutSessionDomain() })
+                    it.copy(listWorkoutSession = workoutSessionList)
                 }
             }
             _homeState.value = _homeState.value.copy(isLoading = false)

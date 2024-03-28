@@ -3,8 +3,6 @@ package com.lifebetter.simplegymapp.ui.screens.workout
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lifebetter.simplegymapp.data.ExercisesRepository
-import com.lifebetter.simplegymapp.domain.toWorkoutDomain
-import com.lifebetter.simplegymapp.model.database.Workout
 import com.lifebetter.simplegymapp.domain.Workout as WorkoutDomain
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -39,8 +37,8 @@ class WorkoutViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            exercisesRepository.workouts.collect { workout: List<Workout> ->
-                _workoutListState.update { WorkoutListState(workoutList = workout.map { it.toWorkoutDomain() }) }
+            exercisesRepository.workouts.collect { workout: List<WorkoutDomain> ->
+                _workoutListState.update { WorkoutListState(workoutList = workout) }
             }
         }
     }

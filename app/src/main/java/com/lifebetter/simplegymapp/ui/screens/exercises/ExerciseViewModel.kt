@@ -4,26 +4,23 @@ import android.util.Log
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.lifebetter.simplegymapp.domain.Exercise
 import com.lifebetter.simplegymapp.data.ExercisesRepository
-import com.lifebetter.simplegymapp.model.database.Workout as WorkoutDatabase
+import com.lifebetter.simplegymapp.domain.Error
+import com.lifebetter.simplegymapp.domain.Exercise
+import com.lifebetter.simplegymapp.domain.Workout
+import com.lifebetter.simplegymapp.domain.toError
+import com.lifebetter.simplegymapp.domain.toWorkoutDomain
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
-import com.lifebetter.simplegymapp.domain.Error
-import com.lifebetter.simplegymapp.domain.toError
-import com.lifebetter.simplegymapp.model.mappers.toExerciseDomain
-import kotlinx.coroutines.flow.catch
-
-import com.lifebetter.simplegymapp.domain.Workout
-import com.lifebetter.simplegymapp.domain.fromWorkoutDomain
-import com.lifebetter.simplegymapp.domain.toWorkoutDomain
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.lifebetter.simplegymapp.model.database.Workout as WorkoutDatabase
 
 //TODO: Arreglar los copy con update
 @HiltViewModel
@@ -78,7 +75,7 @@ class ExerciseViewModel @Inject constructor(
                 _showAddButton.value = ExerciseListState(
                     showButtonAddExercise = true,
                     exerciseId = id,
-                    exerciseSelected = exercise.toExerciseDomain()
+                    exerciseSelected = exercise
                 )
             }
         }
@@ -133,7 +130,7 @@ class ExerciseViewModel @Inject constructor(
                     _exerciseListState.update { it.copy(error = cause.toError()) }
                     Log.d("error", cause.toError().toString())
                 }
-                .collect{exercises -> _exerciseListState.update { it.copy(exerciseList = exercises.map { it.toExerciseDomain() }) }
+                .collect{exercises -> _exerciseListState.update { it.copy(exerciseList = exercises) }
             }
         }
         Log.e("SearchViewModel - hashcode - ", "SearchViewModel - hashcode -" + this.hashCode())

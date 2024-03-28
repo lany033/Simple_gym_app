@@ -2,9 +2,7 @@ package com.lifebetter.simplegymapp.data.datasource
 
 import arrow.core.Either
 import com.lifebetter.simplegymapp.domain.Error
-import com.lifebetter.simplegymapp.domain.Exercise
 import com.lifebetter.simplegymapp.domain.tryCall
-import com.lifebetter.simplegymapp.model.mappers.toLocalModel
 import com.lifebetter.simplegymapp.model.remotedata.ExerciseResult
 import com.lifebetter.simplegymapp.model.remotedata.RemoteConnection
 import javax.inject.Inject

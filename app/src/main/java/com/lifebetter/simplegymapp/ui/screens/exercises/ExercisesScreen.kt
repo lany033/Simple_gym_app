@@ -1,6 +1,5 @@
 package com.lifebetter.simplegymapp.ui.screens.exercises
 
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
@@ -36,13 +35,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.lifebetter.simplegymapp.model.mappers.toText
+import com.lifebetter.simplegymapp.domain.toText
 import com.lifebetter.simplegymapp.ui.components.CommonDivider
 import com.lifebetter.simplegymapp.ui.components.CommonMediumText
 import com.lifebetter.simplegymapp.ui.components.CommonTextTitle
 import com.lifebetter.simplegymapp.ui.components.ErrorText
 import com.lifebetter.simplegymapp.ui.components.ImageWorkout
-import com.lifebetter.simplegymapp.ui.components.Loading
 import com.lifebetter.simplegymapp.ui.components.MyTopWithIconsBar
 import com.lifebetter.simplegymapp.ui.theme.Gray40
 
