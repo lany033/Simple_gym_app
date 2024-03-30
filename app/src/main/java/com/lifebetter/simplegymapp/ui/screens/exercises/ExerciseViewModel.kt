@@ -34,12 +34,6 @@ class ExerciseViewModel @Inject constructor(
     private val _openAlertDialog = MutableStateFlow(false)
     val openAlertDialog = _openAlertDialog.asStateFlow()
 
-    /*
-    private val _workout = MutableStateFlow(Workout())
-    val workout = _workout.asStateFlow()
-
-     */
-
     private val _nameWorkout = MutableStateFlow("")
     val nameWorkout = _nameWorkout.asStateFlow()
 
@@ -105,7 +99,6 @@ class ExerciseViewModel @Inject constructor(
     fun onSaveRoutine() {
         viewModelScope.launch {
             val newWorkout = Workout(
-                    id = 0,
                     nameWorkout = _nameWorkout.value,
                     exerciseList = _selectedExercises.value
                     )
