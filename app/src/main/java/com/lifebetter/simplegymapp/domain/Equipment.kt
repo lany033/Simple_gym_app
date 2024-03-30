@@ -1,4 +1,4 @@
-package com.lifebetter.simplegymapp.data.remotedata.items
+package com.lifebetter.simplegymapp.domain
 
 data class Equipment(
     val id: Int,

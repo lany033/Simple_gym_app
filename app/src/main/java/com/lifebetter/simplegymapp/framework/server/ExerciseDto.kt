@@ -1,12 +1,9 @@
-package com.lifebetter.simplegymapp.data.remotedata
+package com.lifebetter.simplegymapp.framework.server
 
-import com.lifebetter.simplegymapp.data.remotedata.items.Equipment
-import com.lifebetter.simplegymapp.data.remotedata.items.Image
-import com.lifebetter.simplegymapp.data.remotedata.items.Language
-import com.lifebetter.simplegymapp.data.remotedata.items.Muscle
-import kotlinx.serialization.Contextual
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.lifebetter.simplegymapp.domain.Equipment
+import com.lifebetter.simplegymapp.domain.Image
+import com.lifebetter.simplegymapp.domain.Language
+import com.lifebetter.simplegymapp.domain.Muscle
 
 
 data class ExerciseDto(

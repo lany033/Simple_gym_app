@@ -10,6 +10,8 @@ import com.lifebetter.simplegymapp.domain.Exercise
 import com.lifebetter.simplegymapp.domain.Workout
 import com.lifebetter.simplegymapp.domain.toError
 import com.lifebetter.simplegymapp.domain.toWorkoutDomain
+import com.lifebetter.simplegymapp.usecases.GetPopularExercisesUseCase
+import com.lifebetter.simplegymapp.usecases.RequestPopularExerciseUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -25,7 +27,9 @@ import com.lifebetter.simplegymapp.framework.database.Workout as WorkoutDatabase
 //TODO: Arreglar los copy con update
 @HiltViewModel
 class ExerciseViewModel @Inject constructor(
-    private val exercisesRepository: ExercisesRepository
+    private val exercisesRepository: ExercisesRepository,
+    private val requestPopularExerciseUseCase: RequestPopularExerciseUseCase,
+    getPopularExercisesUseCase: GetPopularExercisesUseCase
 ) : ViewModel() {
     private val _openAlertDialog = MutableStateFlow(false)
     val openAlertDialog = _openAlertDialog.asStateFlow()
@@ -123,9 +127,9 @@ class ExerciseViewModel @Inject constructor(
 
         viewModelScope.launch {
 
-            exercisesRepository.requestExercises()
+            requestPopularExerciseUseCase()
 
-            exercisesRepository.exercises
+            getPopularExercisesUseCase()
                 .catch { cause ->
                     _exerciseListState.update { it.copy(error = cause.toError()) }
                     Log.d("error", cause.toError().toString())

@@ -2,9 +2,7 @@ package com.lifebetter.simplegymapp.domain
 
 import com.lifebetter.simplegymapp.framework.database.Exercise
 import com.lifebetter.simplegymapp.domain.Exercise as ExerciseDomain
-import com.lifebetter.simplegymapp.data.remotedata.ExerciseDto
-import com.lifebetter.simplegymapp.data.remotedata.items.Image
-import com.lifebetter.simplegymapp.data.remotedata.items.Muscle
+import com.lifebetter.simplegymapp.framework.server.ExerciseDto
 import com.lifebetter.simplegymapp.framework.database.Workout
 import com.lifebetter.simplegymapp.framework.database.WorkoutSession
 import com.lifebetter.simplegymapp.domain.Workout as WorkoutDomain

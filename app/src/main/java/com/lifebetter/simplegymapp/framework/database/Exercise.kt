@@ -2,9 +2,9 @@ package com.lifebetter.simplegymapp.framework.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.lifebetter.simplegymapp.data.remotedata.items.Equipment
-import com.lifebetter.simplegymapp.data.remotedata.items.Language
-import com.lifebetter.simplegymapp.data.remotedata.items.Muscle
+import com.lifebetter.simplegymapp.domain.Equipment
+import com.lifebetter.simplegymapp.domain.Language
+import com.lifebetter.simplegymapp.domain.Muscle
 
 @Entity
 data class Exercise (

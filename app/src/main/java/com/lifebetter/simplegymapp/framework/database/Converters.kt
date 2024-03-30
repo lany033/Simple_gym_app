@@ -5,9 +5,9 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.lifebetter.simplegymapp.domain.Exercise
 import com.lifebetter.simplegymapp.domain.SetWorkout
-import com.lifebetter.simplegymapp.data.remotedata.items.Equipment
-import com.lifebetter.simplegymapp.data.remotedata.items.Language
-import com.lifebetter.simplegymapp.data.remotedata.items.Muscle
+import com.lifebetter.simplegymapp.domain.Equipment
+import com.lifebetter.simplegymapp.domain.Language
+import com.lifebetter.simplegymapp.domain.Muscle
 import com.lifebetter.simplegymapp.ui.screens.workout.LogWorkoutViewModel.SetValueState
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter

@@ -1,11 +1,11 @@
-package com.lifebetter.simplegymapp.framework.datasource
+package com.lifebetter.simplegymapp.framework.server
 
 import arrow.core.Either
 import com.lifebetter.simplegymapp.data.datasource.ExercisesRemoteDataSource
 import com.lifebetter.simplegymapp.domain.Error
 import com.lifebetter.simplegymapp.domain.tryCall
-import com.lifebetter.simplegymapp.data.remotedata.ExerciseResult
-import com.lifebetter.simplegymapp.data.remotedata.RemoteConnection
+import com.lifebetter.simplegymapp.framework.server.ExerciseResult
+import com.lifebetter.simplegymapp.framework.server.RemoteConnection
 import javax.inject.Inject
 
 

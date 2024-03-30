@@ -1,8 +1,4 @@
-package com.lifebetter.simplegymapp.data.remotedata
-
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import kotlinx.serialization.Serializable
+package com.lifebetter.simplegymapp.framework.server
 
 data class ExerciseResult(
     val count: Int,

@@ -1,4 +1,4 @@
-package com.lifebetter.simplegymapp.framework.datasource
+package com.lifebetter.simplegymapp.framework.database
 
 import com.lifebetter.simplegymapp.data.datasource.ExerciseLocalDataSource
 import com.lifebetter.simplegymapp.domain.Error
