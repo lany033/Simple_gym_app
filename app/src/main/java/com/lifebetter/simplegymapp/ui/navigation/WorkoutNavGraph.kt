@@ -12,18 +12,17 @@ import com.lifebetter.simplegymapp.ui.screens.SaveWorkoutSessionScreen
 import com.lifebetter.simplegymapp.ui.screens.workout.WorkoutScreen
 import com.lifebetter.simplegymapp.ui.screens.exercises.ExercisesScreen
 import com.lifebetter.simplegymapp.ui.screens.workout.LogWorkoutScreen
+import com.lifebetter.simplegymapp.ui.screens.workout.LogWorkoutViewModel
 import com.lifebetter.simplegymapp.ui.screens.workout.NewRoutineScreen
 
-fun NavGraphBuilder.workoutNavGraph(navController: NavHostController) {
+fun NavGraphBuilder.workoutNavGraph(navController: NavHostController, vm: LogWorkoutViewModel) {
     navigation(route = Graph.WORKOUT, startDestination = BottomBarNavItem.Workouts.route) {
         composable(route = BottomBarNavItem.Workouts.route) {
             WorkoutScreen(
                 onClickNewRoutines = { navController.navigate(WorkoutScreens.NewRoutine.route) },
                 onClickStartRoutine = {
                     navController.navigate(
-                        WorkoutScreens.StartRoutine.createRouteWithId(
-                            it
-                        )
+                        WorkoutScreens.StartRoutine.createRouteWithId(it)
                     )
                 }
             )
@@ -34,7 +33,9 @@ fun NavGraphBuilder.workoutNavGraph(navController: NavHostController) {
                 onCancel = { navController.popBackStack() },
                 onClickAddExercises = {
                     navController.navigate(WorkoutScreens.AddExercise.route)
-                }
+                },
+                onBack = {navController.popBackStack()},
+
             )
         }
         composable(route = WorkoutScreens.AddExercise.route) {
@@ -46,14 +47,18 @@ fun NavGraphBuilder.workoutNavGraph(navController: NavHostController) {
         ) { backStackEntry ->
             val id = backStackEntry.arguments?.getInt("id")
             LogWorkoutScreen(
+                onBack = { navController.popBackStack()},
                 onFinish = { navController.navigate(WorkoutScreens.SaveRoutine.route) },
-                id = id
+                id = id,
+                vm = vm
             )
         }
         composable(route = WorkoutScreens.SaveRoutine.route) {
             SaveWorkoutSessionScreen(
                 onBack = { navController.popBackStack() },
-                onCamera = { navController.navigate(WorkoutScreens.Camera.route) })
+                onCamera = { navController.navigate(WorkoutScreens.Camera.route) },
+                onHome = { navController.navigate(BottomBarNavItem.Home.route)},
+                lwvm = vm)
         }
         composable(route = WorkoutScreens.Camera.route) {
             CameraScreen()

@@ -76,6 +76,7 @@ dependencies {
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
+    implementation("io.arrow-kt:arrow-core:1.1.3")
 
     //icons
     implementation("br.com.devsrsouza.compose.icons:feather:1.1.0")
@@ -95,7 +96,7 @@ dependencies {
 
 <<<<<<< HEAD
     //image
-    implementation ("io.coil-kt:coil-compose:2.4.0")
+    implementation ("io.coil-kt:coil-compose:2.5.0")
 
     // Paging3
 =======

@@ -1,11 +1,11 @@
 package com.lifebetter.simplegymapp.ui.screens.workout
 
-import android.Manifest
 import android.Manifest.permission.CAMERA
 import android.content.Context
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Matrix
+import android.net.Uri
+import android.os.Environment
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -46,15 +46,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.concurrent.Executor
 
 
 @Composable
 fun CameraScreen() {
 
-    val logWorkoutViewModel: LogWorkoutViewModel = hiltViewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
-    val permission by logWorkoutViewModel.permission.collectAsState()
+    val logWorkoutViewModel: LogWorkoutViewModel =
+        hiltViewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
+    val permission by logWorkoutViewModel.logState.collectAsState()
 
-    val scope = rememberCoroutineScope()
+
     val context = LocalContext.current
     val controller = remember {
         LifecycleCameraController(context).apply {
@@ -64,11 +72,11 @@ fun CameraScreen() {
         }
     }
 
-    PermissionRequestEffect(permission = CAMERA){
-        logWorkoutViewModel.permisseIsGranted()
+    PermissionRequestEffect(permission = CAMERA) {
+        logWorkoutViewModel.permissionIsGranted()
     }
 
-    if (permission){
+    if (permission.permission) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -119,7 +127,7 @@ fun CameraScreen() {
                     onClick = {
                         takePhoto(
                             controller = controller,
-                            context = context,
+                            executor = ContextCompat.getMainExecutor(context),
                             onPhotoTaken = logWorkoutViewModel::onTakePhoto
                         )
                     }
@@ -130,16 +138,14 @@ fun CameraScreen() {
                         tint = Color.Magenta
                     )
                 }
-
-
             }
 
         }
-    }else{
+    } else {
         Text(text = "Sin acceso")
     }
-        
-    }
+
+}
 
 @Composable
 fun CameraPreview(
@@ -160,45 +166,45 @@ fun CameraPreview(
 
 private fun takePhoto(
     controller: LifecycleCameraController,
-    context: Context,
-    onPhotoTaken: (Bitmap) -> Unit
+    onPhotoTaken: (String) -> Unit,
+    executor: Executor
 ) {
+    val file = createImageFile()
+    val outputDirectory = ImageCapture.OutputFileOptions.Builder(file).build()
     controller.takePicture(
-        ContextCompat.getMainExecutor(context),
-        object : ImageCapture.OnImageCapturedCallback() {
-            override fun onCaptureSuccess(image: ImageProxy) {
-                super.onCaptureSuccess(image)
-
-                val matrix = Matrix().apply {
-                    postRotate(image.imageInfo.rotationDegrees.toFloat())
+        outputDirectory,
+        executor,
+        object : ImageCapture.OnImageSavedCallback{
+            override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+                outputFileResults.savedUri?.let {
+                    onPhotoTaken(it.toString())
                 }
-                val rotatedBitmap = Bitmap.createBitmap(
-                    image.toBitmap(),
-                    0,
-                    0,
-                    image.width,
-                    image.height,
-                    matrix,
-                    true
-                )
-
-                onPhotoTaken(rotatedBitmap)
             }
 
             override fun onError(exception: ImageCaptureException) {
-                super.onError(exception)
-                Log.e("Camera", "Couldn't take photo: ", exception)
+                println("error o.o")
             }
+
         }
+    )
+}
+
+fun createImageFile(): File {
+    // Create an image file name
+    val timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH:mm:ss"))
+    return File.createTempFile(
+        "JPEG_${timeStamp}_", //prefix
+        ".jpg" //suffix
     )
 }
 
 @Composable
 fun PermissionRequestEffect(permission: String, onResult: (Boolean) -> Unit) {
-    val permissionLauncher = rememberLauncherForActivityResult( ActivityResultContracts.RequestPermission()
-    ){onResult(it)}
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { onResult(it) }
 
-    LaunchedEffect(key1 = Unit){
+    LaunchedEffect(key1 = Unit) {
         permissionLauncher.launch(permission)
     }
 }

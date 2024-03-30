@@ -41,13 +41,10 @@ import compose.icons.feathericons.Search
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.Smile
 
-
 @Composable
 fun WorkoutScreen(onClickNewRoutines: () -> Unit, onClickStartRoutine: (Int) -> Unit) {
 
     val workoutViewModel: WorkoutViewModel = hiltViewModel()
-
-    //val openAccordion by workoutViewModel.openAccordion.collectAsState()
 
     val workoutListState by workoutViewModel.workoutListState.collectAsState()
 
@@ -128,7 +125,7 @@ fun WorkoutScreen(onClickNewRoutines: () -> Unit, onClickStartRoutine: (Int) -> 
                         }
                     }
 
-                    Text(text = "My Routines ( ${workoutListState.workoutList.size} )")
+                    Text(text = "My Routines (${workoutListState.workoutList.size})")
                 }
 
                 AnimatedVisibility(visible = workoutListState.openAccordion) {

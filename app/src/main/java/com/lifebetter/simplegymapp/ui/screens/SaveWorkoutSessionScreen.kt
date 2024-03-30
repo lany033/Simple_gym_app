@@ -1,10 +1,8 @@
 package com.lifebetter.simplegymapp.ui.screens
 
-import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,44 +31,58 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.lifebetter.simplegymapp.model.mappers.formatTime
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
+import coil.size.Size
+import com.lifebetter.simplegymapp.domain.formatTime
 import com.lifebetter.simplegymapp.ui.components.CommonTextTitle
 import com.lifebetter.simplegymapp.ui.components.MyTopBarWithBackIcon
 import com.lifebetter.simplegymapp.ui.screens.workout.LogWorkoutViewModel
-import compose.icons.FontAwesomeIcons
-import compose.icons.fontawesomeicons.Solid
-import compose.icons.fontawesomeicons.solid.Image
-import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @Composable
-fun SaveWorkoutSessionScreen(onBack: () -> Unit, onCamera: () -> Unit) {
-    val logWorkoutViewModel: LogWorkoutViewModel = hiltViewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
-    val timer by logWorkoutViewModel.timer.collectAsState()
-    val bitmaps by logWorkoutViewModel.bitmaps.collectAsState()
-    val logState by logWorkoutViewModel.logState.collectAsState()
+fun SaveWorkoutSessionScreen(
+    onBack: () -> Unit,
+    onCamera: () -> Unit,
+    onHome: () -> Unit,
+    lwvm: LogWorkoutViewModel = hiltViewModel()
+) {
+    /*
+    val logWorkoutViewModel: LogWorkoutViewModel =
+        hiltViewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
+
+     */
+    val timer by lwvm.timer.collectAsState()
+    val uris by lwvm.uri.collectAsState()
+    val logState by lwvm.logState.collectAsState()
 
     Scaffold(topBar = {
         MyTopBarWithBackIcon(
             title = "Save Workout",
             subtitleTwo = "Save",
             onClickArrowBack = { onBack() },
-            onClickSave = {})
+            onClickSave = {
+                lwvm.saveWorkoutSession()
+                onHome()
+            })
     }) { paddingValues ->
-
         Column(
             modifier = Modifier
                 .padding(paddingValues)
                 .padding(12.dp), verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            CommonTextTitle(text = "Test", modifier = Modifier)
+            CommonTextTitle(
+                text = logState
+                    .nameWorkout, modifier = Modifier
+            )
             Row {
                 Duration(modifier = Modifier.weight(1f), timer)
                 Card(
@@ -118,7 +130,7 @@ fun SaveWorkoutSessionScreen(onBack: () -> Unit, onCamera: () -> Unit) {
                         )
                     }
                 }
-                if (bitmaps.isEmpty()) {
+                if (uris.isEmpty()) {
                     Box(
                         modifier = Modifier
                             .size(130.dp)
@@ -129,33 +141,35 @@ fun SaveWorkoutSessionScreen(onBack: () -> Unit, onCamera: () -> Unit) {
                     }
                 } else {
                     LazyRow() {
-                        items(bitmaps) { bitmap ->
+                        items(uris) { uri ->
                             Box(
                                 modifier = Modifier
                                     .size(130.dp)
                                     .background(Color.Transparent),
                                 contentAlignment = Alignment.Center
                             ) {
+                                val painter: Painter = rememberAsyncImagePainter(
+                                    model = ImageRequest.Builder(LocalContext.current)
+                                        .data(uri.toUri())
+                                        .size(Size.ORIGINAL) // Set the target size to load the image at.
+                                        .build()
+                                )
                                 Image(
-                                    bitmap = bitmap.asImageBitmap(),
+                                    painter = painter,
                                     contentDescription = null,
                                     modifier = Modifier.clip(
                                         RoundedCornerShape(10.dp)
                                     ),
                                     contentScale = ContentScale.Crop
                                 )
+
                             }
 
                             Spacer(modifier = Modifier.size(10.dp))
-
                         }
                     }
                 }
-
-
             }
-
-
             Divider()
             Card(
                 modifier = Modifier.fillMaxWidth(), shape = RectangleShape,
@@ -172,14 +186,16 @@ fun SaveWorkoutSessionScreen(onBack: () -> Unit, onCamera: () -> Unit) {
 
 @Composable
 fun DateTime() {
-    val day = LocalDate.now().dayOfMonth.toString() +" "+LocalDate.now().month.toString() +" "+LocalDate.now().year.toString()
-    val time = LocalDateTime.now().hour.toString() +":"+LocalDateTime.now().minute.toString()
     Card(
         modifier = Modifier.fillMaxWidth(), shape = RectangleShape,
         colors = CardDefaults.cardColors(containerColor = Color.Transparent)
     ) {
         Text(text = "When")
-        Text(text = "$day, $time", fontSize = 20.sp, color = Color(0XFF40A1F7))
+        Text(
+            text = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+            fontSize = 20.sp,
+            color = Color(0XFF40A1F7)
+        )
     }
 }
 
@@ -192,5 +208,6 @@ fun Duration(modifier: Modifier, timerValue: Long) {
     ) {
         Text(text = "Duration")
         Text(text = timerValue.formatTime(), fontSize = 20.sp, color = Color(0XFF40A1F7))
+
     }
 }

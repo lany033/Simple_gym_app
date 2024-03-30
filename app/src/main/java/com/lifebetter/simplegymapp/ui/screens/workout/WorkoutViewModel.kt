@@ -2,7 +2,8 @@ package com.lifebetter.simplegymapp.ui.screens.workout
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.lifebetter.simplegymapp.model.database.Workout
+import com.lifebetter.simplegymapp.data.ExercisesRepository
+import com.lifebetter.simplegymapp.domain.Workout as WorkoutDomain
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -16,9 +17,6 @@ class WorkoutViewModel @Inject constructor(
     private val _workoutListState = MutableStateFlow(WorkoutListState())
     val workoutListState = _workoutListState.asStateFlow()
 
-    //private val _openAccordion = MutableStateFlow(false)
-    //val openAccordion = _openAccordion.asStateFlow()
-
     fun onOpenAccordion() {
         _workoutListState.update {
             it.copy(openAccordion = true)
@@ -31,7 +29,7 @@ class WorkoutViewModel @Inject constructor(
         }
     }
 
-    fun deleteWorkout(workout: Workout) {
+    fun deleteWorkout(workout: WorkoutDomain) {
         viewModelScope.launch {
             exercisesRepository.deleteWorkout(workout)
         }
@@ -39,15 +37,14 @@ class WorkoutViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            exercisesRepository.workouts.collect { workout: List<Workout> ->
+            exercisesRepository.workouts.collect { workout: List<WorkoutDomain> ->
                 _workoutListState.update { WorkoutListState(workoutList = workout) }
             }
         }
     }
 
     data class WorkoutListState(
-        val isloading: Boolean = false,
-        val openAccordion: Boolean = false,
-        val workoutList: List<Workout> = emptyList(),
+        val openAccordion: Boolean = true,
+        val workoutList: List<WorkoutDomain> = emptyList(),
     )
 }

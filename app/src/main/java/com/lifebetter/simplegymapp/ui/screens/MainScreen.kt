@@ -12,25 +12,31 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.lifebetter.simplegymapp.ui.navigation.BottomBarNavGraph
 import com.lifebetter.simplegymapp.ui.navigation.BottomBarNavItem
+import com.lifebetter.simplegymapp.ui.screens.workout.LogWorkoutViewModel
 
 @Composable
-fun MainScreen(){
+fun MainScreen(vm: LogWorkoutViewModel = hiltViewModel()) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = { MyBottomBar(navController = navController) }
-    ) {padding ->
-        BottomBarNavGraph(navController = navController, modifier = Modifier.padding(padding))
+    ) { padding ->
+        BottomBarNavGraph(
+            navController = navController,
+            modifier = Modifier.padding(padding),
+            vm =  vm
+        )
     }
 }
 
 @Composable
-fun MyBottomBar(navController: NavHostController){
+fun MyBottomBar(navController: NavHostController) {
     val items = listOf(
         BottomBarNavItem.Home,
         BottomBarNavItem.Workouts,
@@ -40,10 +46,16 @@ fun MyBottomBar(navController: NavHostController){
     val currentDestination = navBackStackEntry?.destination
 
     NavigationBar {
-        items.forEach{ item ->
+        items.forEach { item ->
             NavigationBarItem(
-                label = { Text(text = item.title, fontWeight = FontWeight.Bold)},
-                icon = { Icon(imageVector = item.imageVector, contentDescription = item.title, modifier = Modifier.size(26.dp)) },
+                label = { Text(text = item.title, fontWeight = FontWeight.Bold) },
+                icon = {
+                    Icon(
+                        imageVector = item.imageVector,
+                        contentDescription = item.title,
+                        modifier = Modifier.size(26.dp)
+                    )
+                },
                 selected = currentDestination?.hierarchy?.any { it.route == item.route } == true,
                 onClick = { navController.navigate(item.route) }
             )

@@ -1,9 +1,5 @@
 package com.lifebetter.simplegymapp.domain
 
-import com.lifebetter.simplegymapp.model.remotedata.items.Equipment
-import com.lifebetter.simplegymapp.model.remotedata.items.Language
-import com.lifebetter.simplegymapp.model.remotedata.items.Muscle
-
 data class Exercise(
 
     val name: String,
