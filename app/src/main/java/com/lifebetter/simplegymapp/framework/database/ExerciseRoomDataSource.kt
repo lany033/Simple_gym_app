@@ -44,8 +44,8 @@ class ExerciseRoomDataSource @Inject constructor(
     override suspend fun deleteWorkout(workout: Workout) =
         workoutDao.deleteWorkout(workout.fromWorkoutDomain())
 
-    override suspend fun saveWorkout(list: List<Workout>) {
-        workoutDao.insertWorkout(list.fromWorkoutDomain())
+    override suspend fun saveWorkout(workout: Workout) {
+        workoutDao.insertWorkout(workout.fromWorkoutDomain())
     }
 
     override suspend fun saveWorkoutSession(workoutSession: WorkoutSession) {

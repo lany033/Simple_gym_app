@@ -34,8 +34,11 @@ class ExerciseViewModel @Inject constructor(
     private val _openAlertDialog = MutableStateFlow(false)
     val openAlertDialog = _openAlertDialog.asStateFlow()
 
-    private val _workout = MutableStateFlow(mutableListOf<Workout>())
+    /*
+    private val _workout = MutableStateFlow(Workout())
     val workout = _workout.asStateFlow()
+
+     */
 
     private val _nameWorkout = MutableStateFlow("")
     val nameWorkout = _nameWorkout.asStateFlow()
@@ -101,14 +104,12 @@ class ExerciseViewModel @Inject constructor(
 
     fun onSaveRoutine() {
         viewModelScope.launch {
-            _workout.value.add(
-                WorkoutDatabase(
+            val newWorkout = Workout(
+                    id = 0,
                     nameWorkout = _nameWorkout.value,
                     exerciseList = _selectedExercises.value
-                ).toWorkoutDomain()
-            )
-            exercisesRepository.saveNewWorkout(_workout.value)
-            _workout.value.clear()
+                    )
+            exercisesRepository.saveNewWorkout(newWorkout)
             _selectedExercises.value.clear()
             _nameWorkout.value = ""
             _openAlertDialog.value = false
@@ -148,7 +149,8 @@ class ExerciseViewModel @Inject constructor(
         val exerciseSelected: Exercise? = null,
         val isSearching: Boolean = false,
         val exerciseList: List<Exercise> = mutableListOf(),
-        val error: Error? = null
+        val error: Error? = null,
+        val workout: Workout? = null
     )
 }
 

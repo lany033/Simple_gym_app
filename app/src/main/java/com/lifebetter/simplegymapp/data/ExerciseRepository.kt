@@ -4,6 +4,7 @@ import com.lifebetter.simplegymapp.data.datasource.ExerciseLocalDataSource
 import com.lifebetter.simplegymapp.data.datasource.ExercisesRemoteDataSource
 import com.lifebetter.simplegymapp.domain.Error
 import com.lifebetter.simplegymapp.domain.Exercise
+import com.lifebetter.simplegymapp.domain.Workout
 import com.lifebetter.simplegymapp.domain.toDomain
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -30,8 +31,8 @@ class ExercisesRepository @Inject constructor(
         return exerciseLocalDataSource.getWorkoutSession()
     }
 
-    suspend fun saveNewWorkout(list: List<WorkoutDomain>) {
-        exerciseLocalDataSource.saveWorkout(list)
+    suspend fun saveNewWorkout(workout: Workout) {
+        exerciseLocalDataSource.saveWorkout(workout)
     }
 
     suspend fun deleteWorkout(workout: WorkoutDomain) {

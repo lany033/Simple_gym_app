@@ -16,7 +16,7 @@ interface ExerciseLocalDataSource {
     fun findByWorkoutId(id: Int): Flow<Workout>
 
     suspend fun deleteWorkout(workout: Workout)
-    suspend fun saveWorkout(list: List<Workout>)
+    suspend fun saveWorkout(workout: Workout)
 
     suspend fun saveWorkoutSession(workoutSession: WorkoutSession)
     fun getWorkoutSession(): Flow<List<WorkoutSession>>
