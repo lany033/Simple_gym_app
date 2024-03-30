@@ -11,7 +11,9 @@ import androidx.navigation.compose.rememberNavController
 import com.lifebetter.simplegymapp.ui.navigation.RootNavigationGraph
 import com.lifebetter.simplegymapp.ui.screens.MainScreen
 import com.lifebetter.simplegymapp.ui.theme.SimpleGymAppTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

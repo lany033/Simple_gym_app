@@ -3,7 +3,12 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
     id("org.jetbrains.kotlin.plugin.serialization")
+<<<<<<< HEAD
+    id ("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
+=======
     id ("org.jetbrains.kotlin.kapt")
+>>>>>>> main
 }
 
 android {
@@ -12,7 +17,7 @@ android {
 
     defaultConfig {
         applicationId = "com.lifebetter.simplegymapp"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -69,9 +74,13 @@ dependencies {
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
 
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
+
     //icons
     implementation("br.com.devsrsouza.compose.icons:feather:1.1.0")
     implementation("br.com.devsrsouza.compose.icons:font-awesome:1.1.0")
+    implementation("androidx.compose.material:material-icons-extended:1.6.3")
 
     //navigation
     implementation("androidx.navigation:navigation-compose:2.5.3")
@@ -84,14 +93,44 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
 
+<<<<<<< HEAD
+    //image
+    implementation ("io.coil-kt:coil-compose:2.4.0")
+
+    // Paging3
+=======
     //room
     implementation ("androidx.room:room-runtime:2.5.1")
     implementation ("androidx.room:room-ktx:2.5.1")
     kapt ("androidx.room:room-compiler:2.5.1")
 
     // Paging
+>>>>>>> main
     implementation ("androidx.paging:paging-runtime-ktx:3.1.1")
     implementation ("androidx.paging:paging-compose:1.0.0-alpha18")
+
+    //Hilt
+    implementation (libs.hilt.android)
+    kapt (libs.hilt.compiler)
+    implementation (libs.androidx.hilt.navigation.compose)
+
+    //room
+    implementation ("androidx.room:room-runtime:2.6.1")
+    kapt ("androidx.room:room-compiler:2.6.1")
+    implementation ("androidx.room:room-ktx:2.6.1")
+    implementation ("androidx.room:room-paging:2.6.1")
+
+    //chart
+    implementation ("com.github.tehras:charts:0.2.4-alpha")
+
+    //camera
+    val cameraxVersion = "1.3.0-rc01"
+
+    implementation("androidx.camera:camera-core:$cameraxVersion")
+    implementation("androidx.camera:camera-camera2:$cameraxVersion")
+    implementation("androidx.camera:camera-lifecycle:$cameraxVersion")
+    implementation("androidx.camera:camera-view:$cameraxVersion")
+    implementation("androidx.camera:camera-extensions:$cameraxVersion")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)

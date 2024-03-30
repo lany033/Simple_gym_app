@@ -1,6 +1,5 @@
 package com.lifebetter.simplegymapp.ui.screens
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -19,7 +18,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.lifebetter.simplegymapp.ui.navigation.BottomBarNavGraph
 import com.lifebetter.simplegymapp.ui.navigation.BottomBarNavItem
-
 
 @Composable
 fun MainScreen(){

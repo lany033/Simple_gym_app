@@ -2,8 +2,13 @@ package com.lifebetter.simplegymapp.model.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 
-@Database(entities = [Exercise::class], version = 1, exportSchema = false)
+@Database(entities = [Workout::class, WorkoutSession::class], version = 8, exportSchema = false)
+@TypeConverters(Converters::class)
 abstract class ExerciseDatabase: RoomDatabase() {
-    abstract fun exerciseDao(): ExerciseDao
+    abstract fun workoutDao(): WorkoutDao
+
+    abstract fun workoutSessionDao():  WorkoutSessionDao
+
 }

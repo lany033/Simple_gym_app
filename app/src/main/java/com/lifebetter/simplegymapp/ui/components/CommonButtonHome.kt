@@ -11,9 +11,9 @@ import androidx.compose.ui.unit.dp
 
 
 @Composable
-fun CommonButtonHome(text: String, modifier: Modifier, imageVector: ImageVector) {
+fun CommonButtonHome(text: String, modifier: Modifier, imageVector: ImageVector, onclick: () -> Unit) {
     Button(
-        onClick = { /*TODO*/ },
+        onClick = { onclick() },
         shape = RoundedCornerShape(4.dp),
         modifier = modifier,
         //contentPadding = PaddingValues(start = 7.dp)
