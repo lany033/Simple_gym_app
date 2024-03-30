@@ -3,8 +3,12 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
     id("org.jetbrains.kotlin.plugin.serialization")
+<<<<<<< HEAD
     id ("kotlin-kapt")
     id("com.google.dagger.hilt.android")
+=======
+    id ("org.jetbrains.kotlin.kapt")
+>>>>>>> main
 }
 
 android {
@@ -79,8 +83,10 @@ dependencies {
     implementation("br.com.devsrsouza.compose.icons:font-awesome:1.1.0")
     implementation("androidx.compose.material:material-icons-extended:1.6.3")
 
+    //navigation
     implementation("androidx.navigation:navigation-compose:2.5.3")
 
+    //retrofit
     implementation ("com.squareup.okhttp3:logging-interceptor:4.11.0")
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
@@ -88,10 +94,19 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
 
+<<<<<<< HEAD
     //image
     implementation ("io.coil-kt:coil-compose:2.5.0")
 
     // Paging3
+=======
+    //room
+    implementation ("androidx.room:room-runtime:2.5.1")
+    implementation ("androidx.room:room-ktx:2.5.1")
+    kapt ("androidx.room:room-compiler:2.5.1")
+
+    // Paging
+>>>>>>> main
     implementation ("androidx.paging:paging-runtime-ktx:3.1.1")
     implementation ("androidx.paging:paging-compose:1.0.0-alpha18")
 
