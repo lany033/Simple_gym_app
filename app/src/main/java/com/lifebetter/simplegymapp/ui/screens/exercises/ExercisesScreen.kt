@@ -138,7 +138,7 @@ fun ExercisesScreen(onScreenAddExercises: () -> Unit) {
                         onClick = {
                             showButton.exerciseSelected?.let { selectedExercise.add(it) }
                             onScreenAddExercises()
-                                  } ,
+                        } ,
                         modifier = Modifier
                             .padding(8.dp)
                             .fillMaxWidth()

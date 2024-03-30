@@ -1,7 +1,6 @@
 package com.lifebetter.simplegymapp.di
 
 
-import com.lifebetter.simplegymapp.model.ExercisesRepository
 import com.lifebetter.simplegymapp.model.database.ExerciseLocalDataSource
 import com.lifebetter.simplegymapp.model.database.WorkoutDao
 import com.lifebetter.simplegymapp.model.database.WorkoutSessionDao
