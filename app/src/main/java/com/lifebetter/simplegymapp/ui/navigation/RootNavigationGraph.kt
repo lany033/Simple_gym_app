@@ -20,5 +20,4 @@ object Graph {
     const val HOME = "home_graph"
     const val WORKOUT = "workout_graph"
     const val PROFILE = "profile_graph"
-    const val DASHBOARD = "dashboard_graph"
 }

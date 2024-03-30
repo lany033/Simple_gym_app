@@ -1,4 +1,4 @@
-package com.lifebetter.simplegymapp.data
+package com.lifebetter.simplegymapp.model.data
 
 import retrofit2.http.GET
 import retrofit2.http.Query

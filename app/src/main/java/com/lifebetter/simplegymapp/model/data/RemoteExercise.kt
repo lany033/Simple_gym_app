@@ -1,11 +1,11 @@
-package com.lifebetter.simplegymapp.data
+package com.lifebetter.simplegymapp.model.data
 
-import com.lifebetter.simplegymapp.data.test.Language
+import com.lifebetter.simplegymapp.model.data.test.Language
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Exercise(
+data class RemoteExercise(
     val id: Int,
     val name: String,
     val description: String,

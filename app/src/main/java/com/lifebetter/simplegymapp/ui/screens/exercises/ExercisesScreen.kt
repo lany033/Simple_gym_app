@@ -1,5 +1,6 @@
 package com.lifebetter.simplegymapp.ui.screens.exercises
 
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,11 +32,16 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+
 import com.lifebetter.simplegymapp.model.ExercisesRepository
+import com.lifebetter.simplegymapp.model.database.ExerciseDao
+import com.lifebetter.simplegymapp.model.database.MyDatabaseFactory
+import com.lifebetter.simplegymapp.model.datasource.ExerciseRemoteDataSource
 import com.lifebetter.simplegymapp.ui.components.MyTopWithIconsBar
 import kotlinx.coroutines.launch
 
@@ -49,10 +55,10 @@ fun ExercisesScreen() {
         mutableStateOf(false)
     }
 
+    val context = LocalContext.current
     val viewModel: ExercisesViewModel = viewModel {
-        ExercisesViewModel(ExercisesRepository())
+        ExercisesViewModel(ExercisesRepository(MyDatabaseFactory(context = context)))
     }
-
     val state by viewModel.state.collectAsState()
 
 
@@ -119,15 +125,12 @@ fun ExercisesScreen() {
 
             Text(text = "Results")
             LazyColumn {
-
-                items(state.exercise.size){i ->
+                items(state.exercise.size){ i ->
                     val exercise = state.exercise[i]
-                    if ( i >= state.exercise.size - 1 && !state.endReached && !state.isLoading){
+                    if ( i >= state.exercise.size - 20 && !state.endReached && !state.isLoading){
                         viewModel.loadNextItem()
                     }
-                    if (exercise.language.id == 2){
-                        Text(text = "Exercise: ${exercise.name}")
-                    }
+                    Text(text = "Exercise: ${exercise.name}")
                 }
                 item {
                     if (state.isLoading){

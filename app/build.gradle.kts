@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
     id("org.jetbrains.kotlin.plugin.serialization")
+    id ("org.jetbrains.kotlin.kapt")
 }
 
 android {
@@ -82,6 +83,11 @@ dependencies {
     implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
+
+    //room
+    implementation ("androidx.room:room-runtime:2.5.1")
+    implementation ("androidx.room:room-ktx:2.5.1")
+    kapt ("androidx.room:room-compiler:2.5.1")
 
     // Paging
     implementation ("androidx.paging:paging-runtime-ktx:3.1.1")
