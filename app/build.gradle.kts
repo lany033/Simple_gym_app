@@ -3,12 +3,9 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
     id("org.jetbrains.kotlin.plugin.serialization")
-<<<<<<< HEAD
     id ("kotlin-kapt")
     id("com.google.dagger.hilt.android")
-=======
-    id ("org.jetbrains.kotlin.kapt")
->>>>>>> main
+
 }
 
 android {
@@ -94,19 +91,12 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
 
-<<<<<<< HEAD
+
     //image
     implementation ("io.coil-kt:coil-compose:2.5.0")
 
-    // Paging3
-=======
-    //room
-    implementation ("androidx.room:room-runtime:2.5.1")
-    implementation ("androidx.room:room-ktx:2.5.1")
-    kapt ("androidx.room:room-compiler:2.5.1")
-
     // Paging
->>>>>>> main
+
     implementation ("androidx.paging:paging-runtime-ktx:3.1.1")
     implementation ("androidx.paging:paging-compose:1.0.0-alpha18")
 
@@ -121,8 +111,6 @@ dependencies {
     implementation ("androidx.room:room-ktx:2.6.1")
     implementation ("androidx.room:room-paging:2.6.1")
 
-    //chart
-    implementation ("com.github.tehras:charts:0.2.4-alpha")
 
     //camera
     val cameraxVersion = "1.3.0-rc01"
