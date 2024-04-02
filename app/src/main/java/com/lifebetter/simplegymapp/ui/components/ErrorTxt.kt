@@ -13,7 +13,7 @@ import com.lifebetter.simplegymapp.R
 import com.lifebetter.simplegymapp.domain.Error
 
 @Composable
-fun ErrorText(error: Error, modifier: Modifier) {
+fun ErrorText(error: com.lifebetter.simplegymapp.domain.Error, modifier: Modifier) {
     Box(
         modifier = modifier.fillMaxSize()
     ) {
@@ -28,9 +28,9 @@ fun ErrorText(error: Error, modifier: Modifier) {
 }
 
 @Composable
-private fun Error.toUiString() = when (this) {
-    Error.Connectivity -> stringResource(R.string.connectivity_error)
-    is Error.Server -> stringResource(R.string.server_error) + code
-    is Error.Unknown -> stringResource(R.string.unknown_error) + message
-    is Error.NumberException -> stringResource(R.string.number_exception)
+private fun com.lifebetter.simplegymapp.domain.Error.toUiString() = when (this) {
+    com.lifebetter.simplegymapp.domain.Error.Connectivity -> stringResource(R.string.connectivity_error)
+    is com.lifebetter.simplegymapp.domain.Error.Server -> stringResource(R.string.server_error) + code
+    is com.lifebetter.simplegymapp.domain.Error.Unknown -> stringResource(R.string.unknown_error) + message
+    is com.lifebetter.simplegymapp.domain.Error.NumberException -> stringResource(R.string.number_exception)
 }

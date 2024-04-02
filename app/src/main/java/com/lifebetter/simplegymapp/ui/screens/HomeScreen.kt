@@ -97,7 +97,7 @@ fun HomeScreen() {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HorizontalPagerWithIndicators(uris: List<String>?, setWorkout: List<SetWorkout>) {
+fun HorizontalPagerWithIndicators(uris: List<String>?, setWorkout: List<com.lifebetter.simplegymapp.domain.SetWorkout>) {
 
     val pagerCount = if (uris.isNullOrEmpty()) {
         1
@@ -152,12 +152,12 @@ fun HorizontalPagerWithIndicators(uris: List<String>?, setWorkout: List<SetWorko
 @Composable
 fun WorkoutSessionCard(
     nameWorkout: String,
-    workoutSession: WorkoutSession,
+    workoutSession: com.lifebetter.simplegymapp.domain.WorkoutSession,
     time: Long,
     volumeTotal: Int,
     date: String,
     icon: ImageVector?,
-    onDelete: (WorkoutSession) -> Unit
+    onDelete: (com.lifebetter.simplegymapp.domain.WorkoutSession) -> Unit
 ) {
     Card(
         modifier = Modifier

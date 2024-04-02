@@ -56,11 +56,15 @@ import java.util.concurrent.Executor
 
 
 @Composable
-fun CameraScreen() {
+fun CameraScreen(vm: LogWorkoutViewModel = hiltViewModel()) {
 
+    /*
     val logWorkoutViewModel: LogWorkoutViewModel =
         hiltViewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
-    val permission by logWorkoutViewModel.logState.collectAsState()
+
+     */
+
+    val permission by vm.logState.collectAsState()
 
 
     val context = LocalContext.current
@@ -73,7 +77,7 @@ fun CameraScreen() {
     }
 
     PermissionRequestEffect(permission = CAMERA) {
-        logWorkoutViewModel.permissionIsGranted()
+        vm.permissionIsGranted()
     }
 
     if (permission.permission) {
@@ -128,7 +132,7 @@ fun CameraScreen() {
                         takePhoto(
                             controller = controller,
                             executor = ContextCompat.getMainExecutor(context),
-                            onPhotoTaken = logWorkoutViewModel::onTakePhoto
+                            onPhotoTaken = vm::onTakePhoto
                         )
                     }
                 ) {

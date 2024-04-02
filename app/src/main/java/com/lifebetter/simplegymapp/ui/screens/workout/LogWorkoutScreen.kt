@@ -44,7 +44,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.lifebetter.simplegymapp.domain.formatTime
+import com.lifebetter.simplegymapp.data.formatTime
 import com.lifebetter.simplegymapp.ui.components.CommonTextButtons
 import com.lifebetter.simplegymapp.ui.components.CommonTextTitle
 import com.lifebetter.simplegymapp.ui.components.ImageWorkout

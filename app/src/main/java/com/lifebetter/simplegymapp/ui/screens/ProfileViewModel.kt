@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lifebetter.simplegymapp.data.ExercisesRepository
 import com.lifebetter.simplegymapp.domain.WorkoutSession as WorkoutSessionDomain
-import com.lifebetter.simplegymapp.domain.toWorkoutSessionDomain
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

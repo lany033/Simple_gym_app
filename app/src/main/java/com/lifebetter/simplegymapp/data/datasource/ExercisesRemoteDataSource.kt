@@ -5,5 +5,5 @@ import com.lifebetter.simplegymapp.framework.server.ExerciseResult
 import com.lifebetter.simplegymapp.domain.Error
 
 interface ExercisesRemoteDataSource {
-    suspend fun getExercises(): Either<Error, ExerciseResult>
+    suspend fun getExercises(): Either<com.lifebetter.simplegymapp.domain.Error, ExerciseResult>
 }

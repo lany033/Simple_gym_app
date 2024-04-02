@@ -61,7 +61,7 @@ fun NavGraphBuilder.workoutNavGraph(navController: NavHostController, vm: LogWor
                 lwvm = vm)
         }
         composable(route = WorkoutScreens.Camera.route) {
-            CameraScreen()
+            CameraScreen(vm = vm)
         }
     }
 }

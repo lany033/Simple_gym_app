@@ -4,9 +4,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lifebetter.simplegymapp.data.ExercisesRepository
-import com.lifebetter.simplegymapp.domain.toSetValueDomain
-import com.lifebetter.simplegymapp.domain.SetWorkout
-import com.lifebetter.simplegymapp.domain.toWorkoutSessionDomain
+import com.lifebetter.simplegymapp.data.toSetValueDomain
+import com.lifebetter.simplegymapp.data.toWorkoutSessionDomain
 import com.lifebetter.simplegymapp.framework.database.WorkoutSession
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -62,7 +61,7 @@ class LogWorkoutViewModel @Inject constructor(
                 try {
                     _logState.update {
                         it.copy(listWorkoutSet = exercises.exerciseList.map {
-                            SetWorkout(
+                            com.lifebetter.simplegymapp.domain.SetWorkout(
                                 exerciseName = it.name,
                                 exerciseImage = it.images,
                                 exerciseId = it.id,
@@ -249,7 +248,7 @@ class LogWorkoutViewModel @Inject constructor(
         val timerIsPlaying: Boolean = true,
         var timerJob: Job? = null,
         val listSetValueState: MutableList<SetValueState> = mutableListOf(),
-        val listWorkoutSet: List<SetWorkout> = emptyList(),
+        val listWorkoutSet: List<com.lifebetter.simplegymapp.domain.SetWorkout> = emptyList(),
         val sumKg: Int = 0,
         val sumRep: Int = 0,
         val openAlertDialog: Boolean = false,

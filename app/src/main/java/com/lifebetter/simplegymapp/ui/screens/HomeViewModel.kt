@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lifebetter.simplegymapp.data.ExercisesRepository
 import com.lifebetter.simplegymapp.domain.WorkoutSession
-import com.lifebetter.simplegymapp.domain.toWorkoutSessionDomain
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -37,7 +36,7 @@ class HomeViewModel @Inject constructor(private val exercisesRepository: Exercis
     }
 
     data class HomeState(
-        val listWorkoutSession: List<WorkoutSession> = emptyList(),
+        val listWorkoutSession: List<com.lifebetter.simplegymapp.domain.WorkoutSession> = emptyList(),
         val isLoading: Boolean = false
     )
 }

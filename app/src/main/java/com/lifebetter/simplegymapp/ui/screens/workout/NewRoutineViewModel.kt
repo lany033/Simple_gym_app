@@ -33,6 +33,6 @@ class NewRoutineViewModel @Inject constructor(private val exercisesRepository: E
     data class NewRoutineState(
         val openAlertDialog: Boolean = false,
         val nameWorkout: String = "",
-        val workoutList: List<Workout> = emptyList(),
+        val workoutList: List<com.lifebetter.simplegymapp.domain.Workout> = emptyList(),
     )
 }

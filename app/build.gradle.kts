@@ -8,6 +8,8 @@ plugins {
 
 }
 
+
+
 android {
     namespace = "com.lifebetter.simplegymapp"
     compileSdk = 34
@@ -41,11 +43,11 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_18
+        targetCompatibility = JavaVersion.VERSION_18
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "18"
     }
     buildFeatures {
         compose = true
@@ -75,10 +77,18 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
     implementation("io.arrow-kt:arrow-core:1.1.3")
 
+    //modules
+    implementation (project(":domain"))
+    implementation (project(":data"))
+    implementation (project(":usecases"))
+
+
     //icons
     implementation("br.com.devsrsouza.compose.icons:feather:1.1.0")
     implementation("br.com.devsrsouza.compose.icons:font-awesome:1.1.0")
     implementation("androidx.compose.material:material-icons-extended:1.6.3")
+
+
 
     //navigation
     implementation("androidx.navigation:navigation-compose:2.5.3")

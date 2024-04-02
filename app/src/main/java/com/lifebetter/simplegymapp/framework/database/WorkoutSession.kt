@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter
 data class WorkoutSession(
     @PrimaryKey(autoGenerate = true)
     val workoutSessionId: Int = 0,
-    val setWorkout: List<SetWorkout>,
+    val setWorkout: List<com.lifebetter.simplegymapp.domain.SetWorkout>,
     val nameWorkout: String,
     val sumKg: Int,
     val sumRep: Int,

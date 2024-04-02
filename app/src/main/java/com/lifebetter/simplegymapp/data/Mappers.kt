@@ -1,12 +1,33 @@
-package com.lifebetter.simplegymapp.domain
+package com.lifebetter.simplegymapp.data
 
+import arrow.core.Either
+import arrow.core.left
+import arrow.core.right
+import com.lifebetter.simplegymapp.domain.Error
+import com.lifebetter.simplegymapp.domain.SetValue
 import com.lifebetter.simplegymapp.framework.database.Exercise
 import com.lifebetter.simplegymapp.domain.Exercise as ExerciseDomain
 import com.lifebetter.simplegymapp.framework.server.ExerciseDto
 import com.lifebetter.simplegymapp.framework.database.Workout
 import com.lifebetter.simplegymapp.framework.database.WorkoutSession
+import com.lifebetter.simplegymapp.ui.screens.workout.LogWorkoutViewModel
+import retrofit2.HttpException
+import java.io.IOException
 import com.lifebetter.simplegymapp.domain.Workout as WorkoutDomain
 import com.lifebetter.simplegymapp.domain.WorkoutSession as WorkoutSessionDomain
+
+fun Throwable.toError(): Error = when (this) {
+    is IOException -> Error.Connectivity
+    is HttpException -> Error.Server(code())
+    is NumberFormatException -> Error.NumberException
+    else -> Error.Unknown(message ?: "Error")
+}
+
+suspend fun <T> tryCall(action: suspend () -> T): Either<Error, T> = try {
+    action().right()
+} catch (e: Exception) {
+    e.toError().left()
+}
 
 fun Long.formatTime(): String {
     val hours = this / 3600
@@ -14,6 +35,14 @@ fun Long.formatTime(): String {
     val remainingSeconds = this % 60
     return String.format("%02d:%02d:%02d", hours, minutes, remainingSeconds)
 }
+
+
+fun LogWorkoutViewModel.SetValueState.toSetValueDomain(): SetValue = SetValue(
+    setNumber = setNumber,
+    kg = kg,
+    rep = rep,
+    isChecked = isChecked
+)
 
 fun ExerciseDto.toDomain(): ExerciseDomain = ExerciseDomain(
     name = name,
@@ -92,8 +121,8 @@ fun List<WorkoutSessionDomain>.fromWorkoutSessionDomain(): List<WorkoutSession> 
 
 
 val icono = "https://static.thenounproject.com/png/3347062-200.png"
-fun List<Image>.toImage(): String = map { it.image }.joinToString{it}.ifEmpty { icono }
+fun List<com.lifebetter.simplegymapp.domain.Image>.toImage(): String = map { it.image }.joinToString{it}.ifEmpty { icono }
 
-fun List<Muscle>.toText(): String = map { it.name }.joinToString { it }
+fun List<com.lifebetter.simplegymapp.domain.Muscle>.toText(): String = map { it.name }.joinToString { it }
 
 

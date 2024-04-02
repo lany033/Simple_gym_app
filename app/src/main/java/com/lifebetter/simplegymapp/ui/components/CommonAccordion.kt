@@ -27,7 +27,7 @@ import com.lifebetter.simplegymapp.ui.theme.Green40
 
 
 @Composable
-fun AccordionItem(workout: Workout, onDelete: (Workout)-> Unit, onStartRoutine: () -> Unit) {
+fun AccordionItem(workout: com.lifebetter.simplegymapp.domain.Workout, onDelete: (com.lifebetter.simplegymapp.domain.Workout)-> Unit, onStartRoutine: () -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(4.dp),
@@ -56,7 +56,7 @@ fun AccordionItem(workout: Workout, onDelete: (Workout)-> Unit, onStartRoutine: 
 }
 
 @Composable
-fun CommonTextContent(exercises: List<Exercise>) {
+fun CommonTextContent(exercises: List<com.lifebetter.simplegymapp.domain.Exercise>) {
     Text(text = exercises.joinToString { it.name }, color = Color.Gray)
 }
 

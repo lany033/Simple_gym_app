@@ -5,7 +5,6 @@ import com.lifebetter.simplegymapp.data.datasource.ExercisesRemoteDataSource
 import com.lifebetter.simplegymapp.domain.Error
 import com.lifebetter.simplegymapp.domain.Exercise
 import com.lifebetter.simplegymapp.domain.Workout
-import com.lifebetter.simplegymapp.domain.toDomain
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import com.lifebetter.simplegymapp.domain.Workout as WorkoutDomain
