@@ -1,4 +1,4 @@
-package com.lifebetter.simplegymapp
+package com.lifebetter.simplegymapp.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
