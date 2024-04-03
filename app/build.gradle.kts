@@ -8,8 +8,6 @@ plugins {
 
 }
 
-
-
 android {
     namespace = "com.lifebetter.simplegymapp"
     compileSdk = 34
@@ -37,17 +35,15 @@ android {
         }
         debug {
             isDebuggable = true
-
-            //resValue("string", "melaniename", " [DEBUG] SimpleGymApp")
         }
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_18
-        targetCompatibility = JavaVersion.VERSION_18
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "18"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -63,7 +59,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
     implementation(libs.activity.compose)
@@ -82,13 +77,10 @@ dependencies {
     implementation (project(":data"))
     implementation (project(":usecases"))
 
-
     //icons
     implementation("br.com.devsrsouza.compose.icons:feather:1.1.0")
     implementation("br.com.devsrsouza.compose.icons:font-awesome:1.1.0")
     implementation("androidx.compose.material:material-icons-extended:1.6.3")
-
-
 
     //navigation
     implementation("androidx.navigation:navigation-compose:2.5.3")
@@ -124,7 +116,6 @@ dependencies {
 
     //camera
     val cameraxVersion = "1.3.0-rc01"
-
     implementation("androidx.camera:camera-core:$cameraxVersion")
     implementation("androidx.camera:camera-camera2:$cameraxVersion")
     implementation("androidx.camera:camera-lifecycle:$cameraxVersion")

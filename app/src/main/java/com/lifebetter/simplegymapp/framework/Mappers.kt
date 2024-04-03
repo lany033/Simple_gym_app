@@ -1,15 +1,17 @@
-package com.lifebetter.simplegymapp.data
+package com.lifebetter.simplegymapp.framework
 
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
 import com.lifebetter.simplegymapp.domain.Error
+import com.lifebetter.simplegymapp.domain.ExerciseResult as ExerciseResultDomain
 import com.lifebetter.simplegymapp.domain.SetValue
 import com.lifebetter.simplegymapp.framework.database.Exercise
 import com.lifebetter.simplegymapp.domain.Exercise as ExerciseDomain
 import com.lifebetter.simplegymapp.framework.server.ExerciseDto
 import com.lifebetter.simplegymapp.framework.database.Workout
 import com.lifebetter.simplegymapp.framework.database.WorkoutSession
+import com.lifebetter.simplegymapp.framework.server.ExerciseResult
 import com.lifebetter.simplegymapp.ui.screens.workout.LogWorkoutViewModel
 import retrofit2.HttpException
 import java.io.IOException
@@ -35,6 +37,13 @@ fun Long.formatTime(): String {
     val remainingSeconds = this % 60
     return String.format("%02d:%02d:%02d", hours, minutes, remainingSeconds)
 }
+
+fun ExerciseResult.toExerciseResultDomain(): ExerciseResultDomain = ExerciseResultDomain(
+    count = count,
+    next = next,
+    previous = previous,
+    results = results.map { it.toDomain() }
+)
 
 
 fun LogWorkoutViewModel.SetValueState.toSetValueDomain(): SetValue = SetValue(

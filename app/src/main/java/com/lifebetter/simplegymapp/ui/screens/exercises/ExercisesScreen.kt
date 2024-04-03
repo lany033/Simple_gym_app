@@ -35,7 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.lifebetter.simplegymapp.data.toText
+import com.lifebetter.simplegymapp.framework.toText
 import com.lifebetter.simplegymapp.ui.components.CommonDivider
 import com.lifebetter.simplegymapp.ui.components.CommonMediumText
 import com.lifebetter.simplegymapp.ui.components.CommonTextTitle

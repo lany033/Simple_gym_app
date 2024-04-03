@@ -41,7 +41,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.size.Size
-import com.lifebetter.simplegymapp.data.formatTime
+import com.lifebetter.simplegymapp.framework.formatTime
 import com.lifebetter.simplegymapp.ui.components.CommonTextTitle
 import com.lifebetter.simplegymapp.ui.components.MyTopBarWithBackIcon
 import com.lifebetter.simplegymapp.ui.screens.workout.LogWorkoutViewModel

@@ -4,8 +4,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lifebetter.simplegymapp.data.ExercisesRepository
-import com.lifebetter.simplegymapp.data.toSetValueDomain
-import com.lifebetter.simplegymapp.data.toWorkoutSessionDomain
+import com.lifebetter.simplegymapp.framework.toSetValueDomain
+import com.lifebetter.simplegymapp.framework.toWorkoutSessionDomain
 import com.lifebetter.simplegymapp.framework.database.WorkoutSession
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -18,7 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LogWorkoutViewModel @Inject constructor(
-    private val exercisesRepository: ExercisesRepository) :
+    private val exercisesRepository: ExercisesRepository
+) :
     ViewModel() {
 
     private val _logState = MutableStateFlow(LogWorkoutState())

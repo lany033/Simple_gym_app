@@ -3,7 +3,6 @@ package com.lifebetter.simplegymapp.ui.screens.workout
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lifebetter.simplegymapp.data.ExercisesRepository
-import com.lifebetter.simplegymapp.domain.Workout
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

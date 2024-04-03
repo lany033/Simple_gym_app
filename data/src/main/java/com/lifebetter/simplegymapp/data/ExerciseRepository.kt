@@ -48,7 +48,7 @@ class ExercisesRepository @Inject constructor(
                 exercisesRemoteDataSource.getExercises()
             exercisesList.fold(ifLeft = { return it }) {
                 exerciseLocalDataSource.saveExercise(
-                    it.results.map { it.toDomain() }
+                    it.results
                 )
             }
         }

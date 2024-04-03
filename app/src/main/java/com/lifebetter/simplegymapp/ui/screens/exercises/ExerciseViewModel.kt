@@ -5,7 +5,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lifebetter.simplegymapp.data.ExercisesRepository
-import com.lifebetter.simplegymapp.data.toError
+import com.lifebetter.simplegymapp.framework.toError
 import com.lifebetter.simplegymapp.usecases.GetPopularExercisesUseCase
 import com.lifebetter.simplegymapp.usecases.RequestPopularExerciseUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
