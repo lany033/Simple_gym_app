@@ -11,8 +11,8 @@ java {
 
 dependencies{
     implementation (project(":domain"))
-    implementation("io.arrow-kt:arrow-core:1.1.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-    implementation("javax.inject:javax.inject:1")
+    implementation(libs.arrow.core)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.javax.inject)
 
 }

@@ -68,9 +68,9 @@ dependencies {
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
 
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
-    implementation("io.arrow-kt:arrow-core:1.1.3")
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.arrow.core)
 
     //modules
     implementation (project(":domain"))
@@ -78,29 +78,22 @@ dependencies {
     implementation (project(":usecases"))
 
     //icons
-    implementation("br.com.devsrsouza.compose.icons:feather:1.1.0")
-    implementation("br.com.devsrsouza.compose.icons:font-awesome:1.1.0")
-    implementation("androidx.compose.material:material-icons-extended:1.6.3")
+    implementation(libs.feather)
+    implementation(libs.font.awesome)
+    implementation(libs.androidx.material.icons.extended)
 
     //navigation
-    implementation("androidx.navigation:navigation-compose:2.5.3")
+    implementation(libs.androidx.navigation.compose)
 
     //retrofit
-    implementation ("com.squareup.okhttp3:logging-interceptor:4.11.0")
-    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
-
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
-
+    implementation (libs.logging.interceptor)
+    implementation (libs.retrofit)
+    implementation (libs.converter.gson)
+    implementation(libs.retrofit2.kotlinx.serialization.converter)
+    implementation(libs.kotlinx.serialization.json)
 
     //image
-    implementation ("io.coil-kt:coil-compose:2.5.0")
-
-    // Paging
-
-    implementation ("androidx.paging:paging-runtime-ktx:3.1.1")
-    implementation ("androidx.paging:paging-compose:1.0.0-alpha18")
+    implementation (libs.coil.compose)
 
     //Hilt
     implementation (libs.hilt.android)
@@ -108,19 +101,18 @@ dependencies {
     implementation (libs.androidx.hilt.navigation.compose)
 
     //room
-    implementation ("androidx.room:room-runtime:2.6.1")
-    kapt ("androidx.room:room-compiler:2.6.1")
-    implementation ("androidx.room:room-ktx:2.6.1")
-    implementation ("androidx.room:room-paging:2.6.1")
+    implementation (libs.androidx.room.runtime)
+    kapt (libs.androidx.room.compiler)
+    implementation (libs.androidx.room.ktx)
+    implementation (libs.androidx.room.paging)
 
 
-    //camera
-    val cameraxVersion = "1.3.0-rc01"
-    implementation("androidx.camera:camera-core:$cameraxVersion")
-    implementation("androidx.camera:camera-camera2:$cameraxVersion")
-    implementation("androidx.camera:camera-lifecycle:$cameraxVersion")
-    implementation("androidx.camera:camera-view:$cameraxVersion")
-    implementation("androidx.camera:camera-extensions:$cameraxVersion")
+    //cameraX
+    implementation(libs.androidx.camera.core)
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
+    implementation(libs.androidx.camera.extensions)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
