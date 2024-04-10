@@ -5,7 +5,10 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lifebetter.simplegymapp.data.ExercisesRepository
+import com.lifebetter.simplegymapp.domain.Exercise
+import com.lifebetter.simplegymapp.domain.Workout
 import com.lifebetter.simplegymapp.framework.toError
+import com.lifebetter.simplegymapp.domain.Error
 import com.lifebetter.simplegymapp.usecases.GetPopularExercisesUseCase
 import com.lifebetter.simplegymapp.usecases.RequestPopularExerciseUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +22,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-//TODO: Arreglar los copy con update
 @HiltViewModel
 class ExerciseViewModel @Inject constructor(
     private val exercisesRepository: ExercisesRepository,
@@ -35,7 +37,7 @@ class ExerciseViewModel @Inject constructor(
     private val _searchText = MutableStateFlow("")
     val searchText = _searchText.asStateFlow()
 
-    private val _selectedExercises = MutableStateFlow(SnapshotStateList<com.lifebetter.simplegymapp.domain.Exercise>())
+    private val _selectedExercises = MutableStateFlow(SnapshotStateList<Exercise>())
     val selectedExercises = _selectedExercises.asStateFlow()
 
     private val _showAddButton = MutableStateFlow(ExerciseListState())
@@ -85,7 +87,7 @@ class ExerciseViewModel @Inject constructor(
         }
     }
 
-    fun deleteElement(exercise: com.lifebetter.simplegymapp.domain.Exercise) {
+    fun deleteElement(exercise: Exercise) {
         viewModelScope.launch {
             _selectedExercises.value.remove(exercise)
         }
@@ -93,7 +95,7 @@ class ExerciseViewModel @Inject constructor(
 
     fun onSaveRoutine() {
         viewModelScope.launch {
-            val newWorkout = com.lifebetter.simplegymapp.domain.Workout(
+            val newWorkout = Workout(
                 nameWorkout = _nameWorkout.value,
                 exerciseList = _selectedExercises.value
             )
@@ -126,19 +128,17 @@ class ExerciseViewModel @Inject constructor(
                 .collect{exercises -> _exerciseListState.update { it.copy(exerciseList = exercises) }
             }
         }
-        Log.e("SearchViewModel - hashcode - ", "SearchViewModel - hashcode -" + this.hashCode())
-        //Log.d("error", _exerciseListState.value.error.toString())
 
     }
 
     data class ExerciseListState(
         val showButtonAddExercise: Boolean = false,
         val exerciseId: Int = 0,
-        val exerciseSelected: com.lifebetter.simplegymapp.domain.Exercise? = null,
+        val exerciseSelected: Exercise? = null,
         val isSearching: Boolean = false,
-        val exerciseList: List<com.lifebetter.simplegymapp.domain.Exercise> = mutableListOf(),
-        val error: com.lifebetter.simplegymapp.domain.Error? = null,
-        val workout: com.lifebetter.simplegymapp.domain.Workout? = null
+        val exerciseList: List<Exercise> = mutableListOf(),
+        val error: Error? = null,
+        val workout: Workout? = null
     )
 }
 
