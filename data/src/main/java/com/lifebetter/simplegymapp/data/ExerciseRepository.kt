@@ -16,7 +16,7 @@ class ExercisesRepository @Inject constructor(
 ) {
     val workouts = exerciseLocalDataSource.workouts
 
-    val exercises = exerciseLocalDataSource.exercises
+    val popularExercises = exerciseLocalDataSource.exercises
 
     suspend fun saveWorkoutSession(workoutSession: WorkoutSessionDomain) {
         exerciseLocalDataSource.saveWorkoutSession(workoutSession)

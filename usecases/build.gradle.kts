@@ -14,4 +14,8 @@ dependencies{
     implementation (project(":data"))
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.javax.inject)
+
+    testImplementation(libs.junit)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.mockito.inline)
 }

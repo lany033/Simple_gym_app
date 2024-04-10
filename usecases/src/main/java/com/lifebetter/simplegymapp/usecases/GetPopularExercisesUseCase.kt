@@ -5,6 +5,6 @@ import javax.inject.Inject
 
 class GetPopularExercisesUseCase @Inject constructor(private val exercisesRepository: ExercisesRepository)  {
 
-    operator fun invoke() = exercisesRepository.exercises
+    operator fun invoke() = exercisesRepository.popularExercises
 
 }
