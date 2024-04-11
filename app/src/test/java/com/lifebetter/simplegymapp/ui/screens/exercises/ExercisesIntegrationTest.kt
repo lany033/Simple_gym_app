@@ -1,8 +1,8 @@
 package com.lifebetter.simplegymapp.ui.screens.exercises
 
 import app.cash.turbine.test
-import com.lifebetter.simplegymapp.FakeLocalDataSource
-import com.lifebetter.simplegymapp.FakeRemoteDataSource
+import com.lifebetter.simplegymapp.apptestshared.FakeLocalDataSource
+import com.lifebetter.simplegymapp.apptestshared.FakeRemoteDataSource
 import com.lifebetter.simplegymapp.data.ExercisesRepository
 import com.lifebetter.simplegymapp.domain.Exercise
 import com.lifebetter.simplegymapp.testrules.CoroutinesTestRule

@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.lifebetter.simplegymapp.framework.toText
@@ -66,7 +67,7 @@ fun ExercisesScreen(onScreenAddExercises: () -> Unit) {
                 onValueChange = exerciseViewModel::onSearchTextChange,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(14.dp),
+                    .padding(14.dp).testTag("searchTestExercise"),
                 placeholder = { Text(text = "Search") },
                 leadingIcon = {
                     Icon(

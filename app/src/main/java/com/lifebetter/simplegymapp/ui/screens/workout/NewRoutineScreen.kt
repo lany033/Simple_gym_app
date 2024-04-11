@@ -36,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -73,8 +74,8 @@ fun NewRoutineScreen(onClickAddExercises: () -> Unit, onCancel: () -> Unit, onBa
             ErrorText(error = it, modifier = Modifier)
         }
 
-        if (openAlertDialog) {
             SaveAlertDialog(
+                show = openAlertDialog,
                 onDismissRequest = exerciseViewModel::closeAlertDialog,
                 onConfirmation = {
                     exerciseViewModel.onSaveRoutine()
@@ -82,7 +83,7 @@ fun NewRoutineScreen(onClickAddExercises: () -> Unit, onCancel: () -> Unit, onBa
                 },
                 dialogTitle = "Save Routine?",
             )
-        }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -206,11 +207,14 @@ fun CommonButtonItems2(text: String, onClick: () -> Unit) {
 
 @Composable
 fun SaveAlertDialog(
+    show: Boolean,
     onDismissRequest: () -> Unit,
     onConfirmation: () -> Unit,
     dialogTitle: String,
 ) {
+    if (show){
     AlertDialog(
+        modifier = Modifier.testTag("saveAlertDialogTest"),
         title = {
             Text(text = dialogTitle)
         },
@@ -236,4 +240,6 @@ fun SaveAlertDialog(
             }
         }
     )
+}
+
 }
