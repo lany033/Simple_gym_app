@@ -34,5 +34,3 @@ SimpleGym es una aplicacion con la cual puedes crear tus propias rutinas y reali
 - `JUnit 4.13.2`
 - `Mockito 5.3.1`
 - `Espresso 3.5.1`
-
-## Autora
