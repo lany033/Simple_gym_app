@@ -1,9 +1,9 @@
 # SimpleGym 
 
-SimpleGym es una aplicacion con la cual puedes crear tus propias rutinas y realizar un registro fotografico :camera: de ellas. Simple Gym usa el api https://wger.de/es/software/api para obtener informacion de los ejercicios.
+SimpleGym es una aplicacion con la cual puedes crear tus propias rutinas y realizar un registro fotografico :camera: de ellas. SimpleGym usa el api https://wger.de/es/software/api para obtener informacion de los ejercicios.
 
 ## :hammer:Funcionalidades del proyecto
-- `Funcionalidad 1`: Elaborar rutina personalizada.
+- `Funcionalidad 1`: :triangular_ruler: Elaborar rutina personalizada en base a la lista de ejercicios obtenidos del API.
 
 ![GIF_20240412_120521_774](https://github.com/lany033/Simple_gym_app/assets/94999496/89789ca9-a7e9-4f96-b934-5bec1a46b3fd)
   
